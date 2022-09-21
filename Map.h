@@ -4,11 +4,12 @@ using namespace std;
 
 
 class Territory{
-    private:
+    public:
         string name;
         string continent;
         vector<Territory*> neighbours;
     public:
+        
         Territory(string name, string continent); 
         Territory (const Territory &obj);
         ~Territory();
@@ -19,6 +20,7 @@ class Map
 {
     private:
         vector<Territory*> territories;
+        //vector<Continents*> continents;
 
     public:
         bool validate();
@@ -27,8 +29,10 @@ class Map
 
 class MapLoader{
     public:
+        MapLoader();
 
         void readMapFile(string fileName);
-        string findTerritoriesContinet(string);
+        vector<Territory*> findNeighbours(string s, vector<Territory*>);
+
 
 };
