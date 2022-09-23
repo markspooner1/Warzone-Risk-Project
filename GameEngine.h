@@ -47,6 +47,7 @@ public:
 
 };
 
+void testGameStates();
 #endif
 
 
