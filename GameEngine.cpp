@@ -328,6 +328,3 @@ void testGameStates()
     startup.startupPhase();
 }
 
-//
-// Created by Warda Salem on 2021-11-16.
-//
