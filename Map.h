@@ -17,26 +17,27 @@ class Territory{
         void setName(string name);
         string getContinent();
         void setContinent(string continent);
-        vector<Territory *> getNeighbours();
+        vector<Territory*> getNeighbours();
 };
-
+     
 class Map
 {
     private:
         vector<Territory*> territories;
-        //vector<Continents*> continents;
+        vector<string> continents;
 
     public:
         bool validate();
-
+        Map(vector<Territory*> t, vector<string> s);
+        //test function
+        void printTerritory(vector<Territory*> t);
+        vector<Territory*> getTerritories();
 };
 
 class MapLoader{
     public:
         MapLoader();
 
-        void readMapFile(string fileName);
+        Map readMapFile(string fileName);
         vector<Territory*> findNeighbours(string s, vector<Territory*>);
-
-
 };

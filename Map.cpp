@@ -1,6 +1,5 @@
 #include "Map.h"
 #include <fstream>
-#include <algorithm>
 #include <sstream>
 
 Territory::Territory(string name, string continent){
@@ -25,11 +24,23 @@ void Territory::setContinent(string continent){
         {
             return this->neighbours;
         }
-
-MapLoader::MapLoader(){
-
+Map::Map(vector<Territory*> t, vector<string> s){
+    this->territories = t;
+    this->continents = s;
 }
-void MapLoader::readMapFile(string fileName){
+vector<Territory*> Map::getTerritories()
+        {
+            return this->territories;
+        }
+void Map::printTerritory(vector<Territory*> t){
+    for(int i = 0; i < t.size(); i++){
+        cout<< t[i]->getName() << endl;
+
+    }
+}
+MapLoader::MapLoader(){
+}
+Map MapLoader::readMapFile(string fileName){
     
     ifstream input(fileName);
     vector<Territory*> territories;
@@ -46,7 +57,6 @@ void MapLoader::readMapFile(string fileName){
                     break;
                 }
                 else{
-                    
                     continents.push_back(line.substr(0, line.find(delimiter)));
                 }
             }
@@ -63,8 +73,9 @@ void MapLoader::readMapFile(string fileName){
                           continent = continents[i];
                           break;
                       }
+                }         
+                for(int i = 0; i < continents.size(); i++){
                 }
-                
                 territories.push_back(new Territory(territory, continent));
             }
         }
@@ -72,26 +83,17 @@ void MapLoader::readMapFile(string fileName){
     string line2 = "";
     input.clear();
     input.seekg(0, input.beg);
-
     found = -1;
     int territoryNum = 0;
     while(getline(input,line2)){
         string current = territories[territoryNum]->getName();
-
         found = line2.find(current);
         if(found != -1){
             territories[territoryNum]->neighbours = findNeighbours(line2, territories);
             territoryNum++;
-
         }
     }
-    for(int i = 0; i < territories.size(); i++){
-        cout << "neighbours for territory " << territories[i]->getName() << endl;
-        for(int j = 0; j < territories[i]->neighbours.size(); j++){
-            cout << territories[i]->neighbours[j]->getName() << endl;
-        }
-        cout << "---------------" <<endl;
-    } 
+    return Map(territories, continents);
 }
 vector<Territory*> MapLoader::findNeighbours(string s, vector<Territory*> te){
     vector<Territory*> neighbours;
@@ -109,21 +111,19 @@ vector<Territory*> MapLoader::findNeighbours(string s, vector<Territory*> te){
     {
         string substr;
         getline(ss, substr, ',');
-        
         for(int i = 0; i < te.size(); i++){
- 
              if(substr.find(te[i]->getName()) != -1){
                  neighbours.push_back(te[i]);
                  break;
              }
          }
-        
     }
     return neighbours;
 }
 
 int main(){
     MapLoader m;
-    m.readMapFile("Asia.map");
+    Map m1 = m.readMapFile("Asia.map");
+    m1.printTerritory(m1.getTerritories());
 
 }
