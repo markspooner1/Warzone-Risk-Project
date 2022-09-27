@@ -3,30 +3,34 @@
 #include <sstream>
 
 Territory::Territory(string name, string continent){
-    this->name = name;
+    this->name = new string(name);
+    this->continent = new string(continent);
 }
 Territory::~Territory(){
 
 }
 string Territory::getName(){
-            return this->name;
+            return *name;
         }
 void Territory::setName(string name){
-            this->name = name;
+            this->name = &name;
         }
 string Territory::getContinent(){
-            return this->continent;
+            return *continent;
         }
 void Territory::setContinent(string continent){
-            this->continent = continent;
+            this->continent = &continent;
         }
  vector<Territory*> Territory:: getNeighbours()
         {
             return this->neighbours;
         }
-Map::Map(vector<Territory*> t, vector<string> s){
+Map::Map(vector<Territory*> t, vector<string*> s){
     this->territories = t;
     this->continents = s;
+}
+Map::~Map(){
+
 }
 vector<Territory*> Map::getTerritories()
         {
@@ -35,8 +39,15 @@ vector<Territory*> Map::getTerritories()
 void Map::printTerritory(vector<Territory*> t){
     for(int i = 0; i < t.size(); i++){
         cout<< t[i]->getName() << endl;
-
     }
+}
+void Map::printContinents(vector<string*> continents){
+    for(int i = 0; i < continents.size(); i++){
+        cout<< *continents[i] << endl;
+    }
+}
+vector<string*> Map::getContinents(){
+    return continents;
 }
 MapLoader::MapLoader(){
 }
@@ -44,7 +55,7 @@ Map MapLoader::readMapFile(string fileName){
     
     ifstream input(fileName);
     vector<Territory*> territories;
-    vector<string> continents;
+    vector<string*> continents;
     string delimiter; 
     int found = -1;
     string line;
@@ -57,7 +68,7 @@ Map MapLoader::readMapFile(string fileName){
                     break;
                 }
                 else{
-                    continents.push_back(line.substr(0, line.find(delimiter)));
+                    continents.push_back(new string(line.substr(0, line.find(delimiter))));
                 }
             }
         }
@@ -69,13 +80,11 @@ Map MapLoader::readMapFile(string fileName){
                 territory = line.substr(0, line.find(delimiter));
                 string continent;
                 for(std::size_t i = 0; i < continents.size(); i++) {
-                      if(line.find(continents[i]) != -1){
-                          continent = continents[i];
+                      if(line.find(*continents[i]) != -1){
+                          continent = *continents[i];
                           break;
                       }
                 }         
-                for(int i = 0; i < continents.size(); i++){
-                }
                 territories.push_back(new Territory(territory, continent));
             }
         }
@@ -121,9 +130,23 @@ vector<Territory*> MapLoader::findNeighbours(string s, vector<Territory*> te){
     return neighbours;
 }
 
+
+bool Map::validate(){
+    for(size_t i = 0; i < this->getTerritories().size(); i++){
+        if(territories[i]->visited == false){
+            territories[i]->visited = true;
+            //visit neighbours
+            
+            
+        }
+    }
+   
+    
+}
 int main(){
     MapLoader m;
     Map m1 = m.readMapFile("Asia.map");
     m1.printTerritory(m1.getTerritories());
-
+    cout << "--------" <<endl;
+    m1.validate();
 }
