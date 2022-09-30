@@ -1,8 +1,10 @@
-#include "Map.h"
-#include <fstream>
+#include "Map.cpp"
+void testLoadMaps(){
+}
 int main(){
-    MapLoader map;
-    map.readMapFile("Alberta.map");
-
-    
+    MapLoader m;
+    Map m1 = m.readMapFile(".mapFiles/Asia.map");
+    if(m1.validate()){
+        cout << "map is valid" << endl;
+    }
 }
