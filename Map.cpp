@@ -3,7 +3,6 @@
 #include <sstream>
 #include <string>
 #include <map> //reffering to the data structure 
-
 Territory::Territory(string name, string continent){
     this->name = new string(name);
     this->continent = new string(continent);
@@ -94,6 +93,7 @@ vector<Continent*> Map::getContinents(){
 MapLoader::MapLoader(){
 }
 Map MapLoader::readMapFile(string fileName){
+    cout << "--LOADING MAP:  " << fileName << "--"<<endl;
     ifstream input(fileName);
     vector<Territory*> territories;
     vector<Continent*> continents;
@@ -113,6 +113,7 @@ Map MapLoader::readMapFile(string fileName){
                     continue;
                 }
                 else{
+                    cout << "Loading Continent: " << line.substr(0, line.find(delimiter)) <<endl;
                     continents.push_back(new Continent(line.substr(0, line.find(delimiter))));
                 }
             }
@@ -135,6 +136,7 @@ Map MapLoader::readMapFile(string fileName){
                       if(newLine.find(continents[i]->getName()) != -1){
                           continent = continents[i]->getName();
                           index = i;
+                          cout << "Loading Territory: " << territory << endl;
                           Territory* t = new Territory(territory, continent);
                           territories.push_back(t);
                           continents[index]->continent_members.push_back(t);
@@ -148,6 +150,7 @@ Map MapLoader::readMapFile(string fileName){
     input.clear();
     input.seekg(0, input.beg);
     found = -1;
+    cout << "Finding Territory Neighbours...." << endl;
     int territoryNum = 0;
     while(getline(input,line2)){
         string current = territories[territoryNum]->getName();
@@ -160,12 +163,13 @@ Map MapLoader::readMapFile(string fileName){
     return Map(territories, continents);
 }
 Map::Map(){
-    
+
 }
 vector<Territory*> MapLoader::findNeighbours(string s, vector<Territory*> te){
     vector<Territory*> neighbours;
     int commas = 0;
     int ptr = 0;
+    
     while(commas < 4){
         if(s[ptr] == ','){
             commas++;
@@ -268,5 +272,4 @@ int nthSubstr(int n, const string& s, const string& p) {
             else
                 return(s.length());
 }
-
 
