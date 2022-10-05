@@ -1,7 +1,12 @@
 #pragma once
 #include <iostream>
+using std::cout;
+using std::string;
+using std::ostream;
 #include <vector>
-using namespace std;
+using std::vector;
+
+
 
 
 class Territory{
@@ -9,7 +14,6 @@ class Territory{
         string* name;
         string* continent;
     public:
-        bool visited;
         vector<Territory *> neighbours;
         Territory(string name, string continent); 
         Territory (const Territory &obj);
@@ -21,6 +25,7 @@ class Territory{
         string getContinent();
         void setContinent(string continent);
         vector<Territory*> getNeighbours();
+        bool visited;
 };
 class Continent{
     public:
@@ -39,7 +44,6 @@ class Map
     private:
         vector<Territory*> territories;
         vector<Continent*> continents;
-
     public:
         Map();
         Map(vector<Territory*> t, vector<Continent*> c);
@@ -50,6 +54,8 @@ class Map
         vector<Territory*> getTerritories();
         vector<Continent*> getContinents();
         void reset();
+        int DFS(Territory *t, int num);
+    
 };
 
 class MapLoader{
@@ -60,3 +66,4 @@ class MapLoader{
         vector<Territory*> findNeighbours(string s, vector<Territory*>);
 };
 int nthSubstr(int n, const string& s, const string& p);
+void testLoadMaps();
