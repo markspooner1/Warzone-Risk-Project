@@ -51,9 +51,9 @@ void testPlayers() {
     Hand *hand_p3 = new Hand();
 
     //Creating OrderList pointer to assign to the player
-    OrderList *Orderlist_p1 = new OrderList();
-    OrderList *Orderlist_p2 = new OrderList();
-    OrderList *Orderlist_p3 = new OrderList();
+    OrdersList *Orderlist_p1 = new OrdersList();
+    OrdersList *Orderlist_p2 = new OrdersList();
+    OrdersList *Orderlist_p3 = new OrdersList();
 
 
     //Create players and assign subsets of territories
