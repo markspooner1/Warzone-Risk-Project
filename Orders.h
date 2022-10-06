@@ -2,6 +2,9 @@
 #define ORDERS_H
 
 #include <iostream>
+#include <iterator>
+#include <list>
+#include <vector>
 using namespace std;
 
 //void move(Order order);
@@ -19,9 +22,24 @@ public:
 	void setOrderID(int);
 	std::string getOrderName();
 	void setOrderName(string);
+	friend ostream& operator<<(ostream& os, const Order& ordre);
+	void advance();
 private:
 	int* OrderID;
 	std::string* name;
+};
+
+class OrdersList {
+public:
+	void move(Order);
+	void remove(Order);
+	OrdersList();
+	OrdersList(vector<Order>&);
+	void addOrder(Order);
+	void show();
+	void advance(int);
+private:
+	vector<Order> ol;
 };
 
 class OrderAdvance :public Order {
@@ -36,6 +54,7 @@ public:
 	string getSource();
 	string getTarget();
 	int getUnits();
+	friend ostream& operator<<(ostream& os, const OrderAdvance& ordre);
 private:
 	std::string* SourceTerritory;
 	std::string* TargetTerritory;
@@ -53,6 +72,7 @@ public:
 	OrderDeploy& operator =(const OrderDeploy& dep);
 	string getTarget();
 	int getUnits();
+	friend ostream& operator<<(ostream& os, const OrderDeploy& ordre);
 private:
 	std::string* TargetTerritory;
 	int* numberOfunits;
@@ -68,6 +88,7 @@ public:
 	OrderBomb(const OrderBomb& dep);
 	OrderBomb& operator =(const OrderBomb& dep);
 	string getTarget();
+	friend ostream& operator<<(ostream& os, const OrderBomb& ordre);
 private:
 	std::string* TargetTerritory;
 };
@@ -82,6 +103,7 @@ public:
 	OrderBlockade(const OrderBlockade& dep);
 	OrderBlockade& operator =(const OrderBlockade& dep);
 	string getTarget();
+	friend ostream& operator<<(ostream& os, const OrderBlockade& ordre);
 private:
 	std::string* TargetTerritory;
 };
@@ -98,6 +120,7 @@ public:
 	string getSource();
 	string getTarget();
 	int getUnits();
+	friend ostream& operator<<(ostream& os, const OrderAirlift& ordre);
 private:
 	std::string* SourceTerritory;
 	std::string* TargetTerritory;
@@ -115,10 +138,12 @@ public:
 	OrderNegotiate& operator =(const OrderNegotiate& dep);
 	string getSource();
 	string getTarget();
+	friend ostream& operator<<(ostream& os, const OrderNegotiate& ordre);
 private:
 	std::string* SourceTerritory;
 	std::string* TargetTerritory;
 };
 
+//class OrdersList
 
 #endif //ORDERS_H
