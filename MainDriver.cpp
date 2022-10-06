@@ -1,5 +1,5 @@
 #include "Map.h"
-#include "gameEngine.h"
+#include "GameEngine.h"
 
 int main(){
     testLoadMaps();
