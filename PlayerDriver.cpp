@@ -5,6 +5,7 @@
 
 void testPlayers() {
 
+
 /*Invariant:
  * CONST  ALL-TERRITORIES
  * ALL-TERRITORIES = P1 U P2 U ... U Pn U UT(unoccupied Territories)
@@ -15,7 +16,7 @@ void testPlayers() {
 /*t0 : ALL-TERRITORIES = UT */
 
     //Create All territories pointer:
-    vector<Territory> * ALLTERRITORIES = new vector<Territory>;
+    auto * ALLTERRITORIES = new vector<Territory>;
     ALLTERRITORIES->push_back(Territory("England", "Europe"));
     ALLTERRITORIES->push_back(Territory("Finland", "Europe"));
     ALLTERRITORIES->push_back(Territory("Denmark", "Europe"));
@@ -27,20 +28,20 @@ void testPlayers() {
     ALLTERRITORIES->push_back(Territory("Singapore", "Asia"));
 
     //Creating a vector of  Territories to assign to the player
-    vector<Territory> * P1_Territories = new vector<Territory>;
+    auto * P1_Territories = new vector<Territory>;
     P1_Territories->push_back(ALLTERRITORIES->at(0));
     P1_Territories->push_back(ALLTERRITORIES->at(1));
     P1_Territories->push_back(ALLTERRITORIES->at(2));
 
 
     //Creating a vector of  Territories to assign to the player
-    vector<Territory> * P2_Territories = new vector<Territory>;
+    auto * P2_Territories = new vector<Territory>;
     P2_Territories->push_back(ALLTERRITORIES->at(3));
     P2_Territories->push_back(ALLTERRITORIES->at(4));
     P2_Territories->push_back(ALLTERRITORIES->at(5));
 
     //Creating a vector of  Territories to assign to the player
-    vector<Territory> * P3_Territories = new vector<Territory>;
+    auto * P3_Territories = new vector<Territory>;
     P3_Territories->push_back(ALLTERRITORIES->at(6));
     P3_Territories->push_back(ALLTERRITORIES->at(7));
     P3_Territories->push_back(ALLTERRITORIES->at(8));
@@ -51,18 +52,18 @@ void testPlayers() {
     Hand *hand_p3 = new Hand();
 
     //Creating OrderList pointer to assign to the player
-    OrdersList *Orderlist_p1 = new OrdersList();
-    OrdersList *Orderlist_p2 = new OrdersList();
-    OrdersList *Orderlist_p3 = new OrdersList();
+    auto *Orderlist_p1 = new OrdersList();
+    auto *Orderlist_p2 = new OrdersList();
+    auto *Orderlist_p3 = new OrdersList();
 
 
     //Create players and assign subsets of territories
-    Player* p1 = new Player(Orderlist_p1, hand_p1, P1_Territories);
-    cout << "player 1 (p1) created.";
-    Player* p2 = new Player(Orderlist_p2, hand_p2, P2_Territories);
-    cout << "player 2 (p2) created.";
-    Player* p3 = new Player(Orderlist_p3, hand_p3, P3_Territories);
-    cout << "player 3 (p3) created.";
+    auto* p1 = new Player(Orderlist_p1, hand_p1, P1_Territories);
+    cout << "\nplayer 1 (p1) created.\n";
+    auto* p2 = new Player(Orderlist_p2, hand_p2, P2_Territories);
+    cout << "\nplayer 2 (p2) created.\n";
+    auto* p3 = new Player(Orderlist_p3, hand_p3, P3_Territories);
+    cout << "\nplayer 3 (p3) created.\n";
 
 
 
@@ -78,21 +79,21 @@ void testPlayers() {
     cout<< "\nplayer1 (p1) territories:\n";
     int LIMIT = p1_territories_vector.size();
     for (size_t i = 0; i < LIMIT; i++) {
-        cout<<p1_territories_vector[i];
+        cout<<p1_territories_vector[i] <<"\n";
     }
 
     vector<Territory> p2_territories_vector = *(p2->getTerritories());
     cout<< "\nplayer2 (p2) territories:\n";
     LIMIT = p2_territories_vector.size();
     for (size_t i = 0; i < LIMIT; i++) {
-        cout<<p2_territories_vector[i];
+        cout<<p2_territories_vector[i]<< "\n";
     }
 
     vector<Territory> p3_territories_vector = *(p3->getTerritories());
     cout<< "\nplayer3 (p3) territories:\n";
     LIMIT = p3_territories_vector.size();
     for (size_t i = 0; i < LIMIT; i++) {
-        cout<<p3_territories_vector[i];
+        cout<<p3_territories_vector[i] << "\n";
     }
 
 
@@ -111,7 +112,7 @@ void testPlayers() {
     cout<< "\nplayer2 (p2) Orders:\n";
     cout << p2->getOrders();
     cout<< "\nplayer3 (p3) Orders:\n";
-    cout << p3->getOrders();
+    cout << p3->getOrders()<<"\n";
 
 
 
@@ -121,7 +122,7 @@ void testPlayers() {
 
     LIMIT = p1_territories_toAttack.size();
     for (size_t i = 0; i < LIMIT; i++) {
-        cout<<p1_territories_toAttack[i];
+        cout<<p1_territories_toAttack[i]<< "\n";
     }
 
     cout<< "\nplayer2 (p2) toAttack:\n";
@@ -129,7 +130,7 @@ void testPlayers() {
 
     LIMIT = p2_territories_toAttack.size();
     for (size_t i = 0; i < LIMIT; i++) {
-        cout<<p2_territories_toAttack[i];
+        cout<<p2_territories_toAttack[i]<<"\n";
     }
 
     cout<< "\nplayer3 (p3) toAttack:\n";
@@ -137,7 +138,7 @@ void testPlayers() {
 
     LIMIT = p3_territories_toAttack.size();
     for (size_t i = 0; i < LIMIT; i++) {
-        cout<<p3_territories_toAttack[i];
+        cout<<p3_territories_toAttack[i]<<"\n";
     }
 
 
@@ -148,7 +149,7 @@ void testPlayers() {
 
     LIMIT = p1_territories_toDefend.size();
     for (size_t i = 0; i < LIMIT; i++) {
-        cout<<p1_territories_toDefend[i];
+        cout<<p1_territories_toDefend[i]<<"\n";
     }
 
     cout<< "\nplayer2 (p2) toDefend:\n";
@@ -156,7 +157,7 @@ void testPlayers() {
 
     LIMIT = p2_territories_toDefend.size();
     for (size_t i = 0; i < LIMIT; i++) {
-        cout<<p2_territories_toDefend[i];
+        cout<<p2_territories_toDefend[i]<<"\n";
     }
 
     cout<< "\nplayer3 (p3) toDefend:\n";
@@ -164,7 +165,7 @@ void testPlayers() {
 
     LIMIT = p3_territories_toDefend.size();
     for (size_t i = 0; i < LIMIT; i++) {
-        cout<<p3_territories_toDefend[i];
+        cout<<p3_territories_toDefend[i]<<"\n";
     }
 
 
@@ -172,6 +173,7 @@ void testPlayers() {
     cout << p1;
     cout << p2;
     cout << p3;
+
 
 
 }
