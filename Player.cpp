@@ -5,8 +5,9 @@
 #include "Player.h"
 #include <vector>
 #include <string>
+#include "Orders.h"
 
-
+//constructor
 Player::Player(OrderList *orderList, Hand *hand, vector<Territory> *territories) : orderList(orderList), hand(hand),
                                                                                     territories(territories) {}
 
@@ -26,41 +27,89 @@ Player::~Player() {
 
 
 //Getters:
+
+//getter for the collection orders named orderList
 OrderList *Player::getOrders() const {
     return orderList;
 }
 
+//getter for the collection of cards named hand
 Hand *Player::getHand() const {
     return hand;
 }
 
+//getter for the collection of territories
 vector<Territory>* Player::getTerritories() const {
     return territories;
 }
 
 
 //Setters:
+
+//setter for the collection orders named orderList
 void Player::setOrders(OrderList *orders) {
     Player::orderList = orders;
 }
 
+//setter for the collection of cards named hand
 void Player::setHand(Hand *hand) {
     Player::hand = hand;
 }
 
+//Setter for the collection of territories
 void Player::setTerritories(vector<Territory> *territories) {
     Player::territories = territories;
 }
 
 //Player Methods
-void Player::issueOrder() {
-    // Add order params
-    //construct an Order object
-    //append the object to the ordersList
-    Order* order = new Order();
-    this->orderList.Append(order); // Add method non-static in Orderlist
+
+//method to create an order object and add it to the orderlist (collection of orders)
+//the method expects the first param to be an enum issue_order_types to create the correct object
+//the other param depend on the type of order issued
+void Player::issueOrder(issue_order_types order_type, int ID, string name, string source, string target = "default", int num_of_units = 0) {
+
+    switch(order_type)
+    {
+        case OrderAdvanceType:{
+            OrderAdvance* o = new OrderAdvance(ID,num_of_units, name, source, target);
+            this->orderList.Append(o);
+            cout<< "\nOrder created and added to the player order list.\n";
+            break;}
+        case OrderDeployType:{
+            OrderDeploy* o = new OrderDeploy(ID, num_of_units, name, target);
+            this->orderList.Append(o);
+            cout<< "\nOrder created and added to the player order list.\n";
+            break;}
+        case OrderBombType:{
+            OrderBomb* o = new OrderBomb(ID, name, target);
+            this->orderList.Append(o);
+            cout<< "\nOrder created and added to the player order list.\n";
+            break;}
+        case OrderBlockadeType:{
+            OrderBlockade* o = new OrderBlockade(ID, name, target);
+            this->orderList.Append(o);
+            cout<< "\nOrder created and added to the player order list.\n";
+            break;}
+        case OrderAirliftType:{
+            OrderAirlift* o = new OrderAirlift(ID,num_of_units, name, source, target);
+            this->orderList.Append(o);
+            cout<< "\nOrder created and added to the player order list.\n";
+            break;}
+        case OrderNegotiateType:{
+            OrderNegotiate* o = new OrderNegotiate(ID, name, source, target);
+            this->orderList.Append(o);
+            cout<< "\nOrder created and added to the player order list.\n";
+            break;}
+        default:
+            cout<< "Order type not recognized. No order was added to the player order list.";
+    }
+    //vector<string> OrderTypes = {"OrderAdvance", }
+
+
 }
 
+//method to defend territories
+//return subset of the territories that belong to the player (arbitrary for now)
 vector<Territory>* Player::toDefend() {
     vector<Territory>* ToDefendTerritories = new vector<Territory>;
 
@@ -74,13 +123,19 @@ vector<Territory>* Player::toDefend() {
     return ToDefendTerritories;
 };
 
+
+//method to attack territories
+//return an arbitary territories that do not belong to the player by creating the attackable territories vector
 vector<Territory>* Player::toAttack(const  vector<Territory> * ALLTERRITORIES ) {
     //return arbitrary territories for now
-    //Must access Territories not in the possession of the current player
-    vector<Territory> * attackableTerritories = new vector<Territory>;
 
+    //vector of territories that do not belong to the player
+    vector<Territory> * attackableTerritories = new vector<Territory>;
+    //vector of territories to be returned
     vector<Territory> * ToAttackTerritories = new vector<Territory>;
 
+
+    //init the attackable vector
     vector<Territory> ALL = *ALLTERRITORIES;
     vector<Territory> Current = *(this->territories);
 
@@ -99,6 +154,8 @@ vector<Territory>* Player::toAttack(const  vector<Territory> * ALLTERRITORIES ) 
         }
     }
 
+
+    //assigning arbitrarly territories from attackable to toAttack which will be returned
     int LIMIT = (attackableTerritories)->size();
     for (size_t i = 0; i < LIMIT; i++) {
         ToAttackTerritories->push_back(attackableTerritories->at(i));
@@ -109,12 +166,19 @@ vector<Territory>* Player::toAttack(const  vector<Territory> * ALLTERRITORIES ) 
 }
 
 
+// Method to overload the << operator to print the player
+//returns the attributes of the player, namely hand, orders, and territories.
 ostream & operator << (ostream &out, const Player *player)
 {
-    out <<"Hand:\t" <<player->getHand() << "\n"; //Fix this
-    out <<"orderList:\t" <<*(player->getOrders()) << "\n";//Fix this
-    out <<"territories:\n";
+//    out <<"Hand:\t" <<player->getHand() << "\n"; //Fix this
+    cout<< "\nplayer Hand:\n";
+    cout << *(player->getHand());
 
+//    out <<"orderList:\t" <<*(player->getOrders()) << "\n";//Fix this
+    cout<< "\nplayer Orders:\n";
+    cout << *(player->getOrders());
+
+    cout<< "\nplayer territories:\n";
     int LIMIT = (player->getTerritories())->size();
     for (size_t i = 0; i < LIMIT; i++) {
         cout << (player->getTerritories())->at(i)<< endl;
@@ -122,98 +186,4 @@ ostream & operator << (ostream &out, const Player *player)
 
     return out;
 }
-
-/*
-//
-// Created by Brahim Hamid oudjana on 2022-09-17.
-//
-
-#include "Player.h"
-#include <vector>
-
-Player::Player(OrderList *orderList, Hand *hand, vector<Territory> *territories) {
-    this->orderList = orderList;
-    this->territories2 = territories;
-    this->hand = hand;
-}
-
-//Copy constructor
-Player::Player(const Player *player) {
-    this->orderList = player->getOrders();
-    this->territories2 = player->getTerritories();
-    this->hand = player->getHand();
-}
-
-//Destructor
-Player::~Player() {
-    this->territories2 = NULL;
-    this->orderList = NULL;
-    this->hand = NULL;
-};
-
-
-//Getters:
-OrderList *Player::getOrders() const {
-    return orderList;
-}
-
-Hand *Player::getHand() const {
-    return hand;
-}
-/*
-const vector<Territory *> Player::getTerritories() const {
-    return territories;
-}*/
-/*
-const vector<Territory>* Player::getTerritories() const {
-    return territories2;
-}
-
-//Setters:
-void Player::setOrders(OrderList *orders) {
-    Player::orderList = orders;
-}
-
-void Player::setHand(Hand *hand) {
-    Player::hand = hand;
-}
-
-/*void Player::setTerritories(const vector<Territory *> &territories) {
-    territories = territories;
-}*/
-/*
-void Player::setTerritories( vector<Territory>* territories) {
-    territories2 = territories;
-}
-
-void Player::issueOrder() {
-    // Add order params
-    //construct an Order object
-    //append the object to the ordersList
-    Order* order = new Order();
-    this->orderList.Append(order);
-}
-vector<Territory >* Player::toDefend() {
-    vector<Territory*> ToDefendTerritories;
-    int LIMIT = (this->territories2).size();
-    for (size_t i = 0; i < LIMIT; i++) {
-        ToDefendTerritories.push_back(this->territories2[i]);
-        i++;
-    }
-    return ToDefendTerritories;
-};
-
-vector<Territory *> Player::toAttack() {
-    //return arbitrary territories for now
-    //Must access Territories not in the possession of the player
-}*/
-
-
-
-
-
-
-
-
-
 

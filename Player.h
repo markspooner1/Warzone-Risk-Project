@@ -10,53 +10,61 @@
 #include "Cards.h"
 using namespace std;
 
+//Attributes:
 // Collection of orderList
-// collection of territoires
+// collection of territories
 // collection of cards
+
 // methods:
 // to_defend()
 // to_Attack()
 //issue_Order()
 
+enum issue_order_types { OrderAdvanceType, OrderDeployType, OrderBombType, OrderBlockadeType, OrderAirliftType, OrderNegotiateType };
+
 class Player {
 
 private:
 
+    OrderList* orderList;  // collection of Orders
+    Hand* hand;            //collection of Cards
+    vector<Territory> *territories;     //collection of territories
 
-    OrderList* orderList;
-    Hand* hand;
-    vector<Territory> *territories;
-    // territories1->at[index]
 
 public:
 
 
-    Player(Player const *player);
+    Player(Player const *player);   //copy constructor
 
-    Player(OrderList *orderList, Hand *hand, vector<Territory> *territories);
+    Player(OrderList *orderList, Hand *hand, vector<Territory> *territories);   //constructor
 
-    virtual ~Player();
+    virtual ~Player();      //destructor
 
-    vector<Territory>* toDefend();
+    vector<Territory>* toDefend();      //method to defend territories
 
-    vector<Territory>* toAttack(const  vector<Territory> * ALLTERRITORIES);
+    vector<Territory>* toAttack(const  vector<Territory> * ALLTERRITORIES);     //method to attack territories
 
-    void  issueOrder();
+    //method to create an order object and add it to the orderlist (collection of orders)
+    void issueOrder(issue_order_types order_type, int ID, string name, string source, string target, int num_of_units );
 
-    OrderList *getOrders() const;
+    //Getters:
+    OrderList *getOrders() const;       //getter for the collection orders named orderList
 
-    Hand *getHand() const;
+    Hand *getHand() const;      //getter for the collection of cards named hand
 
-    vector<Territory> *getTerritories() const;
+    vector<Territory> *getTerritories() const;  //getter for the collection of territories
 
-    void setOrders(OrderList *orders);
+    //Setters:
+    void setOrders(OrderList *orders);  //setter for the collection orders named orderList
 
-    void setHand(Hand *hand);
+    void setHand(Hand *hand);       //setter for the collection of cards named hand
 
-    void setTerritories(vector<Territory> *territories);
+    void setTerritories(vector<Territory> *territories);        //Setter for the collection of territories
 
-    friend ostream & operator << (ostream &out, const Player *player);
+
+    //Friend method:
+    friend ostream & operator << (ostream &out, const Player *player);    // Method to overload the << operator to print the player
+
+
 
 };
-
-
