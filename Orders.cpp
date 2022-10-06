@@ -3,6 +3,7 @@
 #include <cstdlib>
 using namespace std;
 #include "Orders.h"
+std::list<Order>::iterator;
 
 Order::Order(int ID, string name) {
 	this->OrderID = new int(ID);
@@ -17,6 +18,10 @@ Order::Order() {
 Order::Order(const Order& copyed) {
 	this->OrderID = new int(*(copyed.OrderID));
 	this->name = new string(*(copyed.name));
+}
+
+void Order:: advance() {
+	cout << "DEFAULT ADVANCE\n";
 }
 
 Order& Order::operator =(const Order& o) {
@@ -52,7 +57,12 @@ bool Order::validate() {
 	cout << "Order validity check...\n";
 	return true;
 }
-
+ostream& operator<<(ostream& os, const Order& ordre)
+{
+	os << *ordre.name << '/' << *ordre.OrderID << endl;
+	return os;
+}
+//////////////////////////////////////////
 OrderAdvance::OrderAdvance(int ID, int numofUnits, string name, string source, string target) : Order(ID, name) {
 	this->numberOfunits = new int(numofUnits);
 	this->SourceTerritory = new string(source);
@@ -113,6 +123,12 @@ bool OrderAdvance::validate() {
 	}
 
 }
+
+ostream& operator<<(ostream& os, const OrderAdvance& ordre)
+{
+	os << *ordre.SourceTerritory << '/' << *ordre.TargetTerritory << '/' << *ordre.numberOfunits << endl;
+	return os;
+}
 //////////////////////////////////
 OrderDeploy::OrderDeploy(int ID, int numofUnits, string name, string target) : Order(ID, name) {
 	this->numberOfunits = new int(numofUnits);
@@ -168,6 +184,12 @@ bool OrderDeploy::validate() {
 	}
 
 }
+
+ostream& operator<<(ostream& os, const OrderDeploy& ordre)
+{
+	os  << *ordre.TargetTerritory << '/' << *ordre.numberOfunits << endl;
+	return os;
+}
 //////////////////////////////////
 OrderBomb::OrderBomb(int ID, string name, string target) : Order(ID, name) {
 	this->TargetTerritory = new string(target);
@@ -217,6 +239,13 @@ bool OrderBomb::validate() {
 	}
 
 }
+
+ostream& operator<<(ostream& os, const OrderBomb& ordre)
+{
+	os << *ordre.TargetTerritory << endl;
+	return os;
+}
+
 //////////////////////////////////
 OrderBlockade::OrderBlockade(int ID, string name, string target) : Order(ID, name) {
 	this->TargetTerritory = new string(target);
@@ -265,6 +294,12 @@ bool OrderBlockade::validate() {
 		return false;
 	}
 
+}
+
+ostream& operator<<(ostream& os, const OrderBlockade& ordre)
+{
+	os << *ordre.TargetTerritory << endl;
+	return os;
 }
 /////////////////////////////////
 OrderAirlift::OrderAirlift(int ID, int numofUnits, string name, string source, string target) : Order(ID, name) {
@@ -328,6 +363,13 @@ bool OrderAirlift::validate() {
 	}
 
 }
+
+ostream& operator<<(ostream& os, const OrderAirlift& ordre)
+{
+	os << *ordre.SourceTerritory << '/' << *ordre.TargetTerritory << '/' << *ordre.numberOfunits << endl;
+	return os;
+}
+
 /////////////////////////////////
 OrderNegotiate::OrderNegotiate(int ID, string name, string source, string target) : Order(ID, name) {
 	this->SourceTerritory = new string(source);
@@ -381,11 +423,53 @@ bool OrderNegotiate::validate() {
 	}
 
 }
+
+ostream& operator<<(ostream& os, const OrderNegotiate& ordre)
+{
+	os << *ordre.SourceTerritory << '/' << *ordre.TargetTerritory << endl;
+	return os;
+}
+
 /////////////////////////////////
-//std::ostream& operator<<(std::ostream& strm, const Order& a) {
-	//return strm << "Order(" << a.getOrderID() << ")";
-//}
+OrdersList::OrdersList() {
+	ol;
+}
+
+void OrdersList::addOrder(Order o) {
+	ol.push_back(o);
+}
+
+void OrdersList::show() {
+	std::vector<Order>::iterator it;
+	for (it = ol.begin(); it != ol.end(); ++it) {
+		std::cout << it->getOrderID()<< " ";
+		std::cout << it->getOrderName()<< endl;
+	}
+}
+
+void OrdersList::advance(int id) {
+	std::vector<Order>::iterator it;
+	int index = 0;
+	for (it = ol.begin(); it != ol.end(); ++it) {
+		if (it->getOrderID() == id) {
+			static_cast<OrderAdvance&>(ol[index]).advance();
+		}
+		else
+			index++;
+			cout << "NOT THAT ONE\n";
+		
+	}
+}
 
 
 
+/*
+void OrdersList::remove(Order o) {
+	this->ol->remove(o);
+}
 
+void OrdersList::move(Order o) {
+	remove(o);
+	this->ol->push_back(o);
+}
+*/
