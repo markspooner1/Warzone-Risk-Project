@@ -452,7 +452,7 @@ void OrdersList::advance(int id) {
 	int index = 0;
 	for (it = ol.begin(); it != ol.end(); ++it) {
 		if (it->getOrderID() == id) {
-			(static_cast<OrderAdvance>(ol[index])).advance();
+			static_cast<OrderAdvance&>(ol[index]).advance();
 		}
 		else
 			index++;
