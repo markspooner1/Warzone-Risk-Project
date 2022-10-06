@@ -26,7 +26,7 @@ class Player {
 
 private:
 
-    OrderList* orderList;  // collection of Orders
+    OrdersList* orderList;  // collection of Orders
     Hand* hand;            //collection of Cards
     vector<Territory> *territories;     //collection of territories
 
@@ -36,7 +36,7 @@ public:
 
     Player(Player const *player);   //copy constructor
 
-    Player(OrderList *orderList, Hand *hand, vector<Territory> *territories);   //constructor
+    Player(OrdersList *orderList, Hand *hand, vector<Territory> *territories);   //constructor
 
     virtual ~Player();      //destructor
 
@@ -48,14 +48,14 @@ public:
     void issueOrder(issue_order_types order_type, int ID, string name, string source, string target, int num_of_units );
 
     //Getters:
-    OrderList *getOrders() const;       //getter for the collection orders named orderList
+    OrdersList *getOrders() const;       //getter for the collection orders named orderList
 
     Hand *getHand() const;      //getter for the collection of cards named hand
 
     vector<Territory> *getTerritories() const;  //getter for the collection of territories
 
     //Setters:
-    void setOrders(OrderList *orders);  //setter for the collection orders named orderList
+    void setOrders(OrdersList *orders);  //setter for the collection orders named orderList
 
     void setHand(Hand *hand);       //setter for the collection of cards named hand
 

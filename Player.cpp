@@ -8,7 +8,7 @@
 #include "Orders.h"
 
 //constructor
-Player::Player(OrderList *orderList, Hand *hand, vector<Territory> *territories) : orderList(orderList), hand(hand),
+Player::Player(OrdersList *orderList, Hand *hand, vector<Territory> *territories) : orderList(orderList), hand(hand),
                                                                                     territories(territories) {}
 
 //Copy constructor
@@ -29,7 +29,7 @@ Player::~Player() {
 //Getters:
 
 //getter for the collection orders named orderList
-OrderList *Player::getOrders() const {
+OrdersList *Player::getOrders() const {
     return orderList;
 }
 
@@ -47,7 +47,7 @@ vector<Territory>* Player::getTerritories() const {
 //Setters:
 
 //setter for the collection orders named orderList
-void Player::setOrders(OrderList *orders) {
+void Player::setOrders(OrdersList *orders) {
     Player::orderList = orders;
 }
 
@@ -72,32 +72,32 @@ void Player::issueOrder(issue_order_types order_type, int ID, string name, strin
     {
         case OrderAdvanceType:{
             OrderAdvance* o = new OrderAdvance(ID,num_of_units, name, source, target);
-            this->orderList.Append(o);
+            this->orderList->addOrder(*o);
             cout<< "\nOrder created and added to the player order list.\n";
             break;}
         case OrderDeployType:{
             OrderDeploy* o = new OrderDeploy(ID, num_of_units, name, target);
-            this->orderList.Append(o);
+            this->orderList->addOrder(*o);
             cout<< "\nOrder created and added to the player order list.\n";
             break;}
         case OrderBombType:{
             OrderBomb* o = new OrderBomb(ID, name, target);
-            this->orderList.Append(o);
+            this->orderList->addOrder(*o);
             cout<< "\nOrder created and added to the player order list.\n";
             break;}
         case OrderBlockadeType:{
             OrderBlockade* o = new OrderBlockade(ID, name, target);
-            this->orderList.Append(o);
+            this->orderList->addOrder(*o);
             cout<< "\nOrder created and added to the player order list.\n";
             break;}
         case OrderAirliftType:{
             OrderAirlift* o = new OrderAirlift(ID,num_of_units, name, source, target);
-            this->orderList.Append(o);
+            this->orderList->addOrder(*o);
             cout<< "\nOrder created and added to the player order list.\n";
             break;}
         case OrderNegotiateType:{
             OrderNegotiate* o = new OrderNegotiate(ID, name, source, target);
-            this->orderList.Append(o);
+            this->orderList->addOrder(*o);
             cout<< "\nOrder created and added to the player order list.\n";
             break;}
         default:
@@ -170,13 +170,12 @@ vector<Territory>* Player::toAttack(const  vector<Territory> * ALLTERRITORIES ) 
 //returns the attributes of the player, namely hand, orders, and territories.
 ostream & operator << (ostream &out, const Player *player)
 {
-//    out <<"Hand:\t" <<player->getHand() << "\n"; //Fix this
-    cout<< "\nplayer Hand:\n";
-    cout << *(player->getHand());
+//    cout<< "\nplayer Hand:\n";
+//    cout << *(player->getHand());
+//
+//    cout<< "\nplayer Orders:\n";
+//    cout << *(player->getOrders());
 
-//    out <<"orderList:\t" <<*(player->getOrders()) << "\n";//Fix this
-    cout<< "\nplayer Orders:\n";
-    cout << *(player->getOrders());
 
     cout<< "\nplayer territories:\n";
     int LIMIT = (player->getTerritories())->size();
