@@ -237,6 +237,27 @@ void Play::win()
             "";
 }
 
+GameEngine::GameEngine(){
+
+}
+GameEngine::GameEngine(string* stateNamee){
+    this->stateName= stateNamee;
+}
+GameEngine::GameEngine(const GameEngine& engine){
+    this->stateName = engine.getStateName();
+}
+
+GameEngine::~GameEngine(){
+    this->stateName=NULL;
+}
+
+string *GameEngine::getStateName() const {
+    return stateName;
+};
+ void GameEngine::setStateName(string* stateNamee){
+     GameEngine::stateName = stateNamee;
+ }
+
 void GameEngine::startupPhase()
 {
     string start, gamestart; // string to start the game
