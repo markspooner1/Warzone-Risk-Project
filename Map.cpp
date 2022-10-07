@@ -115,7 +115,8 @@ vector<Territory*> Map::getTerritories(){
 vector<Continent*> Map::getContinents(){
     return continents;
 }
-MapLoader::MapLoader(){
+MapLoader::MapLoader(string filename){
+    this->filename = filename;
 }
 //Method to read .map files and create Map
 Map MapLoader::readMapFile(string fileName){
@@ -124,16 +125,21 @@ Map MapLoader::readMapFile(string fileName){
     ifstream input(fileName);
     vector<Territory*> territories;
     vector<Continent*> continents;
+    if(fileName.substr(nthSubstr(2, fileName, "."), 4) != ".map"){
+        cout << "Invalid filetype" << endl;
+        cout << "Couldnt create map" << endl;
+        return Map(territories, continents);
+    }
     string delimiter; 
     int found = -1;
     string line;
     cout << "Loading Continents..." << endl;
     cout << "Loading Territories.." << endl;
     while(getline(input,line)){   
-        //If empty line, continue, read until start of continents found       
+        //If empty line, continue,
+        //read until start of continents found       
         if(line.length() == 1) continue;
-        found = line.find("[Continents]");
-        if(found != -1){
+        if(line.find("[Continents]") != -1){
             delimiter = "=";
             while(getline(input, line)){
                 if(line.find("[Territories]") != -1){
@@ -150,9 +156,8 @@ Map MapLoader::readMapFile(string fileName){
         }
         if(line.length() == 1) continue;
         //read until start of territories found
-        found = line.find("[Territories]");
         string territory;
-        if(found != -1){
+        if(line.find("[Territories]") != -1){
             while(getline(input, line)){
                 if(line.length() == 1) continue;
                 int index;
@@ -196,25 +201,18 @@ Map MapLoader::readMapFile(string fileName){
             territoryNum++;
         }
     }
+    
     return Map(territories, continents);
 }
 Map::Map(){
-
+}
+MapLoader::MapLoader(){
 }
 vector<Territory*> MapLoader::findNeighbours(string s, vector<Territory*> te){
     vector<Territory*> neighbours;
     int commas = 0;
     int ptr = 0;
-    //move pointer to skip to where the list of neighbours starts
-    while(commas < 4){
-        if(s[ptr] == ','){
-            commas++;
-        }
-        //case if there is no neighbours
-        if(ptr > s.length()) return neighbours;
-        ptr++;
-    }
-    string terr = s.substr(ptr, s.find('\n'));
+    string terr = s.substr(nthSubstr(4, s, ","), s.find('\n'));
     stringstream ss(terr);
     // split the line by commas to find every neighbouring territory
     while(ss.good())
@@ -308,6 +306,7 @@ bool Map::validate(){
     return true;
 }
 //free function that finds nth occurence of a string
+//reference: https://www.oreilly.com/library/view/c-cookbook/0596007612/ch04s11.html
 int nthSubstr(int n, const string& s, const string& p) {
             string::size_type i = s.find(p);     
 

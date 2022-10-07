@@ -5,14 +5,13 @@ using std::string;
 using std::ostream;
 #include <vector>
 using std::vector;
-
-
-
-
+class player;
 class Territory{
     private:
+        player* owner;
         string* name;
         string* continent;
+        int* army_units;
     public:
         vector<Territory *> neighbours;
         Territory(string name, string continent); 
@@ -55,15 +54,17 @@ class Map
         vector<Continent*> getContinents();
         void reset();
         int DFS(Territory *t, int num);
-    
 };
-
 class MapLoader{
+    private:
+        string filename;
+         //Helper function to find neighbours while loading map file
+        vector<Territory*> findNeighbours(string s, vector<Territory*>);
     public:
         Map readMapFile(string fileName);
+        MapLoader(string filname);
         MapLoader();
-        //Helper function to find neighbours while loading map file
-        vector<Territory*> findNeighbours(string s, vector<Territory*>);
+       
 };
 int nthSubstr(int n, const string& s, const string& p);
 void testLoadMaps();
