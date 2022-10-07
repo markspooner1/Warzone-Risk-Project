@@ -16,8 +16,15 @@ using namespace std;
 
 class GameEngine
 {
-public:
-    void startupPhase();
+  private: string* stateName;
+  public:
+     GameEngine();
+    ~GameEngine();
+     GameEngine(string* stateName);
+     GameEngine(const GameEngine& engine);
+     string* getStateName() const;
+     void setStateName(string* stateName);
+     void startupPhase();
 };
 
 class Startup
