@@ -44,40 +44,39 @@ void Startup::loadmap()
 {
     string loadState;
     GameEngine* loadMapState = new GameEngine(loadState);
-    string load;
     cout << "Please enter loadmap <filename>:";
-    cin >> load;
+    cin >> loadState;
 
     do
     {
 
-        if (load == "loadmap <canada.map>" || load == "loadmap <germany.map>" || load == "loadmap <greece.map>")
+        if (loadState == "loadmap <canada.map>" || loadState == "loadmap <germany.map>" || loadState == "loadmap <greece.map>")
         {
             cout << "The map is loaded\n";
         }
 
         cout << "If you wish to load another map. Enter loadmap.\n If not enter done\n"
              << endl;
-        cin >> load;
+        cin >> loadState;
 
-        if (load == "done")
+        if (loadState == "done")
         {
             cout << "No more maps to be loaded.\n";
         }
 
         stack<int> dels;
-        for (int i = 0; i < load.size(); i++)
+        for (int i = 0; i < loadState.size(); i++)
         {
             // If opening delimeter
             // is encountered
-            if (load[i] == '<')
+            if (loadState[i] == '<')
             {
                 dels.push(i);
             }
 
             // If closing delimeter
             // is encountered
-            else if (load[i] == '>' && !dels.empty())
+            else if (loadState[i] == '>' && !dels.empty())
             {
 
                 // Extract the position
@@ -90,7 +89,7 @@ void Startup::loadmap()
                 int len = i - 1 - pos;
 
                 // Extract the substring
-                string ans = load.substr(pos + 1, len);
+                string ans = loadState.substr(pos + 1, len);
                 cout << "\n◤◢◣◥◤ ◢◣◆◢◣◥◤◢◣◥◤◢◣◥◤ ◢◣◆◢◣◥◤◢◣◥\n"
                         "You have loaded the following map. \n"
                      << endl;
@@ -100,16 +99,15 @@ void Startup::loadmap()
             }
         }
 
-    } while (load == "loadmap <canada>" || load == "loadmap <germany>" || load == "loadmap <greece>");
+    } while (loadState == "loadmap <canada>" || loadState == "loadmap <germany>" || loadState == "loadmap <greece>");
 }
 
 // validateMap checks of the player validates the loaded map
 
 void Startup::validateMap()
 {
-     string validateState;
-    GameEngine* validateGameState = new GameEngine(validateState);
     string validate;
+    GameEngine* validateGameState = new GameEngine(validate);
     cout << "Type validatemap if you validate the map you entered.\n";
     cin >> validate;
     if (validate == "validatemap")
@@ -129,11 +127,10 @@ void Startup::validateMap()
 void Startup::addPlayer()
 {
 
-     string addplayerState;
-    GameEngine* playerAdditionState = new GameEngine(addplayerState);
     // ofstream MyFile("players.txt");
    
     string confirm;
+    GameEngine* playerAdditionState = new GameEngine(confirm);
     cout << "\nIf you wish to add a player. "
             "Please enter: \n addplayer <playername>.\n";
     cin >> confirm;
@@ -172,11 +169,10 @@ void Play::assignReinforcement()
      string reinforcementState;
     GameEngine* reinforcementAssignmentState = new GameEngine(reinforcementState);
 
-    string assign;
     cout << "\nPlease enter assigncountries. \n";
-    cin >> assign;
+    cin >> reinforcementState;
 
-    if (assign == "assigncountries")
+    if (reinforcementState == "assigncountries")
     {
         cout << "You have successfully been assigned countries.\n\n";
     }
@@ -194,17 +190,16 @@ void Play::issueOrders()
 {
      string issueOrdersState;
     GameEngine* issueState = new GameEngine(issueOrdersState);
-    string issue;
     cout << "\n Please enter issueorder ";
-    cin >> issue;
+    cin >> issueOrdersState;
     do
     {
-        if (issue == "issueorder")
+        if (issueOrdersState == "issueorder")
         {
             cout << "The order has been issued.\n\n";
         }
 
-        while (issue != "issueorder")
+        while (issueOrdersState != "issueorder")
         {
             cout << "╞╪╪╪╪╪╪╪╪╪╪╪╪╪╪╪╪╡\n";
             cout << "Invalid Entry.";
@@ -212,11 +207,11 @@ void Play::issueOrders()
         }
 
         cout << "\n Please enter issueorder. \nIf you wish to end issuing orders, please enter done\n ";
-        cin >> issue;
-        if (issue == "done")
+        cin >> issueOrdersState;
+        if (issueOrdersState == "done")
             cout << "Issuing orders has been stopped. Transitioning to the next step.\n\n";
 
-    } while (issue == "issueorder");
+    } while (issueOrdersState == "issueorder");
 }
 // executeorders lets user execute orders
 
@@ -225,17 +220,17 @@ void Play::executeorders()
 
      string ExecuteOrdersState;
     GameEngine* ExecuteState = new GameEngine(ExecuteOrdersState);
-    string execute;
+    string ExecuteOrdersState;
     cout << "Please enter execorder ";
-    cin >> execute;
+    cin >> ExecuteOrdersState;
     do
     {
-        if (execute == "execorder")
+        if (ExecuteOrdersState == "execorder")
         {
             cout << "The order has been executed.\n\n";
         }
 
-        while (execute != "execorder")
+        while (ExecuteOrdersState != "execorder")
         {
             cout << "╞╪╪╪╪╪╪╪╪╪╪╪╪╪╪╪╪╡\n";
             cout << "Invalid Entry. ";
@@ -243,11 +238,11 @@ void Play::executeorders()
         }
 
         cout << "\n Please enter execorder. \n If you are done executing orders, enter done.\n\n ";
-        cin >> execute;
+        cin >> ExecuteOrdersState;
 
-        if (execute == "done")
+        if (ExecuteOrdersState == "done")
             cout << "No more orders to be executed. \n \n";
-    } while (execute == "execorder");
+    } while (ExecuteOrdersState == "execorder");
 }
 
 // endexecuteorders allows user to end the execution of orders
