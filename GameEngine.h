@@ -22,9 +22,12 @@ class GameEngine
     ~GameEngine();
      GameEngine(string stateName);
      GameEngine(const GameEngine& engine);
+     GameEngine& operator=(const GameEngine& t);
+     friend ostream& operator<<(ostream& out, GameEngine engine);
      string* getStateName() const;
      void setStateName(string* stateName);
      void startupPhase();
+     
 };
 
 class Startup
