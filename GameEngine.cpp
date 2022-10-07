@@ -25,7 +25,15 @@ GameEngine::GameEngine(const GameEngine &engine)
 {
     this->stateName = engine.getStateName();
 }
+GameEngine& GameEngine::operator=(const GameEngine& t){
+    this->stateName = new string(*(t.stateName));
+    return *this;
+     }
 
+ostream& operator<<(ostream& out, GameEngine engine){
+
+}
+ 
 GameEngine::~GameEngine()
 {
     this->stateName = NULL;
