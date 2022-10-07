@@ -4,4 +4,5 @@
 int main(){
     testLoadMaps();
     testGameStates();
+    testPlayers();
 }
