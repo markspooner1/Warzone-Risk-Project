@@ -42,7 +42,7 @@ void GameEngine::setStateName(string *stateNamee)
 
 void Startup::loadmap()
 {
-    string loadState = "loadmap";
+    string loadState;
     GameEngine* loadMapState = new GameEngine(loadState);
     string load;
     cout << "Please enter loadmap <filename>:";
@@ -107,6 +107,8 @@ void Startup::loadmap()
 
 void Startup::validateMap()
 {
+     string validateState;
+    GameEngine* validateGameState = new GameEngine(validateState);
     string validate;
     cout << "Type validatemap if you validate the map you entered.\n";
     cin >> validate;
@@ -126,8 +128,11 @@ void Startup::validateMap()
 
 void Startup::addPlayer()
 {
-    // ofstream MyFile("players.txt");
 
+     string addplayerState;
+    GameEngine* playerAdditionState = new GameEngine(addplayerState);
+    // ofstream MyFile("players.txt");
+   
     string confirm;
     cout << "\nIf you wish to add a player. "
             "Please enter: \n addplayer <playername>.\n";
@@ -164,6 +169,8 @@ void Startup::addPlayer()
 
 void Play::assignReinforcement()
 {
+     string reinforcementState;
+    GameEngine* reinforcementAssignmentState = new GameEngine(reinforcementState);
 
     string assign;
     cout << "\nPlease enter assigncountries. \n";
@@ -185,6 +192,8 @@ void Play::assignReinforcement()
 
 void Play::issueOrders()
 {
+     string issueOrdersState;
+    GameEngine* issueState = new GameEngine(issueOrdersState);
     string issue;
     cout << "\n Please enter issueorder ";
     cin >> issue;
@@ -213,6 +222,9 @@ void Play::issueOrders()
 
 void Play::executeorders()
 {
+
+     string ExecuteOrdersState;
+    GameEngine* ExecuteState = new GameEngine(ExecuteOrdersState);
     string execute;
     cout << "Please enter execorder ";
     cin >> execute;
@@ -260,6 +272,8 @@ void Play::endexecuteorders()
 
 void Play::win()
 {
+     string winState;
+    GameEngine* WinningState = new GameEngine(winState);
     cout << " ◤◢◣◥◤ ◢◣◆◢◣◥◤◢◣◥◤◢◣◥◤ ◢◣◆◢◣◥◤◢◣◥\n";
     cout << "Congratulations you have WON !!!\n";
     cout << "◣◥◤◢◣ ◥◤◆◥◤◢◣◥◤◢◣◥◤◢◣ ◥◤◆◥◤◢◣◥◤◢\n"
