@@ -30,9 +30,6 @@ GameEngine& GameEngine::operator=(const GameEngine& t){
     return *this;
      }
 
-ostream& operator<<(ostream& out, GameEngine engine){
-
-}
  
 GameEngine::~GameEngine()
 {
@@ -46,6 +43,11 @@ string *GameEngine::getStateName() const
 void GameEngine::setStateName(string *stateNamee)
 {
     GameEngine::stateName = stateNamee;
+}
+
+ostream& operator<<(ostream& out, const GameEngine* engine){
+       out << "State Name is: " << engine->getStateName();
+       return out;
 }
 
 void Startup::loadmap()
