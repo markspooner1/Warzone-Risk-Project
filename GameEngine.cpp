@@ -220,7 +220,6 @@ void Play::executeorders()
 
      string ExecuteOrdersState;
     GameEngine* ExecuteState = new GameEngine(ExecuteOrdersState);
-    string ExecuteOrdersState;
     cout << "Please enter execorder ";
     cin >> ExecuteOrdersState;
     do
