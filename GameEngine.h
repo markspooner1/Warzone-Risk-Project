@@ -20,7 +20,7 @@ class GameEngine
   public:
      GameEngine();
     ~GameEngine();
-     GameEngine(string* stateName);
+     GameEngine(string stateName);
      GameEngine(const GameEngine& engine);
      string* getStateName() const;
      void setStateName(string* stateName);

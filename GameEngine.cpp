@@ -1,4 +1,4 @@
-#include "gameEngine.h"
+#include "GameEngine.h"
 
 #include <iostream>
 #include <string>
@@ -9,32 +9,41 @@
 #include <list>
 #include <iterator>
 #include <algorithm>
+#include <stack>
+
 using namespace std;
 
 // loadmap asks the user to load map(s)
-GameEngine::GameEngine(){
-
+GameEngine::GameEngine()
+{
 }
-GameEngine::GameEngine(string* stateNamee){
-    this->stateName= stateNamee;
+GameEngine::GameEngine(string stateNamee)
+{
+    this->stateName = new string(stateNamee);
 }
-GameEngine::GameEngine(const GameEngine& engine){
+GameEngine::GameEngine(const GameEngine &engine)
+{
     this->stateName = engine.getStateName();
 }
 
-GameEngine::~GameEngine(){
-    this->stateName=NULL;
+GameEngine::~GameEngine()
+{
+    this->stateName = NULL;
 }
 
-string* GameEngine::getStateName() const {
+string *GameEngine::getStateName() const
+{
     return stateName;
 }
-void GameEngine::setStateName(string* stateNamee){
+void GameEngine::setStateName(string *stateNamee)
+{
     GameEngine::stateName = stateNamee;
 }
 
 void Startup::loadmap()
 {
+    string loadState = "loadmap";
+    GameEngine* loadMapState = new GameEngine(loadState);
     string load;
     cout << "Please enter loadmap <filename>:";
     cin >> load;
@@ -257,8 +266,6 @@ void Play::win()
             "";
 }
 
-
-
 void GameEngine::startupPhase()
 {
     string start, gamestart; // string to start the game
@@ -349,4 +356,3 @@ void testGameStates()
     GameEngine startup;
     startup.startupPhase();
 }
-
