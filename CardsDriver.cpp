@@ -31,10 +31,3 @@ void testCards() {
 	delete aHandCard;
 	delete aDeck;
 }
-
-
-int main()
-{
-    testCards();
-    return 0;
-}
