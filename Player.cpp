@@ -9,13 +9,20 @@
 
 //constructor
 Player::Player(OrdersList *orderList, Hand *hand, vector<Territory> *territories) : orderList(orderList), hand(hand),
+
                                                                                     territories(territories) {}
+//Assign all attributes to NULL
+Player::Player() {
+    this->orderList = NULL;
+    this->territories = NULL;
+    this->hand = NULL;
+}
 
 //Copy constructor
-Player::Player(const Player *player) {
-    this->orderList = player->getOrders();
-    this->territories = player->getTerritories();
-    this->hand = player->getHand();
+Player::Player(const Player &player) {
+    this->orderList = new OrdersList(player.orderList);
+    this->territories = new vector<Territory>(*(player.territories));
+    this->hand = new Hand(*(player.hand));
 }
 
 //Destructor
@@ -103,8 +110,6 @@ void Player::issueOrder(issue_order_types order_type, int ID, string name, strin
         default:
             cout<< "Order type not recognized. No order was added to the player order list.";
     }
-    //vector<string> OrderTypes = {"OrderAdvance", }
-
 
 }
 
@@ -155,7 +160,7 @@ vector<Territory>* Player::toAttack(const  vector<Territory> * ALLTERRITORIES ) 
     }
 
 
-    //assigning arbitrarly territories from attackable to toAttack which will be returned
+    //assigning arbitrary territories from attackable to toAttack which will be returned
     int LIMIT = (attackableTerritories)->size();
     for (size_t i = 0; i < LIMIT; i++) {
         ToAttackTerritories->push_back(attackableTerritories->at(i));
@@ -168,21 +173,31 @@ vector<Territory>* Player::toAttack(const  vector<Territory> * ALLTERRITORIES ) 
 
 // Method to overload the << operator to print the player
 //returns the attributes of the player, namely hand, orders, and territories.
-ostream & operator << (ostream &out, const Player *player)
+ostream & operator << (ostream &out, const Player &player)
 {
-//    cout<< "\nplayer Hand:\n";
-//    cout << *(player->getHand());
-//
-//    cout<< "\nplayer Orders:\n";
-//    cout << *(player->getOrders());
+    cout<< "\nplayer Hand:\n";
+    cout << *(player.getHand());
+
+    cout<< "\nplayer Orders:\n";
+    cout << *(player.getOrders());
 
 
     cout<< "\nplayer territories:\n";
-    int LIMIT = (player->getTerritories())->size();
+    int LIMIT = (player.getTerritories())->size();
     for (size_t i = 0; i < LIMIT; i++) {
-        cout << (player->getTerritories())->at(i)<< endl;
+        cout << (player.getTerritories())->at(i)<< endl;
     }
 
     return out;
+}
+
+
+Player &Player::operator=(const Player &player) {
+
+    this->orderList = new OrdersList(player.orderList);
+    this->territories = new vector<Territory>(*(player.territories));
+    this->hand = new Hand(*(player.hand));
+
+    return *this;
 }
 
