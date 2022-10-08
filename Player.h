@@ -34,7 +34,9 @@ private:
 public:
 
 
-    Player(Player const *player);   //copy constructor
+    Player(Player const &player);   //copy constructor
+
+    Player();   //default Constructor
 
     Player(OrdersList *orderList, Hand *hand, vector<Territory> *territories);   //constructor
 
@@ -61,11 +63,10 @@ public:
 
     void setTerritories(vector<Territory> *territories);        //Setter for the collection of territories
 
+    Player & operator= (const Player&);     //Assignment operator = 
 
     //Friend method:
-    friend ostream & operator << (ostream &out, const Player *player);    // Method to overload the << operator to print the player
-
-
+    friend ostream & operator << (ostream &out, const Player &player);    // Method to overload the << operator to print the player
 
 };
 
