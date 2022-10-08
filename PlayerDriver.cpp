@@ -52,17 +52,17 @@ void testPlayers() {
     Hand *hand_p3 = new Hand();
 
     //Creating OrderList pointer to assign to the player
-    auto *Orderlist_p1 = new OrdersList();
-    auto *Orderlist_p2 = new OrdersList();
-    auto *Orderlist_p3 = new OrdersList();
+    auto *order_list_p1 = new OrdersList();
+    auto *order_list_p2 = new OrdersList();
+    auto *order_list_p3 = new OrdersList();
 
 
     //Create players and assign subsets of territories
-    auto* p1 = new Player(Orderlist_p1, hand_p1, P1_Territories);
+    auto* p1 = new Player(order_list_p1, hand_p1, P1_Territories);
     cout << "\nplayer 1 (p1) created.\n";
-    auto* p2 = new Player(Orderlist_p2, hand_p2, P2_Territories);
+    auto* p2 = new Player(order_list_p2, hand_p2, P2_Territories);
     cout << "\nplayer 2 (p2) created.\n";
-    auto* p3 = new Player(Orderlist_p3, hand_p3, P3_Territories);
+    auto* p3 = new Player(order_list_p3, hand_p3, P3_Territories);
     cout << "\nplayer 3 (p3) created.\n";
 
 
@@ -99,20 +99,20 @@ void testPlayers() {
 
     //Executing get hand() for each player and printing it:
     cout<< "\nplayer1 (p1) Hand:\n";
-    cout << p1->getHand();
+    cout << *(p1->getHand());
     cout<< "\nplayer2 (p2) Hand:\n";
-    cout << p2->getHand();
+    cout << *(p2->getHand());
     cout<< "\nplayer3 (p3) Hand:\n";
-    cout << p3->getHand();
+    cout << *(p3->getHand());
 
 
     //Executing get order() for each player and printing it:
     cout<< "\nplayer1 (p1) Orders:\n";
-    cout << p1->getOrders();
+    cout << *(p1->getOrders());
     cout<< "\nplayer2 (p2) Orders:\n";
-    cout << p2->getOrders();
+    cout << *(p2->getOrders());
     cout<< "\nplayer3 (p3) Orders:\n";
-    cout << p3->getOrders()<<"\n";
+    cout << *(p3->getOrders())<<"\n";
 
 
 
@@ -170,10 +170,31 @@ void testPlayers() {
 
 
     //overloading the << operator to print the player object:
-    cout << p1;
-    cout << p2;
-    cout << p3;
+    cout<< "\nPrinting the player objects:\n";
+    cout<< "\nprinting P1\n";
+    cout << *p1;
+    cout<< "\nprinting P2\n";
+    cout << *p2;
+    cout<< "\nprinting P3\n";
+    cout << *p3;
+
+//Deleting the objects:
+delete ALLTERRITORIES;
+delete P1_Territories;
+delete P2_Territories;
+delete P3_Territories;
+delete hand_p1;
+delete hand_p2;
+delete hand_p3;
+delete order_list_p1;
+delete order_list_p2;
+delete order_list_p3;
+delete p1;
+delete p2;
+delete p3;
+
 
 
 
 }
+
