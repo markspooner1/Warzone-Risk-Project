@@ -191,7 +191,7 @@ ostream & operator << (ostream &out, const Player &player)
     return out;
 }
 
-
+//Assignment operator = to create a copy of a player
 Player &Player::operator=(const Player &player) {
 
     this->orderList = new OrdersList(player.orderList);
