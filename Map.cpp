@@ -149,6 +149,7 @@ Map MapLoader::readMapFile(string fileName){
                     continue;
                 }
                 else{
+                    cout << "Loading Continent: " << line.substr(0, line.find(delimiter)) << endl;
                     //using the = sign as a dilimeter to insert continents into the vector
                     continents.push_back(new Continent(line.substr(0, line.find(delimiter))));
                 }
@@ -163,6 +164,7 @@ Map MapLoader::readMapFile(string fileName){
                 int index;
                 delimiter = ",";
                 territory = line.substr(0, line.find(delimiter));
+                cout << "Loading Territory: " << territory << endl;
                 //creating a substring of the current line to find the respective continent for each territory
                 //continent of each territory is always between 3rd and 4th commas 
                 string continent;
@@ -207,6 +209,17 @@ Map MapLoader::readMapFile(string fileName){
 Map::Map(){
 }
 MapLoader::MapLoader(){
+}
+MapLoader::MapLoader(const MapLoader &ml){
+    this->filename = ml.filename;
+}
+ostream& operator<<(ostream &out, MapLoader ml){
+     out << "Map Name: " << ml.filename << endl;
+    return out;
+}
+MapLoader& MapLoader::operator=(const MapLoader &ml){
+   this->filename = ml.filename;
+   return *this;
 }
 vector<Territory*> MapLoader::findNeighbours(string s, vector<Territory*> te){
     vector<Territory*> neighbours;
@@ -260,6 +273,7 @@ bool Map::validate(){
     if(!connected) {
         return false;
     }
+    cout << "Map is connencted" << endl;
     //Check if map is connected sub-graph
     for(size_t i = 0; i < this->getContinents().size(); i++){
         string continent_name = this->getContinents()[i]->getName();
@@ -287,6 +301,7 @@ bool Map::validate(){
             }
         }
     }
+        cout << "Map is a connencted subgraph" << endl;
     //check each country(territory) belongs to only one continent
     // for each continent, insert its members into a map with the format <TerritoryName, ContinentName>
     map<string,string> m;
@@ -303,6 +318,7 @@ bool Map::validate(){
                 return false;
             }
     }
+    cout << "Each Territory belongs to one continent" << endl;
     return true;
 }
 //free function that finds nth occurence of a string

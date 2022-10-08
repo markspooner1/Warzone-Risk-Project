@@ -64,6 +64,10 @@ class MapLoader{
         Map readMapFile(string fileName);
         MapLoader(string filname);
         MapLoader();
+        MapLoader(const MapLoader &ml);
+        friend ostream& operator<<(ostream& out, MapLoader ml);
+        MapLoader& operator = (const MapLoader &ml);
+
        
 };
 int nthSubstr(int n, const string& s, const string& p);
