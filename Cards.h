@@ -117,7 +117,7 @@ public:
 	//remove the  played card from cards in hand
 	void remove_card_played_from_hand_vector(Card* r_card);
 
-    friend ostream & operator << (ostream &out, Hand *hand);
+    friend ostream & operator << (ostream &out, Hand hand);
 
 private:
 	vector<Card*> hand_vector;
