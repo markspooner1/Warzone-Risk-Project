@@ -1,10 +1,15 @@
+#pragma once
 #include <iostream>
 #include <time.h>
 #include <vector>
+#include "Player.h"
 
 using namespace std;
+class Deck;
+class Player;
 
 class Card {
+
 public:
 	Card();
 
@@ -27,12 +32,17 @@ public:
 	//card type 0-5
 	void set_card_type_id(int num);
 
+
+    friend ostream & operator << (ostream &out, const Card *card);
+
 private:
     string* card_type;
 
 	//this vector stores the 5 types of cards  bomb, reinforcement, blockade,airlift, diplomacy,
 	vector<string> card_types = {"bomb", "reinforcement", "blockade", "airlift", "diplomacy"};
 
+    //method that is called to play the card
+    void play(Player* a_Player, Deck* a_deck);
 
 };
 
@@ -59,6 +69,9 @@ public:
 
 	//the method is to return played cards into deck vector
 	void add_card_to_deck_vector(Card* one_card);
+
+
+    friend ostream & operator << (ostream &out, const Deck *deck);
 
 
 private:
@@ -89,10 +102,6 @@ public:
 
 	void print_cards_in_hand();
 
-	//method that is called to play the card
-	void play(Card* a_card, Deck* a_Deck);
-
-
 	//print hards in hand
 	void print_hand_vector();
 
@@ -109,10 +118,13 @@ public:
 	//remove the  played card from cards in hand
 	void remove_card_played_from_hand_vector(Card* r_card);
 
-
+    friend ostream & operator << (ostream &out, const Hand *hand);
 
 private:
 	vector<Card*> hand_vector;
 	vector<Card*> card_vector;
 
 };
+
+
+void testCards();
