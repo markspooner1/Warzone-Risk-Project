@@ -24,12 +24,12 @@ GameEngine::GameEngine(const GameEngine &engine)
 {
     this->stateName = engine.getStateName();
 }
-GameEngine& GameEngine::operator=(const GameEngine& t){
+GameEngine &GameEngine::operator=(const GameEngine &t)
+{
     this->stateName = new string(*(t.stateName));
     return *this;
-     }
+}
 
- 
 GameEngine::~GameEngine()
 {
     this->stateName = NULL;
@@ -44,9 +44,10 @@ void GameEngine::setStateName(string *stateNamee)
     GameEngine::stateName = stateNamee;
 }
 
-ostream& operator<<(ostream& out, const GameEngine* engine){
-       out << "State Name is: " << engine->getStateName();
-       return out;
+ostream &operator<<(ostream &out, const GameEngine *engine)
+{
+    out << "State Name is: " << engine->getStateName();
+    return out;
 }
 
 // loadmap asks the user to load map(s)
@@ -54,7 +55,7 @@ ostream& operator<<(ostream& out, const GameEngine* engine){
 void Startup::loadmap()
 {
     string loadState;
-    GameEngine* loadMapState = new GameEngine(loadState);
+    GameEngine *loadMapState = new GameEngine(loadState);
     cout << "Please enter loadmap <filename>:";
     cin >> loadState;
 
@@ -118,7 +119,7 @@ void Startup::loadmap()
 void Startup::validateMap()
 {
     string validate;
-    GameEngine* validateGameState = new GameEngine(validate);
+    GameEngine *validateGameState = new GameEngine(validate);
     cout << "Type validatemap if you validate the map you entered.\n";
     cin >> validate;
     if (validate == "validatemap")
@@ -139,9 +140,9 @@ void Startup::addPlayer()
 {
 
     // ofstream MyFile("players.txt");
-   
+
     string confirm;
-    GameEngine* playerAdditionState = new GameEngine(confirm);
+    GameEngine *playerAdditionState = new GameEngine(confirm);
     cout << "\nIf you wish to add a player. "
             "Please enter: \n addplayer <playername>.\n";
     cin >> confirm;
@@ -177,8 +178,8 @@ void Startup::addPlayer()
 
 void Play::assignReinforcement()
 {
-     string reinforcementState;
-    GameEngine* reinforcementAssignmentState = new GameEngine(reinforcementState);
+    string reinforcementState;
+    GameEngine *reinforcementAssignmentState = new GameEngine(reinforcementState);
 
     cout << "\nPlease enter assigncountries. \n";
     cin >> reinforcementState;
@@ -199,8 +200,8 @@ void Play::assignReinforcement()
 
 void Play::issueOrders()
 {
-     string issueOrdersState;
-    GameEngine* issueState = new GameEngine(issueOrdersState);
+    string issueOrdersState;
+    GameEngine *issueState = new GameEngine(issueOrdersState);
     cout << "\n Please enter issueorder ";
     cin >> issueOrdersState;
     do
@@ -229,8 +230,8 @@ void Play::issueOrders()
 void Play::executeorders()
 {
 
-     string ExecuteOrdersState;
-    GameEngine* ExecuteState = new GameEngine(ExecuteOrdersState);
+    string ExecuteOrdersState;
+    GameEngine *ExecuteState = new GameEngine(ExecuteOrdersState);
     cout << "Please enter execorder ";
     cin >> ExecuteOrdersState;
     do
@@ -260,6 +261,7 @@ void Play::executeorders()
 void Play::endexecuteorders()
 {
     string endexecorder;
+    GameEngine *EexeOrder = new GameEngine(endexecorder);
     cout << "if you wish to end executing orders. \nPlease enter endexecorders";
     cin >> endexecorder;
     if (endexecorder == "endexecorders")
@@ -277,8 +279,8 @@ void Play::endexecuteorders()
 
 void Play::win()
 {
-     string winState;
-    GameEngine* WinningState = new GameEngine(winState);
+    string winState;
+    GameEngine *WinningState = new GameEngine(winState);
     cout << " ◤◢◣◥◤ ◢◣◆◢◣◥◤◢◣◥◤◢◣◥◤ ◢◣◆◢◣◥◤◢◣◥\n";
     cout << "Congratulations you have WON !!!\n";
     cout << "◣◥◤◢◣ ◥◤◆◥◤◢◣◥◤◢◣◥◤◢◣ ◥◤◆◥◤◢◣◥◤◢\n"
