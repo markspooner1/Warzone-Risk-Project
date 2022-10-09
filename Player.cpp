@@ -166,6 +166,7 @@ vector<Territory>* Player::toAttack(const  vector<Territory> * ALLTERRITORIES ) 
         ToAttackTerritories->push_back(attackableTerritories->at(i));
         i++;
     }
+    delete attackableTerritories;
     return ToAttackTerritories;
 
 }
