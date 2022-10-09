@@ -71,7 +71,6 @@ public:
 	void add_card_to_deck_vector(Card* one_card);
 
 
-    friend ostream & operator << (ostream &out, const Deck *deck);
 
 
 private:
@@ -118,7 +117,7 @@ public:
 	//remove the  played card from cards in hand
 	void remove_card_played_from_hand_vector(Card* r_card);
 
-    friend ostream & operator << (ostream &out, const Hand *hand);
+    friend ostream & operator << (ostream &out, Hand *hand);
 
 private:
 	vector<Card*> hand_vector;
