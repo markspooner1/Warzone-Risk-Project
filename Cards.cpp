@@ -284,7 +284,7 @@ ostream & operator << (ostream &out, Hand *hand)
 ostream & operator << (ostream &out, Card *card)
 {
 
-    cout<< "\Card\n";
+    cout<< "Card\n";
 
     //print cards in hand
     cout<<card->get_card_type()<<endl;

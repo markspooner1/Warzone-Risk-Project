@@ -55,7 +55,7 @@ void testCards() {
 	int hand_size = aHandCard->get_hand_vector()->size();
 	for (int k = 0; k < hand_size; k++) {
 		Card* card =  aHandCard->get_hand_vector()->at(k);
-		card->play(p1,aDeck)
+		card->play(p1,aDeck);
 	}
 
 	//delete pointers
