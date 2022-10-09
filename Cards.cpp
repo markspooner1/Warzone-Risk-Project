@@ -1,15 +1,18 @@
 #include "Cards.h"
+#include "Player.h"
+#include "Map.h"
 
 Card::Card()
 {
 }
 
+//Destructor
 Card::~Card()
 {
-
 }
 
 
+//Card copy constructor
 Card::Card(const Card & c)
 {
 	this->card_types = *new vector<string>(c.card_types);
@@ -48,6 +51,32 @@ string * Card::get_card_type()
 }
 
 
+//method to play card
+void Card::play(Player* a_player,Deck* a_deck )
+{
+    //Create All territories pointer:
+    auto * ALLTERRITORIES = new vector<Territory>;
+    ALLTERRITORIES->push_back(Territory("England", "Europe"));
+    ALLTERRITORIES->push_back(Territory("Finland", "Europe"));
+    ALLTERRITORIES->push_back(Territory("Denmark", "Europe"));
+    ALLTERRITORIES->push_back(Territory("Ghana", "Africa"));
+    ALLTERRITORIES->push_back(Territory("Egypt", "Africa"));
+    ALLTERRITORIES->push_back(Territory("Congo", "Africa"));
+    ALLTERRITORIES->push_back(Territory("China", "Asia"));
+    ALLTERRITORIES->push_back(Territory("Russia", "Asia"));
+    ALLTERRITORIES->push_back(Territory("Singapore", "Asia"));
+
+
+//create order and add to players orderlist
+a_player->issueOrder(OrderAdvanceType, 1,"p1 order", ALLTERRITORIES->at(1).getName(), ALLTERRITORIES->at(2).getName(), 2);
+
+//return card to deck
+a_deck->add_card_to_deck_vector(this);
+
+
+}
+
+
 
 Deck::Deck()
 {
@@ -78,6 +107,7 @@ Deck & Deck::operator=(const Deck & d)
 	return *this;
 }
 
+//method to set initial deck of cards
 void Deck::initial_deck()
 {
 	//add 30 cards to vector, each type has 5 cards
@@ -116,6 +146,8 @@ void Deck::initial_deck()
 	}
 }
 
+
+//method to draw card from deck and return it
 Card* Deck::draw()
 {
 	//draw random card from the remaining deck of cards
@@ -198,21 +230,6 @@ void Hand::print_cards_in_hand()
 	}
 }
 
-void Hand::play(Card* a_card, Deck* a_Deck)
-{
-	//set this card to play order (card_vector)
-	card_vector.push_back(a_card);
-
-	//put back into the deck
-	return_played_card_to_deck(a_Deck);
-
-	//remove from the hand_cards
-	remove_card_played_from_hand_vector(a_card);
-
-	//remove this card from the play_cards
-	card_vector.pop_back();
-
-}
 
 void Hand::return_played_card_to_deck(Deck* a_Deck)
 {
@@ -237,7 +254,7 @@ vector<Card*>* Hand::get_vector_to_cards()
 
 void Hand::remove_card_played_from_hand_vector(Card* r_card)
 {
-	//go through the hand cards, find a card with same type as card, then remove it.
+	//traverse the hand cards, find a card with same type as card, then remove it.
 	for (int p = 0; p < hand_vector.size(); p++) {
 		if (*hand_vector.at(p)->get_card_type() == *r_card->get_card_type()) {
 			//find a same type card, then remove, and return.
