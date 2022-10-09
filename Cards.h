@@ -2,7 +2,6 @@
 #include <iostream>
 #include <time.h>
 #include <vector>
-#include "Player.h"
 
 using namespace std;
 class Deck;
@@ -34,6 +33,8 @@ public:
 
 
     friend ostream & operator << (ostream &out, const Card *card);
+	//method that is called to play the card
+    void play(Player* a_Player, Deck* a_deck);
 
 private:
     string* card_type;
@@ -41,8 +42,7 @@ private:
 	//this vector stores the 5 types of cards  bomb, reinforcement, blockade,airlift, diplomacy,
 	vector<string> card_types = {"bomb", "reinforcement", "blockade", "airlift", "diplomacy"};
 
-    //method that is called to play the card
-    void play(Player* a_Player, Deck* a_deck);
+ 
 
 };
 
