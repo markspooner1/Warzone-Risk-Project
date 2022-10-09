@@ -3,66 +3,49 @@
 #include <cstdlib>
 #include "Orders.h"
 using namespace std;
-std::vector<Order>::iterator;
+void testOrdersLists() {
+	Order* order1 = new Order(8987, "Order Number 1");
+	OrderAdvance* oAdvance1 = new OrderAdvance(2121, 667, "First arrival", "Quebec", "Ontario");
+	OrderAdvance* oAdvance2 = new OrderAdvance(*oAdvance1);
+	OrderAdvance* oAdvance3 = oAdvance1;
+	OrderAdvance* oAdvance4 = new OrderAdvance();
+	cout << *oAdvance1 << "\n" << *oAdvance2 << "\n" << *oAdvance3 << "\n" << *oAdvance4 << endl; //Printing the info of the deep-copies and the "empty" OrderAdvance objects
+	OrderDeploy* oDeploy1 = new OrderDeploy(2222, 667, "GO", "TRANSYLVANIE");
+	OrderAirlift* oAirlift = new OrderAirlift(1234, 3000, "FLIGHT", "America", "Europe");
+	OrderBomb* oBomb = new OrderBomb(6036, "EXPLOSION", "Area 1");
+	OrderBlockade* oBlock = new OrderBlockade(67034, "BLOCK", "Territory 2");
+	OrderNegotiate* nego1 = new OrderNegotiate(111, "STOP", "France", "USA");
+	(*oAdvance2).execute();
+	OrdersList olist;
+	(olist.ol).push_back(oAdvance1);
+	(olist.ol).push_back(oBlock);
+	(olist.ol).push_back(oAirlift);
+	OrdersList olist2 = olist;
+	for (auto it = (olist.ol).begin(); it != (olist.ol).end(); ++it)
+		cout << ' ' << *(*it);
+	cout << "/////////////////////////\n";
+	for (auto it = (olist2.ol).begin(); it != (olist2.ol).end(); ++it)
+		cout << ' ' << *(*it);
+	olist.move();
+	for (auto it = (olist.ol).begin(); it != (olist.ol).end(); ++it)
+		cout << ' ' << *(*it);
+	cout << "/////////////////////////\n";
+	for (auto it = (olist2.ol).begin(); it != (olist2.ol).end(); ++it)
+		cout << ' ' << *(*it);
+	cout << "--------------------------\n";
+	olist.remove();
+	for (auto it = (olist.ol).begin(); it != (olist.ol).end(); ++it)
+		cout << ' ' << *(*it);
+	cout << "/////////////////////////\n";
+	for (auto it = (olist2.ol).begin(); it != (olist2.ol).end(); ++it)
+		cout << ' ' << *(*it);
+	cout << "--------------------------\n";
+	for (auto it = (olist.ol).begin(); it != (olist.ol).end(); ++it)
+		(*it)->execute();
+}
+
 
 int main() {
-	cout << "Hello World\n";
-	Order o1(int(46), "First Order");
-	cout << o1;
-	Order treas = o1;
-	Order o2;
-	OrdersList ol3;
-	ol3.addOrder(o1);
-	ol3.addOrder(treas);
-	ol3.show();
-	OrderAdvance od1(2121, 667, "First arrival", "Quebec", "Ontario");
-	ol3.addOrder(od1);
-	ol3.show();
-	cout << endl;
-	ol3.advance(2121);
-	cout << "END OF ADVANCE TRY\n";
-	o1.execute();
-	cout << "The OrderID is " << o1.getOrderID() << "\n";
-	cout << "The OrderID is " << treas.getOrderID() << "\n";
-	cout << "The Order name is " << o1.getOrderName() << "\n";
-	cout << "The Order name is " << treas.getOrderName() << "\n";
-	treas.setOrderID(9);
-	cout << "The OrderID is " << o1.getOrderID() << "\n";
-	cout << "The OrderID is " << treas.getOrderID() << "\n";
-	//cout << "The OrderID is " << o1.getOrderID() << "\n";
-	cout << "The OrderID is " << o2.getOrderID() << endl;
-	cout << "OD1 Info: \n" << od1.getOrderName() << " From " << od1.getSource() << " to " << od1.getTarget() << "\n";
-	cout << od1.getUnits() << " UNITS INCOMING" << endl;
-	OrderAdvance od2 = od1;
-	cout << "OD2 Info: \n" << od2.getOrderName() << " From " << od2.getSource() << " to " << od2.getTarget() << "\n";
-	cout << od2.getUnits() << " UNITS INCOMING" << endl;
-	OrderAdvance od3 = OrderAdvance();
-	cout << "OD3 Info: \n" << od3.getOrderName() << " From " << od3.getSource() << " to " << od3.getTarget() << "\n";
-	cout << od3.getUnits() << " UNITS INCOMING" << endl;
-	od3.advance();
-	od1.execute();
-	//Test for Deploy;
-	OrderDeploy deploy1(2222, 667, "GO", "TRANSYLVANIE");
-	deploy1.execute();
-	deploy1.deploy();
-	OrderDeploy dep2 = deploy1;
-	dep2.execute();
-	dep2.deploy();
-	//Test for bomb
-	OrderBomb ob1(6036, "EXPLOSION", "Area 1");
-	ob1.execute();
-	//Test for blockade
-	OrderBlockade block1(67034, "BLOCK", "Territory 2");
-	OrderBlockade block2 = OrderBlockade();
-	OrderBlockade block3 = OrderBlockade(block1);
-	block1.execute();
-	block2.execute();
-	block3.execute();
-	//Test for airlift
-	OrderAirlift oair(564, 1000000, "Dive", "Home", "ENDZONE");
-	oair.execute();
-	//Test for negotiate
-	OrderNegotiate nego1(111, "STOP", "France", "USA");
-	nego1.execute();
+	testOrdersLists();
 	return 0;
 }
