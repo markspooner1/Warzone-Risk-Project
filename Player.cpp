@@ -176,10 +176,10 @@ vector<Territory>* Player::toAttack(const  vector<Territory> * ALLTERRITORIES ) 
 ostream & operator << (ostream &out, const Player &player)
 {
     cout<< "\nplayer Hand:\n";
-    cout << (player.getHand());
+    cout << *(player.getHand());
 
     cout<< "\nplayer Orders:\n";
-    cout << (player.getOrders());
+    cout << *(player.getOrders());
 
 
     cout<< "\nplayer territories:\n";
