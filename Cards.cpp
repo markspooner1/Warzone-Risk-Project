@@ -267,13 +267,13 @@ void Hand::remove_card_played_from_hand_vector(Card* r_card)
 
 
 // Method to overload the << operator to print the hand
-ostream & operator << (ostream &out, Hand *hand)
+ostream & operator << (ostream &out, Hand hand)
 {
 
     cout<< "\nHand\n";
 
     //print cards in hand
-    hand->print_cards_in_hand();
+    hand.print_cards_in_hand();
 
 
     return out;
