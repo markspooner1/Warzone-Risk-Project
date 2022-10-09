@@ -33,6 +33,7 @@ public:
 	OrdersList(const OrdersList& cop);
 	OrdersList& operator =(const OrdersList& o);
 	vector<Order *> ol;
+	friend ostream& operator<<(ostream& os, const OrdersList& ordre);
 	void addOrder(Order o);
 };
 
