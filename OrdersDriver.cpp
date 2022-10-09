@@ -43,9 +43,3 @@ void testOrdersLists() {
 	for (auto it = (olist.ol).begin(); it != (olist.ol).end(); ++it)
 		(*it)->execute();
 }
-
-
-int main() {
-	testOrdersLists();
-	return 0;
-}
