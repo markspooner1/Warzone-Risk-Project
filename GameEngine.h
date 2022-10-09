@@ -18,13 +18,21 @@ class GameEngine
 {
   private: string* stateName;
   public:
+  //default constructor
      GameEngine();
+     //destructor
     ~GameEngine();
+    //overloaded constructor
      GameEngine(string stateName);
+     // copy constructor
      GameEngine(const GameEngine& engine);
+     // assignment operator
      GameEngine& operator=(const GameEngine& t);
+     // insertion operator
      friend ostream& operator<<(ostream& out, GameEngine engine);
+     // getters
      string* getStateName() const;
+     //setters
      void setStateName(string* stateName);
      void startupPhase();
      
