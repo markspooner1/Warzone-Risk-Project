@@ -272,7 +272,6 @@ void Play::endexecuteorders()
     {
         cout << "╞╪╪╪╪╪╪╪╪╪╪╪╪╪╪╪╪╡\n";
         cout << "Invalid Entry. ";
-        exit(0);
     }
 }
 // win announces that the user has won the game
