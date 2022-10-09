@@ -12,8 +12,7 @@
 #include <stack>
 
 using namespace std;
-
-// loadmap asks the user to load map(s)
+// implementing encapsulation
 GameEngine::GameEngine()
 {
 }
@@ -49,6 +48,8 @@ ostream& operator<<(ostream& out, const GameEngine* engine){
        out << "State Name is: " << engine->getStateName();
        return out;
 }
+
+// loadmap asks the user to load map(s)
 
 void Startup::loadmap()
 {
