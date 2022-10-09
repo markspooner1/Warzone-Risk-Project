@@ -76,7 +76,7 @@ public:
 private:
 	vector<Card*> deck_vector; //deck of cards
 
-	Card* temp_card_holder;//to draw and remove the element of deck vector
+	Card* temp_card_holder;
 
 	Card* pointer_to_card;
 
