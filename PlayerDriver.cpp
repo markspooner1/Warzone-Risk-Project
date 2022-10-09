@@ -99,20 +99,20 @@ void testPlayers() {
 
     //Executing get hand() for each player and printing it:
     cout<< "\nplayer1 (p1) Hand:\n";
-    cout << *(p1->getHand());
+    cout << (p1->getHand());
     cout<< "\nplayer2 (p2) Hand:\n";
-    cout << *(p2->getHand());
+    cout << (p2->getHand());
     cout<< "\nplayer3 (p3) Hand:\n";
-    cout << *(p3->getHand());
+    cout << (p3->getHand());
 
 
     //Executing get order() for each player and printing it:
     cout<< "\nplayer1 (p1) Orders:\n";
-    cout << *(p1->getOrders());
+    cout << (p1->getOrders());
     cout<< "\nplayer2 (p2) Orders:\n";
-    cout << *(p2->getOrders());
+    cout << (p2->getOrders());
     cout<< "\nplayer3 (p3) Orders:\n";
-    cout << *(p3->getOrders())<<"\n";
+    cout << (p3->getOrders())<<"\n";
 
 
 
