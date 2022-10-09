@@ -36,6 +36,7 @@ void Order::setOrderID(int ID) {
 	this->OrderID = new int(ID);
 }
 
+
 string Order::getOrderName() {
 	return *name;
 }
@@ -448,3 +449,7 @@ void OrdersList::remove() {
 		}
 	}
 }
+
+ void OrdersList::addOrder(Order o) {
+ 	this->ol.push_back(&o);
+ }

@@ -33,6 +33,7 @@ public:
 	OrdersList(const OrdersList& cop);
 	OrdersList& operator =(const OrdersList& o);
 	vector<Order *> ol;
+	void addOrder(Order o);
 };
 
 class OrderAdvance :public Order {
