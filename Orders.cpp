@@ -417,6 +417,12 @@ OrdersList& OrdersList::operator =(const OrdersList& o) {
 	return *this;
 }
 
+ostream& operator<<(ostream& os, const OrdersList& ordre)
+{
+	os <<"This list contains " << (ordre.ol).size() << "orders." << endl;
+	return os;
+}
+
 void OrdersList::move() {
 	int id;
 	cout << "What is the ID of the Order to be moved?: ";
