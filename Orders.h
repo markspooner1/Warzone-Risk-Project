@@ -7,13 +7,10 @@
 #include <vector>
 using namespace std;
 
-//void move(Order order);
-//void remove(Order order);
-
 class Order {
 public:
-	bool validate();
-	void execute();
+	virtual bool validate();
+	virtual void execute();
 	Order(int, string);
 	Order();
 	Order(const Order& cop);
@@ -23,7 +20,6 @@ public:
 	std::string getOrderName();
 	void setOrderName(string);
 	friend ostream& operator<<(ostream& os, const Order& ordre);
-	void advance();
 private:
 	int* OrderID;
 	std::string* name;
@@ -31,22 +27,18 @@ private:
 
 class OrdersList {
 public:
-	void move(Order);
-	void remove(Order);
+	void move();
+	void remove();
 	OrdersList();
-	OrdersList(vector<Order>&);
-	void addOrder(Order);
-	void show();
-	void advance(int);
-private:
-	vector<Order> ol;
+	OrdersList(const OrdersList& cop);
+	OrdersList& operator =(const OrdersList& o);
+	vector<Order *> ol;
 };
 
 class OrderAdvance :public Order {
 public:
 	bool validate();
 	void execute();
-	void advance();
 	OrderAdvance();
 	OrderAdvance(int, int, string, string, string);
 	OrderAdvance(const OrderAdvance& dep);
@@ -65,7 +57,6 @@ class OrderDeploy :public Order {
 public:
 	bool validate();
 	void execute();
-	void deploy();
 	OrderDeploy();
 	OrderDeploy(int, int, string, string);
 	OrderDeploy(const OrderDeploy& dep);
@@ -82,7 +73,6 @@ class OrderBomb :public Order {
 public:
 	bool validate();
 	void execute();
-	void bomb();
 	OrderBomb();
 	OrderBomb(int, string, string);
 	OrderBomb(const OrderBomb& dep);
@@ -97,7 +87,6 @@ class OrderBlockade :public Order {
 public:
 	bool validate();
 	void execute();
-	void blockade();
 	OrderBlockade();
 	OrderBlockade(int, string, string);
 	OrderBlockade(const OrderBlockade& dep);
@@ -112,7 +101,6 @@ class OrderAirlift :public Order {
 public:
 	bool validate();
 	void execute();
-	void airlift();
 	OrderAirlift();
 	OrderAirlift(int, int, string, string, string);
 	OrderAirlift(const OrderAirlift& dep);
@@ -131,7 +119,6 @@ class OrderNegotiate :public Order {
 public:
 	bool validate();
 	void execute();
-	void negotiate();
 	OrderNegotiate();
 	OrderNegotiate(int, string, string, string);
 	OrderNegotiate(const OrderNegotiate& dep);
@@ -144,6 +131,5 @@ private:
 	std::string* TargetTerritory;
 };
 
-//class OrdersList
 
 #endif //ORDERS_H
