@@ -100,6 +100,7 @@ string OrderAdvance::getSource() {
 
 void OrderAdvance::execute() {
 	if (validate()) {
+		cout << "Arrival of " << *numberOfunits << " units to " << *TargetTerritory << " coming from " << *SourceTerritory << endl;
 		cout << "Advance Order has been executed\n";
 	}
 	else
@@ -109,6 +110,7 @@ void OrderAdvance::execute() {
 bool OrderAdvance::validate() {
 	cout << "Order validity check...\n";
 	if (getSource() != getTarget()) {
+		cout << "Order is valid\n";
 		return true;
 	}
 	else {
@@ -156,6 +158,7 @@ string OrderDeploy::getTarget() {
 
 void OrderDeploy::execute() {
 	if (validate()) {
+		cout << "Deployment of " << *TargetTerritory << " units to " << *numberOfunits << endl;
 		cout << "Deploy Order has been executed\n";
 	}
 	else
@@ -165,6 +168,7 @@ void OrderDeploy::execute() {
 bool OrderDeploy::validate() {
 	cout << "Order validity check...\n";
 	if (true) {
+		cout << "Order is valid\n";
 		return true;
 	}
 	else {
@@ -203,6 +207,7 @@ string OrderBomb::getTarget() {
 
 void OrderBomb::execute() {
 	if (validate()) {
+		cout << *TargetTerritory << " has been bombed successfully!! Half of the units were wiped out!\n";
 		cout << "Bomb order has been executed\n";
 
 	}
@@ -255,6 +260,7 @@ string OrderBlockade::getTarget() {
 
 void OrderBlockade::execute() {
 	if (validate()) {
+		cout<<"The number of units on the territory " << *TargetTerritory << " has been tripled! It is now a neutral territory." << endl;
 		cout << "Blockade order has been executed\n";
 
 	}
@@ -320,6 +326,7 @@ string OrderAirlift::getSource() {
 
 void OrderAirlift::execute() {
 	if (validate()) {
+		cout << *numberOfunits << " units have arrived in " << *TargetTerritory << " from " << *SourceTerritory << endl;
 		cout << "Airlift order has been executed\n";
 	}
 	else
@@ -329,6 +336,7 @@ void OrderAirlift::execute() {
 bool OrderAirlift::validate() {
 	cout << "Order validity check...\n";
 	if (getSource() != getTarget()) {
+		cout << "Order is valid\n";
 		return true;
 	}
 	else {
@@ -375,6 +383,7 @@ string OrderNegotiate::getSource() {
 
 void OrderNegotiate::execute() {
 	if (validate()) {
+		cout<< *TargetTerritory << " and  " << *SourceTerritory << " can no longer attack each other" << endl;
 		cout << "Negotiation Order has been executed\n";
 	}
 	else
@@ -384,6 +393,7 @@ void OrderNegotiate::execute() {
 bool OrderNegotiate::validate() {
 	cout << "Order validity check...\n";
 	if (getSource() != getTarget()) {
+		cout << "Order is valid\n";
 		return true;
 	}
 	else {
@@ -419,7 +429,9 @@ OrdersList& OrdersList::operator =(const OrdersList& o) {
 
 ostream& operator<<(ostream& os, const OrdersList& ordre)
 {
-	os <<"This list contains " << (ordre.ol).size() << "orders." << endl;
+	os <<"This list contains " << (ordre.ol).size() << " orders:\n";
+	for (auto it = (ordre.ol).begin(); it != (ordre.ol).end(); ++it)
+		cout << ' ' << *(*it);
 	return os;
 }
 
