@@ -20,7 +20,7 @@ Player::Player() {
 
 //Copy constructor
 Player::Player(const Player &player) {
-    this->orderList = new OrdersList(player.orderList);
+    this->orderList = new OrdersList(*player.orderList);
     this->territories = new vector<Territory>(*(player.territories));
     this->hand = new Hand(*(player.hand));
 }
@@ -195,7 +195,7 @@ ostream & operator << (ostream &out, const Player &player)
 //Assignment operator = to create a copy of a player
 Player &Player::operator=(const Player &player) {
 
-    this->orderList = new OrdersList(player.orderList);
+    this->orderList = new OrdersList(*player.orderList);
     this->territories = new vector<Territory>(*(player.territories));
     this->hand = new Hand(*(player.hand));
 

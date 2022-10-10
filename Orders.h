@@ -132,6 +132,6 @@ private:
 	std::string* SourceTerritory;
 	std::string* TargetTerritory;
 };
-
+void testOrdersLists();
 
 #endif //ORDERS_H

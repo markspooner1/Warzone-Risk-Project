@@ -2,12 +2,12 @@
 #include "GameEngine.h"
 #include "Player.h"
 #include "Cards.h"
-
-
-
+#include "Orders.h"
 int main(){
     testLoadMaps();
-    testGameStates();
     testPlayers();
     testCards();
+    testOrdersLists();
+    testGameStates();
+
 }
