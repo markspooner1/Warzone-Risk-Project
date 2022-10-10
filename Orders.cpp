@@ -3,7 +3,6 @@
 #include <cstdlib>
 using namespace std;
 #include "Orders.h"
-vector<Order>::iterator;
 
 Order::Order(int ID, string name) {
 	this->OrderID = new int(ID);
@@ -411,7 +410,6 @@ ostream& operator<<(ostream& os, const OrderNegotiate& ordre)
 
 /////////////////////////////////
 OrdersList::OrdersList() {
-	ol;
 }
 
 OrdersList::OrdersList(const OrdersList& cop) {
@@ -431,7 +429,7 @@ ostream& operator<<(ostream& os, const OrdersList& ordre)
 {
 	os <<"This list contains " << (ordre.ol).size() << " orders:\n";
 	for (auto it = (ordre.ol).begin(); it != (ordre.ol).end(); ++it)
-		cout << ' ' << *(*it);
+		cout << ' ' << (*it);
 	return os;
 }
 
