@@ -130,7 +130,7 @@ void Startup::validateMap()
     {
         cout << "╞╪╪╪╪╪╪╪╪╪╪╪╪╪╪╪╪╡\n";
         cout << "Invalid Entry.";
-        exit(0);
+        // exit(0);
     }
 }
 
