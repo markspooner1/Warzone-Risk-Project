@@ -28,13 +28,15 @@ class Territory{
 };
 class Continent{
     public:
-        Continent(string name); 
+        Continent(string name, int bonus_value); 
         Continent(const Continent &obj);
         Continent& operator=(const Continent &c);
         friend ostream& operator<<(ostream& out, Continent continent);
         string getName();
         vector<Territory*> continent_members;
+        int getBonusValue();
     private:
+        int * bonus_value;
         string* name;
 };
 

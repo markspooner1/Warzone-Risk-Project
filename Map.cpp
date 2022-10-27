@@ -61,8 +61,9 @@ void Territory::setContinent(string continent){
             return this->neighbours;
         }
 //Continent one parameter constructor
-Continent::Continent(string name){
+Continent::Continent(string name, int bonus_value){
     this->name = new string(name);
+    this->bonus_value = new int(bonus_value);
 }
 //Continent copy constructor
 Continent::Continent(const Continent &continent){
@@ -82,6 +83,9 @@ ostream& operator <<(ostream &out, Continent continent){
 }
 string Continent::getName(){
     return *name;
+}
+int Continent::getBonusValue(){
+    return this->getBonusValue();
 }
 // Map 2 parameter constructor
 Map::Map(vector<Territory*> t, vector<Continent*> c){
@@ -150,8 +154,9 @@ Map MapLoader::readMapFile(string fileName){
                 }
                 else{
                     cout << "Loading Continent: " << line.substr(0, line.find(delimiter)) << endl;
+                     
                     //using the = sign as a dilimeter to insert continents into the vector
-                    continents.push_back(new Continent(line.substr(0, line.find(delimiter))));
+                    continents.push_back(new Continent(line.substr(0, line.find(delimiter)),  stoi(line.substr(line.find(delimiter) + 1, line.length()))));
                 }
             }
         }

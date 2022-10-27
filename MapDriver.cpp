@@ -8,7 +8,8 @@ using std::string;
 void testLoadMaps(){
      MapLoader* m = new MapLoader();
      // insert file name here with correct path
-    string maps[5] = {".mapFiles/Middle Earth.map", ".mapFiles/Africa.map", ".mapFiles/Alabama.map", ".mapFiles/Asia.map"};
+     // invalid map - Pangaea.map, Mongol Empire 1924.map
+    string maps[4] = {".mapFiles/Pangaea.map", ".mapFiles/Africa.map", ".mapFiles/Alabama.map", ".mapFiles/Asia.map"};
     for(int i = 0; i < 4; i++){
       Map m1;
       m1 = m->readMapFile(maps[i]);
@@ -21,5 +22,6 @@ void testLoadMaps(){
          cout << "map is invalid" << endl;
       }
     }
+    delete m;
  }
 
