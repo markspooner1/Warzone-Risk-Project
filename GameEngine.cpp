@@ -367,5 +367,13 @@ void GameEngine::startupPhase()
         }
     }
 }
+void GameEngine::reinforcementPhase(){
 
+}
+void GameEngine::issueOrdersPhase(){
+
+}
+void GameEngine::executeOrdersPhase(){
+    
+}
 

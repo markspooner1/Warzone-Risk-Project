@@ -35,6 +35,11 @@ class GameEngine
      //setters
      void setStateName(string* stateName);
      void startupPhase();
+     // A2 Part 3
+     void mainGameLoop();
+     void reinforcementPhase();
+     void issueOrdersPhase();
+     void executeOrdersPhase();
      
 };
 
