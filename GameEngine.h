@@ -11,6 +11,8 @@
 
 
 #include <iostream>
+#include "CommandProcessing.h"
+#include "Player.h"
 // istream and ostream are defined in the std namespace in the iostream library
 using namespace std;
 
@@ -18,6 +20,7 @@ class GameEngine
 {
   private: string* stateName;
   public:
+
   //default constructor
      GameEngine();
      //destructor
@@ -34,12 +37,14 @@ class GameEngine
      string* getStateName() const;
      //setters
      void setStateName(string* stateName);
-     void startupPhase();
+     void startupPhase(CommandProcessing* c);
      // A2 Part 3
      void mainGameLoop();
      void reinforcementPhase();
      void issueOrdersPhase();
      void executeOrdersPhase();
+     void readCommandList(CommandProcessing* c, GameEngine* g);
+     vector<Player*> players;
      
 };
 
@@ -74,3 +79,4 @@ void testGameStates();
 #endif
 
 
+int nthSubstr(int n, const string& s, const string& p);

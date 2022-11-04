@@ -1,5 +1,5 @@
 #include "GameEngine.h"
-
+#include "Map.h"
 #include <iostream>
 #include <string>
 #include <regex>
@@ -286,86 +286,139 @@ void Play::win()
             "";
 }
 
-void GameEngine::startupPhase()
-{
-    string start, gamestart; // string to start the game
-    string option;
-    cout << "◤◢◣◥◤ ◢◣◆◢◣◥◤◢◣◥◤◢◣◥◤ ◢◣◆◢◣◥◤◢◣◥\n";
-    cout << "WELCOME TO WARZONE. \n";
-    cout << "◣◥◤◢◣ ◥◤◆◥◤◢◣◥◤◢◣◥◤◢◣ ◥◤◆◥◤◢◣◥◤◢\n";
-    cout << "Enter start to begin your adventure.\n";
-    cin >> start;
+// void GameEngine::startupPhase()
+// {
+//     string start, gamestart; // string to start the game
+//     string option;
+//     cout << "◤◢◣◥◤ ◢◣◆◢◣◥◤◢◣◥◤◢◣◥◤ ◢◣◆◢◣◥◤◢◣◥\n";
+//     cout << "WELCOME TO WARZONE. \n";
+//     cout << "◣◥◤◢◣ ◥◤◆◥◤◢◣◥◤◢◣◥◤◢◣ ◥◤◆◥◤◢◣◥◤◢\n";
+//     cout << "Enter start to begin your adventure.\n";
+//     cin >> start;
 
-    // looping through the startup and the playing state diagram
-    // when either the user enter start or play once the user chooses to play
-    // after winning the game
+//     // looping through the startup and the playing state diagram
+//     // when either the user enter start or play once the user chooses to play
+//     // after winning the game
 
-    while (start == "start" || option == "play")
-    {
-        Startup starting;
-        starting.loadmap();
-        starting.validateMap();
-        starting.addPlayer();
+//     while (start == "start" || option == "play")
+//     {
+//         Startup starting;
+//         starting.loadmap();
+//         starting.validateMap();
+//         starting.addPlayer();
 
-        cout << "If you wish to start the game. "
-                "Enter gamestart. \n";
-        cin >> gamestart;
+//         cout << "If you wish to start the game. "
+//                 "Enter gamestart. \n";
+//         cin >> gamestart;
 
-        // reading a text file
+//         // reading a text file
 
-        if (start == "start" || option == "play")
-        {
-            Play playing;
-            playing.assignReinforcement();
-            playing.issueOrders();
-            playing.executeorders();
+//         if (start == "start" || option == "play")
+//         {
+//             Play playing;
+//             playing.assignReinforcement();
+//             playing.issueOrders();
+//             playing.executeorders();
+//         }
+
+//         cout
+//             << "If you wish to win. Enter win.\n Otherwise enter endexecorders if you wish to end executing orders. \n";
+//         cin >> option;
+
+//         if (option == "win")
+//         {
+//             Play playing;
+//             playing.win();
+
+//             cout
+//                 << "If you wish to continue playing. Enter play.\n Otherwise if you wish to end the game. Enter end. \n";
+//             cin >> option;
+//         }
+
+//         // loops through the methods assignReinforcement, issueOrders, executeorders, endexecuteorders
+//         // to allow user to go from executing orders to assigning reinforcement.
+
+//         while (option == "endexecorders")
+//         {
+//             Play playingexec;
+//             playingexec.assignReinforcement();
+//             playingexec.issueOrders();
+//             playingexec.executeorders();
+//             playingexec.endexecuteorders();
+
+//             cout
+//                 << "If you wish to win. Enter win.\n Otherwise enter endexecorders if you wish to end executing orders. \n";
+//             cin >> option;
+
+//             if (option == "win")
+//             {
+//                 Play playing;
+//                 playing.win();
+
+//                 cout
+//                     << "If you wish to continue playing. Enter play.\n Otherwise if you wish to end the game. Enter end. \n";
+//                 cin >> option;
+//             }
+//         }
+
+//         if (option == "end")
+//         {
+//             exit(0);
+//         }
+//     }
+// }
+void GameEngine::startupPhase(CommandProcessing* c){ 
+    vector<string*> valid_commands;
+    valid_commands.push_back(new string("loadmap"));
+    valid_commands.push_back(new string("validatemap"));
+    valid_commands.push_back(new string("addplayer"));
+    valid_commands.push_back(new string("gamestart"));
+    GameEngine game* = new GameEngine();
+    for(int i = 0; i < valid_commands.size(); i++){
+        if(valid_commands[i] == "addplayer"){
+            cout << "Enter 2 - 6 players" << endl;
+            do{
+                game.setStateName(valid_commands[i]);
+                string response;
+                c->getCommand(valid_commands[i]);
+                readCommandList(c, game);  
+                cout << "Are you done entering players(Y/N): ";
+                cin >> response;
+            } while(response == "Y");
+            
         }
-
-        cout
-            << "If you wish to win. Enter win.\n Otherwise enter endexecorders if you wish to end executing orders. \n";
-        cin >> option;
-
-        if (option == "win")
-        {
-            Play playing;
-            playing.win();
-
-            cout
-                << "If you wish to continue playing. Enter play.\n Otherwise if you wish to end the game. Enter end. \n";
-            cin >> option;
-        }
-
-        // loops through the methods assignReinforcement, issueOrders, executeorders, endexecuteorders
-        // to allow user to go from executing orders to assigning reinforcement.
-
-        while (option == "endexecorders")
-        {
-            Play playingexec;
-            playingexec.assignReinforcement();
-            playingexec.issueOrders();
-            playingexec.executeorders();
-            playingexec.endexecuteorders();
-
-            cout
-                << "If you wish to win. Enter win.\n Otherwise enter endexecorders if you wish to end executing orders. \n";
-            cin >> option;
-
-            if (option == "win")
-            {
-                Play playing;
-                playing.win();
-
-                cout
-                    << "If you wish to continue playing. Enter play.\n Otherwise if you wish to end the game. Enter end. \n";
-                cin >> option;
-            }
-        }
-
-        if (option == "end")
-        {
-            exit(0);
-        }
+        
+        game.setStateName(valid_commands[i]);
+        readCommandList(c, game);  
     }
+
+}
+void GameEngine::readCommandList(CommandProcessing* c, GameEngine *g){
+    Map m1;
+
+    for(Command *co: c->gameCommands){
+                if((*co->theCommand.find("loadmap") != -1) && (*co->theEffect.find("ERROR") == -1) && (g->getStateName() == "loadmap")){
+                    string file = *co->theCommand;
+                    string map = file.substr(nthSubstr(1,file,"<"), nthSubstr(1,file,".map"));
+                    map.erase(remove(map.begin(), map.end(), '<'), map.end());
+                    map.erase(remove(map.begin(), map.end(), '>'), map.end());
+                    MapLoader* loadmap = new MapLoader();
+                    m1 = loadmap->readMapFile(map);
+                    delete loadmap;
+                }
+                else if(*co->theCommand.find("validatemap") && (*co->theEffect.find("ERROR") == -1) && (g->getStateName() == "validatemap")){
+                    m1.validate();
+                }
+                else if(*co->theCommand.find("addplayer") && (*co->theEffect.find("ERROR") == -1) && (g->getStateName() == "addplayer") && (co->theEffect != "player added")){
+                    //new player added
+                    //co->theEffect = "player added"
+                }
+                else if(*co->theCommand.find("gamestart") && (*co->theEffect.find("ERROR") == -1) && (g->getStateName() == "gamestart")){
+
+                }
+
+            }
+
 }
 void GameEngine::reinforcementPhase(){
 
@@ -376,4 +429,20 @@ void GameEngine::issueOrdersPhase(){
 void GameEngine::executeOrdersPhase(){
     
 }
+//free function that finds nth occurence of a string
+//reference: https://www.oreilly.com/library/view/c-cookbook/0596007612/ch04s11.html
+int nthSubstr(int n, const string& s, const string& p) {
+            string::size_type i = s.find(p);     
+
+            int j;
+            for (j = 1; j < n && i != string::npos; ++j){
+                i = s.find(p, i+1); 
+            }
+            if (j == n)
+                return(i);
+            else
+                return(s.length());
+}
+
+
 
