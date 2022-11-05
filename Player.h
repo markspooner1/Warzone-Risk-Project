@@ -28,7 +28,7 @@ private:
 
     OrdersList* orderList;  // collection of Orders
     Hand* hand;            //collection of Cards
-    vector<Territory> *territories;     //collection of territories
+    vector<Territory*> territories;     //collection of territories
 
 
 public:
@@ -38,13 +38,15 @@ public:
 
     Player();   //default Constructor
 
-    Player(OrdersList *orderList, Hand *hand, vector<Territory> *territories);   //constructor
+    Player(OrdersList *orderList, Hand *hand, vector<Territory*> territories);   //constructor
+
+    Player(string name);
 
     virtual ~Player();      //destructor
 
-    vector<Territory>* toDefend();      //method to defend territories
+    vector<Territory*> toDefend();      //method to defend territories
 
-    vector<Territory>* toAttack(const  vector<Territory> * ALLTERRITORIES);     //method to attack territories
+    vector<Territory*> toAttack(const  vector<Territory*>  ALLTERRITORIES);     //method to attack territories
 
     //method to create an order object and add it to the orderlist (collection of orders)
     void issueOrder(issue_order_types order_type, int ID, string name, string source, string target, int num_of_units );
@@ -54,20 +56,28 @@ public:
 
     Hand *getHand() const;      //getter for the collection of cards named hand
 
-    vector<Territory> *getTerritories() const;  //getter for the collection of territories
+    vector<Territory*> getTerritories() const;  //getter for the collection of territories
 
     //Setters:
     void setOrders(OrdersList *orders);  //setter for the collection orders named orderList
 
     void setHand(Hand *hand);       //setter for the collection of cards named hand
 
-    void setTerritories(vector<Territory> *territories);        //Setter for the collection of territories
+    void setTerritories(vector<Territory*> territories);        //Setter for the collection of territories
+
+    void addTerritory(Territory *t);
 
     Player & operator= (const Player&);     //Assignment operator = 
 
     //Friend method:
     friend ostream & operator << (ostream &out, const Player &player);    // Method to overload the << operator to print the player
+    
+    string name;
 
+    int *reinforcement_pool;
+
+    void setName(string name);
+    
 };
 
 void testPlayers();

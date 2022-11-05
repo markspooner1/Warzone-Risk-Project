@@ -8,26 +8,27 @@
 #include "Orders.h"
 
 //constructor
-Player::Player(OrdersList *orderList, Hand *hand, vector<Territory> *territories) : orderList(orderList), hand(hand),
+Player::Player(OrdersList *orderList, Hand *hand, vector<Territory*> territories) : orderList(orderList), hand(hand),
 
                                                                                     territories(territories) {}
 //Assign all attributes to NULL
 Player::Player() {
     this->orderList = NULL;
-    this->territories = NULL;
     this->hand = NULL;
 }
 
 //Copy constructor
 Player::Player(const Player &player) {
     this->orderList = new OrdersList(*player.orderList);
-    this->territories = new vector<Territory>(*(player.territories));
+    this->territories = player.getTerritories();
     this->hand = new Hand(*(player.hand));
 }
 
+Player::Player(string name){
+    this->name = name;
+}
 //Destructor
 Player::~Player() {
-    this->territories = NULL;
     this->hand = NULL;
     this->orderList = NULL;
 };
@@ -46,7 +47,7 @@ Hand *Player::getHand() const {
 }
 
 //getter for the collection of territories
-vector<Territory>* Player::getTerritories() const {
+vector<Territory*> Player::getTerritories() const {
     return territories;
 }
 
@@ -64,7 +65,7 @@ void Player::setHand(Hand *hand) {
 }
 
 //Setter for the collection of territories
-void Player::setTerritories(vector<Territory> *territories) {
+void Player::setTerritories(vector<Territory*> territories) {
     Player::territories = territories;
 }
 
@@ -115,14 +116,14 @@ void Player::issueOrder(issue_order_types order_type, int ID, string name, strin
 
 //method to defend territories
 //return subset of the territories that belong to the player (arbitrary for now)
-vector<Territory>* Player::toDefend() {
-    vector<Territory>* ToDefendTerritories = new vector<Territory>;
+vector<Territory*> Player::toDefend() {
+    vector<Territory*> ToDefendTerritories;
 
-    vector<Territory>* ptr = this->getTerritories();
+    vector<Territory*> ptr = this->getTerritories();
 
-    int LIMIT = (this->territories)->size();
+    int LIMIT = (this->territories).size();
     for (size_t i = 0; i < LIMIT; i++) {
-        ToDefendTerritories->push_back(ptr->at(i));
+        ToDefendTerritories.push_back(ptr.at(i));
         i++;
     }
     return ToDefendTerritories;
@@ -131,28 +132,28 @@ vector<Territory>* Player::toDefend() {
 
 //method to attack territories
 //return an arbitary territories that do not belong to the player by creating the attackable territories vector
-vector<Territory>* Player::toAttack(const  vector<Territory> * ALLTERRITORIES ) {
+vector<Territory*> Player::toAttack(const  vector<Territory*> ALLTERRITORIES ) {
     //return arbitrary territories for now
 
     //vector of territories that do not belong to the player
-    vector<Territory> * attackableTerritories = new vector<Territory>;
+    vector<Territory*>  attackableTerritories;
     //vector of territories to be returned
-    vector<Territory> * ToAttackTerritories = new vector<Territory>;
+    vector<Territory*> ToAttackTerritories;
 
 
     //init the attackable vector
-    vector<Territory> ALL = *ALLTERRITORIES;
-    vector<Territory> Current = *(this->territories);
+    vector<Territory*> ALL = ALLTERRITORIES;
+    vector<Territory*> Current = (this->territories);
 
     int LIMIT1 = Current.size();
     int LIMIT2 = ALL.size();
 
     for (size_t i = 0; i < LIMIT1; i++) {
-        string compared_element = Current.at(i).getName();
+        string compared_element = Current.at(i)->getName();
 
         for (size_t j = 0; j < LIMIT2; j++) {
-            if(compared_element == ALL.at(j).getName()){
-                attackableTerritories->push_back(Current.at(i));
+            if(compared_element == ALL.at(j)->getName()){
+                attackableTerritories.push_back(Current.at(i));
                 break;
             }
 
@@ -161,17 +162,19 @@ vector<Territory>* Player::toAttack(const  vector<Territory> * ALLTERRITORIES ) 
 
 
     //assigning arbitrary territories from attackable to toAttack which will be returned
-    int LIMIT = (attackableTerritories)->size();
+    int LIMIT = (attackableTerritories).size();
     for (size_t i = 0; i < LIMIT; i++) {
-        ToAttackTerritories->push_back(attackableTerritories->at(i));
+        ToAttackTerritories.push_back(attackableTerritories.at(i));
         i++;
     }
-    delete attackableTerritories;
+    //delete attackableTerritories;
     return ToAttackTerritories;
 
 }
 
-
+void Player::addTerritory(Territory *t){
+    this->territories.push_back(t);
+}
 // Method to overload the << operator to print the player
 //returns the attributes of the player, namely hand, orders, and territories.
 ostream & operator << (ostream &out, const Player &player)
@@ -184,9 +187,9 @@ ostream & operator << (ostream &out, const Player &player)
 
 
     cout<< "\nplayer territories:\n";
-    int LIMIT = (player.getTerritories())->size();
+    int LIMIT = (player.getTerritories()).size();
     for (size_t i = 0; i < LIMIT; i++) {
-        cout << (player.getTerritories())->at(i)<< endl;
+        cout << (player.getTerritories()).at(i)<< endl;
     }
 
     return out;
@@ -196,9 +199,12 @@ ostream & operator << (ostream &out, const Player &player)
 Player &Player::operator=(const Player &player) {
 
     this->orderList = new OrdersList(*player.orderList);
-    this->territories = new vector<Territory>(*(player.territories));
+    this->territories = player.getTerritories();
     this->hand = new Hand(*(player.hand));
 
     return *this;
+}
+void Player::setName(string name){
+    this->name = name;
 }
 
