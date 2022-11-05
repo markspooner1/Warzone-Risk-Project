@@ -2,11 +2,17 @@
 #include <iostream>
 using namespace std;
 
-void testGameStates()
-{
+// void testGameStates()
+// {
 
-    // starts the startup phase then leads to the play phase once user enters gamestart
+//     // starts the startup phase then leads to the play phase once user enters gamestart
 
-    GameEngine startup;
-    startup.startupPhase();
+//     GameEngine startup;
+//     startup.startupPhase();
+// }
+
+void testStartupPhase(){
+    CommandProcessing *c = new CommandProcessing();
+    GameEngine *g = new GameEngine();
+    g->startupPhase(c);
 }

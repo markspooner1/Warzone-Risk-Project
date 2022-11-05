@@ -35,6 +35,7 @@ void CommandProcessing::saveCommand(string command, string effect, string * curr
     } else {
         cout << "Command is NOT valid. Saving.";
         effect = "ERROR";
+        *currentState = "ERROR";
     }
 
     Command c = Command(command);

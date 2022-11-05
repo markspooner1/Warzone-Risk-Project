@@ -11,6 +11,7 @@
 
 
 #include <iostream>
+#include <vector>
 #include "CommandProcessing.h"
 #include "Player.h"
 // istream and ostream are defined in the std namespace in the iostream library
@@ -43,8 +44,10 @@ class GameEngine
      void reinforcementPhase();
      void issueOrdersPhase();
      void executeOrdersPhase();
-     void readCommandList(CommandProcessing* c, GameEngine* g);
+     void readCommandList(CommandProcessing* c);
      vector<Player*> players;
+     Map map;
+     Deck *deck;
      
 };
 
@@ -79,4 +82,5 @@ void testGameStates();
 #endif
 
 
-int nthSubstr(int n, const string& s, const string& p);
+bool search(vector<Player*> player, string command);
+void testStartupPhase();

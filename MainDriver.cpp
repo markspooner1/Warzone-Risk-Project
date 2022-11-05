@@ -4,7 +4,8 @@
 #include "Cards.h"
 #include "Orders.h"
 int main(){
-    testLoadMaps();
+    testStartupPhase();
+    //testLoadMaps();
  
     //  testPlayers();
   

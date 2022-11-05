@@ -25,3 +25,6 @@ void testLoadMaps(){
     delete m;
  }
 
+int main(){
+   testLoadMaps();
+}

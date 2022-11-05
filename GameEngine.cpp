@@ -10,6 +10,7 @@
 #include <iterator>
 #include <algorithm>
 #include <stack>
+#include <random>
 
 using namespace std;
 // implementing encapsulation
@@ -368,53 +369,102 @@ void Play::win()
 //     }
 // }
 void GameEngine::startupPhase(CommandProcessing* c){ 
-    vector<string*> valid_commands;
-    valid_commands.push_back(new string("loadmap"));
-    valid_commands.push_back(new string("validatemap"));
-    valid_commands.push_back(new string("addplayer"));
-    valid_commands.push_back(new string("gamestart"));
-    GameEngine game* = new GameEngine();
-    for(int i = 0; i < valid_commands.size(); i++){
-        if(valid_commands[i] == "addplayer"){
-            cout << "Enter 2 - 6 players" << endl;
-            do{
-                game.setStateName(valid_commands[i]);
+    vector<string*> states;
+    states.push_back(new string("start"));
+    states.push_back(new string("maploaded"));
+    states.push_back(new string("mapvalidated"));
+    states.push_back(new string("playersadded"));
+    int i = 0;
+    this->setStateName(new string(" "));
+    while(i < states.size()){
+        if(states[i]->compare("mapvalidated") == 0 || states[i]->compare("playersadded") == 0){
+            while(this->getStateName()->compare("play") != 0){
+                cout << "Enter 2 - 6 players, startgame when ready" << endl;
                 string response;
-                c->getCommand(valid_commands[i]);
-                readCommandList(c, game);  
-                cout << "Are you done entering players(Y/N): ";
-                cin >> response;
-            } while(response == "Y");
+                c->getCommand(states[i]);
+                this->setStateName(states[i]);
+                readCommandList(c);      
+            }
+        }else{
+            if(this->getStateName()->compare("play") == 0) {
+                break;
+            }
+            string nextstate = *states[i];
+            c->getCommand(states[i]);
+            this->setStateName(states[i]);
+
+            if(this->getStateName()->compare("ERROR") == 0){
+                *states[i] = nextstate;
+                continue;
+            }
+            readCommandList(c);  
             
+
+           
         }
-        
-        game.setStateName(valid_commands[i]);
-        readCommandList(c, game);  
+         i++;
     }
-
 }
-void GameEngine::readCommandList(CommandProcessing* c, GameEngine *g){
-    Map m1;
-
-    for(Command *co: c->gameCommands){
-                if((*co->theCommand.find("loadmap") != -1) && (*co->theEffect.find("ERROR") == -1) && (g->getStateName() == "loadmap")){
-                    string file = *co->theCommand;
-                    string map = file.substr(nthSubstr(1,file,"<"), nthSubstr(1,file,".map"));
-                    map.erase(remove(map.begin(), map.end(), '<'), map.end());
-                    map.erase(remove(map.begin(), map.end(), '>'), map.end());
+void GameEngine::readCommandList(CommandProcessing* c){
+    for(Command co: c->gameCommands){
+                if((co.theCommand.find("loadmap") != std::string::npos) && ((*this->getStateName()).compare("maploaded") == 0)){
+                    string file = co.theCommand;
+                    string mp = file.substr(nthSubstr(1,file,"<"), nthSubstr(1,file,">"));
+                    mp.erase(remove(mp.begin(), mp.end(), '<'), mp.end());
+                    mp.erase(remove(mp.begin(), mp.end(), '>'), mp.end());
                     MapLoader* loadmap = new MapLoader();
-                    m1 = loadmap->readMapFile(map);
+                    mp = ".mapFiles/" + mp;
+                    this->map = loadmap->readMapFile(mp);
                     delete loadmap;
                 }
-                else if(*co->theCommand.find("validatemap") && (*co->theEffect.find("ERROR") == -1) && (g->getStateName() == "validatemap")){
-                    m1.validate();
+                else if((co.theCommand.find("validatemap") != std::string::npos) && (this->getStateName()->compare("mapvalidated") == 0)){
+                    this->map.validate();
+                    
                 }
-                else if(*co->theCommand.find("addplayer") && (*co->theEffect.find("ERROR") == -1) && (g->getStateName() == "addplayer") && (co->theEffect != "player added")){
-                    //new player added
-                    //co->theEffect = "player added"
-                }
-                else if(*co->theCommand.find("gamestart") && (*co->theEffect.find("ERROR") == -1) && (g->getStateName() == "gamestart")){
+                else if((co.theCommand.find("addplayer")!= std::string::npos) && (this->getStateName()->compare("playersadded") == 0)){
+                   
+                    string player_name = co.theCommand;
+                   
+                    player_name = player_name.substr(nthSubstr(1,player_name, "<"), nthSubstr(1,player_name,">"));
+                    player_name.erase(remove(player_name.begin(), player_name.end(), '<'), player_name.end());
+                    player_name.erase(remove(player_name.begin(), player_name.end(), '>'), player_name.end());
+                     if(search(this->players, player_name)) {
+                        continue;
+                    }
+                    this->players.push_back(new Player(player_name));
 
+                }
+                else if((co.theCommand.find("gamestart") != std::string::npos) && (this->getStateName()->compare("assignreinforcement") == 0)){
+                    // //Randomize territories
+                    this->setStateName(new string("play"));
+                    int total_territories = this->map.getTerritories().size();
+                    shuffle(this->map.getTerritories().begin(), this->map.getTerritories().end(), random_device());
+                    int terrPerPlayer = (total_territories/this->players.size());
+                    this->players[0]->addTerritory(this->map.getTerritories()[0]);
+                    for(int i = 0; i < this->map.getTerritories().size(); i++){
+                        for(int j = 0; j < this->players.size(); j++){
+                            this->players[j]->addTerritory(this->map.getTerritories()[i]);
+                            i++;
+                        }
+                    }
+                    for(int i = 0; i < this->players.size(); i++){
+                        cout << "Player: ";
+                        cout << this->players[i]->name << endl;
+                        cout << "Assigned Territories: " << endl; 
+                        for(int j = 0; j < this->players[i]->getTerritories().size(); j++){
+                            cout<< this->players[i]->getTerritories()[j]->getName() << endl;
+                        }
+                    }
+                   
+                    shuffle(this->players.begin(), players.end(), random_device());
+                    //Give 50 army units to the players
+                    // let each player draw 2 cards
+                     for(Player* p: this->players){
+                        p->reinforcement_pool = new int(50);
+                        // p->getHand()->set_cards_in_hand(this->deck->draw());
+                        // p->getHand()->set_cards_in_hand(this->deck->draw());
+                     }
+                    
                 }
 
             }
@@ -429,20 +479,12 @@ void GameEngine::issueOrdersPhase(){
 void GameEngine::executeOrdersPhase(){
     
 }
-//free function that finds nth occurence of a string
-//reference: https://www.oreilly.com/library/view/c-cookbook/0596007612/ch04s11.html
-int nthSubstr(int n, const string& s, const string& p) {
-            string::size_type i = s.find(p);     
+bool search(vector<Player*> player, string command){
+    for(int i = 0; i < player.size(); i++){
+        if(player[i]->name.compare(command) == 0){
+            return true;
+        }
+    }
+    return false;
 
-            int j;
-            for (j = 1; j < n && i != string::npos; ++j){
-                i = s.find(p, i+1); 
-            }
-            if (j == n)
-                return(i);
-            else
-                return(s.length());
 }
-
-
-
