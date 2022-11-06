@@ -47,7 +47,8 @@ class GameEngine
      void readCommandList(CommandProcessing* c);
      vector<Player*> players;
      Map map;
-     Deck *deck;
+     Deck deck;
+     int num_players;
      
 };
 

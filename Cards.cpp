@@ -114,7 +114,7 @@ void Deck::initial_deck()
 	for (int a = 0; a < 6; a++) {
 		for(int b=0; b<5; b++)
 		{
-			pointer_to_card = new Card;//create Card
+			pointer_to_card = new Card();//create Card
 
 			if(b == 0){
 				pointer_to_card->set_card_type_id(0);

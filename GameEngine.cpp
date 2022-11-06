@@ -369,7 +369,10 @@ void Play::win()
 //     }
 // }
 void GameEngine::startupPhase(CommandProcessing* c){ 
+    this->num_players = 0;
+    this->deck.initial_deck();
     vector<string*> states;
+    this->setStateName(new string("start"));
     states.push_back(new string("start"));
     states.push_back(new string("maploaded"));
     states.push_back(new string("mapvalidated"));
@@ -378,29 +381,33 @@ void GameEngine::startupPhase(CommandProcessing* c){
     this->setStateName(new string(" "));
     while(i < states.size()){
         if(states[i]->compare("mapvalidated") == 0 || states[i]->compare("playersadded") == 0){
-            while(this->getStateName()->compare("play") != 0){
+            while(this->getStateName()->compare("play") != 0 && num_players < 6){
+                cout << "**Current State**: "<<*this->getStateName() << endl;
                 cout << "Enter 2 - 6 players, startgame when ready" << endl;
-                string response;
+                string nextstate = *states[i];
                 c->getCommand(states[i]);
                 this->setStateName(states[i]);
+                if(this->getStateName()->compare("ERROR") == 0){
+                    *states[i] = nextstate;
+                    continue;
+                }
                 readCommandList(c);      
             }
-        }else{
-            if(this->getStateName()->compare("play") == 0) {
-                break;
-            }
-            string nextstate = *states[i];
-            c->getCommand(states[i]);
-            this->setStateName(states[i]);
+            }else{
+                cout << "**Current State**: "<<*this->getStateName() << endl;
+                if(this->getStateName()->compare("play") == 0) {
+                    break;
+                }
+                string nextstate = *states[i];
+                c->getCommand(states[i]);
+                this->setStateName(states[i]);
 
-            if(this->getStateName()->compare("ERROR") == 0){
-                *states[i] = nextstate;
-                continue;
-            }
-            readCommandList(c);  
-            
-
-           
+                if(this->getStateName()->compare("ERROR") == 0){
+                    *states[i] = nextstate;
+                    continue;
+                }
+                readCommandList(c);  
+        
         }
          i++;
     }
@@ -415,7 +422,6 @@ void GameEngine::readCommandList(CommandProcessing* c){
                     MapLoader* loadmap = new MapLoader();
                     mp = ".mapFiles/" + mp;
                     this->map = loadmap->readMapFile(mp);
-                    delete loadmap;
                 }
                 else if((co.theCommand.find("validatemap") != std::string::npos) && (this->getStateName()->compare("mapvalidated") == 0)){
                     this->map.validate();
@@ -438,31 +444,32 @@ void GameEngine::readCommandList(CommandProcessing* c){
                     // //Randomize territories
                     this->setStateName(new string("play"));
                     int total_territories = this->map.getTerritories().size();
-                    shuffle(this->map.getTerritories().begin(), this->map.getTerritories().end(), random_device());
-                    int terrPerPlayer = (total_territories/this->players.size());
-                    this->players[0]->addTerritory(this->map.getTerritories()[0]);
-                    for(int i = 0; i < this->map.getTerritories().size(); i++){
+                    //shuffle(this->map.getTerritories().begin(), this->map.getTerritories().end(), random_device());
+                    //int terrPerPlayer = (total_territories/this->players.size());
+                    for(int i = 0; i < total_territories;){
                         for(int j = 0; j < this->players.size(); j++){
+                            if(i == this->map.getTerritories().size()) break;
                             this->players[j]->addTerritory(this->map.getTerritories()[i]);
                             i++;
                         }
                     }
+
                     for(int i = 0; i < this->players.size(); i++){
-                        cout << "Player: ";
+                        cout << "\nPlayer: ";
                         cout << this->players[i]->name << endl;
-                        cout << "Assigned Territories: " << endl; 
+                        cout << "Assigned Territories: \n" << endl; 
                         for(int j = 0; j < this->players[i]->getTerritories().size(); j++){
                             cout<< this->players[i]->getTerritories()[j]->getName() << endl;
                         }
                     }
                    
                     shuffle(this->players.begin(), players.end(), random_device());
-                    //Give 50 army units to the players
+                    // Give 50 army units to the players
                     // let each player draw 2 cards
                      for(Player* p: this->players){
                         p->reinforcement_pool = new int(50);
-                        // p->getHand()->set_cards_in_hand(this->deck->draw());
-                        // p->getHand()->set_cards_in_hand(this->deck->draw());
+                         p->getHand()->set_cards_in_hand(this.deck.draw());
+                         p->getHand()->set_cards_in_hand(this.deck.draw());
                      }
                     
                 }
