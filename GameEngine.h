@@ -14,10 +14,11 @@
 #include <vector>
 #include "CommandProcessing.h"
 #include "Player.h"
+#include "LoggingObserver.h"
 // istream and ostream are defined in the std namespace in the iostream library
 using namespace std;
 
-class GameEngine
+class GameEngine: public Subject, public ILoggable
 {
   private: string* stateName;
   public:
@@ -49,7 +50,11 @@ class GameEngine
      Map map;
      Deck deck;
      int num_players;
-     
+
+    //this funtion is for ILoggable class in LoggingObserver.h
+    std::string stringToLog() override;
+
+
 };
 
 class Startup

@@ -7,10 +7,11 @@
 #include <iostream>
 #include <fstream>
 #include <stack>
+#include "LoggingObserver.h"
 
 using namespace std;
 
-class Command {
+class Command: public Subject, public ILoggable {
     public:
         string theCommand; // command that was types
         string theEffect; // effect of command or error message
@@ -21,9 +22,13 @@ class Command {
         Command(string command);
         ~Command();
         //ostream& operator<<(ostream& os, const Command& c);
+
+
+    //this funtion is for ILoggable class in LoggingObserver.h
+    std::string stringToLog() override;
 };
 
-class CommandProcessing {
+class CommandProcessing: public Subject, public ILoggable {
     private:
          void readCommand(string * currentState); // get command from console
     public:
@@ -32,6 +37,10 @@ class CommandProcessing {
          void saveCommand(string command, string effect, string * currentState); // saves command to gameCommands
          CommandProcessing();
          ~CommandProcessing();
+
+    //this funtion is for ILoggable class in LoggingObserver.h
+    std::string stringToLog() override;
+
 };
 
 class CommandProcessor {

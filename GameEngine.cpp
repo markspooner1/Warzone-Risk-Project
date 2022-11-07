@@ -43,6 +43,13 @@ string *GameEngine::getStateName() const
 void GameEngine::setStateName(string *stateNamee)
 {
     GameEngine::stateName = stateNamee;
+    //Notifies observers
+    Notify(this);
+}
+
+//this funtion is for ILoggable class in LoggingObserver.h
+std::string GameEngine::stringToLog() {
+    return "Game Engine new state: " + *getStateName();
 }
 
 ostream &operator<<(ostream &out, const GameEngine *engine)

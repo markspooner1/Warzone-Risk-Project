@@ -39,16 +39,29 @@ void CommandProcessing::saveCommand(string command, string effect, string * curr
     }
 
     Command c = Command(command);
+
+    this->gameCommands.push_back(c);
+    Notify(this);
+
     c.saveEffect(effect);
 
     cout << c;
 
-    this->gameCommands.push_back(c);
+
+
+}
+std::string CommandProcessing::stringToLog(){
+    return "Command: " + gameCommands.back().theCommand;
 }
 
 
 void Command::saveEffect(string effect) {
     theEffect = effect;
+    Notify(this);
+}
+
+std::string Command::stringToLog(){
+    return "Command's effect: " + theEffect;
 }
 
 string CommandProcessor::validate(string str, string * currentState){
