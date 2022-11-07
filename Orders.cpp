@@ -46,8 +46,12 @@ void Order::setOrderName(string nom) {
 
 void Order::execute() {
 	if (validate()) {
+        Notify(this);
 		cout << "Order has been executed";
 	}
+}
+std::string Order::stringToLog(){
+    return "Command Executed: " + getOrderName();
 }
 
 bool Order::validate() {
@@ -101,6 +105,7 @@ void OrderAdvance::execute() {
 	if (validate()) {
 		cout << "Arrival of " << *numberOfunits << " units to " << *TargetTerritory << " coming from " << *SourceTerritory << endl;
 		cout << "Advance Order has been executed\n";
+        Notify(this);
 	}
 	else
 		cout << "Order has not been executed" << endl;
@@ -159,6 +164,7 @@ void OrderDeploy::execute() {
 	if (validate()) {
 		cout << "Deployment of " << *TargetTerritory << " units to " << *numberOfunits << endl;
 		cout << "Deploy Order has been executed\n";
+        Notify(this);
 	}
 	else
 		cout << "Order has not been executed" << endl;
@@ -208,7 +214,7 @@ void OrderBomb::execute() {
 	if (validate()) {
 		cout << *TargetTerritory << " has been bombed successfully!! Half of the units were wiped out!\n";
 		cout << "Bomb order has been executed\n";
-
+        Notify(this);
 	}
 	else
 		cout << "Order has not been executed" << endl;
@@ -261,7 +267,7 @@ void OrderBlockade::execute() {
 	if (validate()) {
 		cout<<"The number of units on the territory " << *TargetTerritory << " has been tripled! It is now a neutral territory." << endl;
 		cout << "Blockade order has been executed\n";
-
+        Notify(this);
 	}
 	else
 		cout << "Order has not been executed" << endl;
@@ -327,6 +333,7 @@ void OrderAirlift::execute() {
 	if (validate()) {
 		cout << *numberOfunits << " units have arrived in " << *TargetTerritory << " from " << *SourceTerritory << endl;
 		cout << "Airlift order has been executed\n";
+        Notify(this);
 	}
 	else
 		cout << "Order has not been executed" << endl;
@@ -384,6 +391,7 @@ void OrderNegotiate::execute() {
 	if (validate()) {
 		cout<< *TargetTerritory << " and  " << *SourceTerritory << " can no longer attack each other" << endl;
 		cout << "Negotiation Order has been executed\n";
+        Notify(this);
 	}
 	else
 		cout << "Order has not been executed" << endl;
@@ -468,4 +476,10 @@ void OrdersList::remove() {
 
  void OrdersList::addOrder(Order o) {
  	this->ol.push_back(&o);
+     Notify(this);
+
  }
+
+std::string OrdersList::stringToLog(){
+    return "Command Issued: " + ol.back()->getOrderName();
+}

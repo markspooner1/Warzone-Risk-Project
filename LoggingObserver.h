@@ -23,27 +23,27 @@ class Observer{
 
 public:
     Observer();
-    ~Observer();
+    virtual ~Observer();
     virtual void Update(ILoggable* iloggable);
 
 };
 
-
-
-
+//this is a singleton class
 class Subject{
 private:
 
+
+    static std::list<Observer*> observers;
+
 public:
 
-    std::list<std::shared_ptr<Observer>> observers;
 
     Subject();
 
     ~Subject();
 
-    void addObserver(std::shared_ptr<Observer> observer);
-    void removeObserver(std::shared_ptr<Observer> observer);
+    void addObserver(Observer* observer);
+    void removeObserver(Observer* observer);
     void Notify(ILoggable* iloggable);
 
 };
@@ -51,14 +51,13 @@ public:
 
 class LogObserver: public Observer{
 private:
-    std::shared_ptr<std::fstream> logFile;
+    std::ofstream logFile;
 
-    void write_log();
 
 public:
     LogObserver();
     ~LogObserver();
-    void Update(ILoggable* iLoggable);
+    virtual void Update(ILoggable* iLoggable);
 };
 
 

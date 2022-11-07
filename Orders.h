@@ -5,9 +5,10 @@
 #include <iterator>
 #include <list>
 #include <vector>
+#include "LoggingObserver.h"
 using namespace std;
 
-class Order {
+class Order: public Subject, public ILoggable {
 public:
 	virtual bool validate();
 	virtual void execute();
@@ -20,12 +21,14 @@ public:
 	std::string getOrderName();
 	void setOrderName(string);
 	friend ostream& operator<<(ostream& os, const Order& ordre);
+
+    std::string stringToLog();
 private:
 	int* OrderID;
 	std::string* name;
 };
 
-class OrdersList {
+class OrdersList: public Subject, public ILoggable{
 public:
 	void move();
 	void remove();
@@ -35,6 +38,8 @@ public:
 	vector<Order *> ol;
 	friend ostream& operator<<(ostream& os, const OrdersList& ordre);
 	void addOrder(Order o);
+
+    std::string stringToLog();
 };
 
 class OrderAdvance :public Order {
