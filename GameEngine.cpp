@@ -488,16 +488,23 @@ void GameEngine::mainGameLoop(){
 
   bool winner = false;
   int totalTerritories;
-  
+
   do {
     // check if there is a winner to terminate loop
-       for(Player* p: this->players){
-        if(p->getTerritories().size() == totalTerritories)
-        { 
+
+        for(Player* p: players){
+            if(p->getTerritories().size()==0){
+            delete p;
+            p =NULL;
+        }
+    }
+
+        for(Player* p: this->players){
+            if(p->getTerritories().size() == totalTerritories){ 
             winner = true; 
             cout << "the winner of this game is " << p->name;
         }
-       } 
+       }
     //       
       reinforcementPhase();
 
