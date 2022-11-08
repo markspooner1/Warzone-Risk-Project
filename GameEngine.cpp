@@ -2,7 +2,6 @@
 #include "Map.h"
 #include <iostream>
 #include <string>
-#include <regex>
 #include <fstream>
 #include <regex>
 #include <vector>
@@ -43,12 +42,13 @@ string *GameEngine::getStateName() const
 void GameEngine::setStateName(string *stateNamee)
 {
     GameEngine::stateName = stateNamee;
-    //Notifies observers
+    // Notifies observers
     Notify(this);
 }
 
-//this funtion is for ILoggable class in LoggingObserver.h
-std::string GameEngine::stringToLog() {
+// this funtion is for ILoggable class in LoggingObserver.h
+std::string GameEngine::stringToLog()
+{
     return "Game Engine new state: " + *getStateName();
 }
 
@@ -375,10 +375,11 @@ void Play::win()
 //         }
 //     }
 // }
-void GameEngine::startupPhase(CommandProcessing* c){ 
+void GameEngine::startupPhase(CommandProcessing *c)
+{
     this->num_players = 0;
     this->deck.initial_deck();
-    vector<string*> states;
+    vector<string *> states;
     this->setStateName(new string("start"));
     states.push_back(new string("start"));
     states.push_back(new string("maploaded"));
@@ -386,161 +387,261 @@ void GameEngine::startupPhase(CommandProcessing* c){
     states.push_back(new string("playersadded"));
     int i = 0;
     this->setStateName(new string(" "));
-    while(i < states.size()){
-        if(states[i]->compare("mapvalidated") == 0 || states[i]->compare("playersadded") == 0){
-            while(this->getStateName()->compare("play") != 0 && num_players < 6){
-                cout << "**Current State**: "<<*this->getStateName() << endl;
+    while (i < states.size())
+    {
+        if (states[i]->compare("mapvalidated") == 0 || states[i]->compare("playersadded") == 0)
+        {
+            while (this->getStateName()->compare("play") != 0 && num_players < 6)
+            {
+                cout << "**Current State**: " << *this->getStateName() << endl;
                 cout << "Enter 2 - 6 players, startgame when ready" << endl;
                 string nextstate = *states[i];
                 c->getCommand(states[i]);
                 this->setStateName(states[i]);
-                if(this->getStateName()->compare("ERROR") == 0){
+                if (this->getStateName()->compare("ERROR") == 0)
+                {
                     *states[i] = nextstate;
                     continue;
                 }
-                readCommandList(c);      
+                readCommandList(c);
             }
-            }else{
-                cout << "**Current State**: "<<*this->getStateName() << endl;
-                if(this->getStateName()->compare("play") == 0) {
-                    break;
-                }
-                string nextstate = *states[i];
-                c->getCommand(states[i]);
-                this->setStateName(states[i]);
-
-                if(this->getStateName()->compare("ERROR") == 0){
-                    *states[i] = nextstate;
-                    continue;
-                }
-                readCommandList(c);  
-        
         }
-         i++;
+        else
+        {
+            cout << "**Current State**: " << *this->getStateName() << endl;
+            if (this->getStateName()->compare("play") == 0)
+            {
+                break;
+            }
+            string nextstate = *states[i];
+            c->getCommand(states[i]);
+            this->setStateName(states[i]);
+
+            if (this->getStateName()->compare("ERROR") == 0)
+            {
+                *states[i] = nextstate;
+                continue;
+            }
+            readCommandList(c);
+        }
+        i++;
     }
 }
-void GameEngine::readCommandList(CommandProcessing* c){
-    for(Command co: c->gameCommands){
-                if((co.theCommand.find("loadmap") != std::string::npos) && ((*this->getStateName()).compare("maploaded") == 0)){
-                    string file = co.theCommand;
-                    string mp = file.substr(nthSubstr(1,file,"<"), nthSubstr(1,file,">"));
-                    mp.erase(remove(mp.begin(), mp.end(), '<'), mp.end());
-                    mp.erase(remove(mp.begin(), mp.end(), '>'), mp.end());
-                    MapLoader* loadmap = new MapLoader();
-                    mp = ".mapFiles/" + mp;
-                    this->map = loadmap->readMapFile(mp);
-                }
-                else if((co.theCommand.find("validatemap") != std::string::npos) && (this->getStateName()->compare("mapvalidated") == 0)){
-                    this->map.validate();
-                    
-                }
-                else if((co.theCommand.find("addplayer")!= std::string::npos) && (this->getStateName()->compare("playersadded") == 0)){
-                   
-                    string player_name = co.theCommand;
-                   
-                    player_name = player_name.substr(nthSubstr(1,player_name, "<"), nthSubstr(1,player_name,">"));
-                    player_name.erase(remove(player_name.begin(), player_name.end(), '<'), player_name.end());
-                    player_name.erase(remove(player_name.begin(), player_name.end(), '>'), player_name.end());
-                     if(search(this->players, player_name)) {
-                        continue;
-                    }
-                    this->players.push_back(new Player(player_name));
+void GameEngine::readCommandList(CommandProcessing *c)
+{
+    for (Command co : c->gameCommands)
+    {
+        if ((co.theCommand.find("loadmap") != std::string::npos) && ((*this->getStateName()).compare("maploaded") == 0))
+        {
+            string file = co.theCommand;
+            string mp = file.substr(nthSubstr(1, file, "<"), nthSubstr(1, file, ">"));
+            mp.erase(remove(mp.begin(), mp.end(), '<'), mp.end());
+            mp.erase(remove(mp.begin(), mp.end(), '>'), mp.end());
+            MapLoader *loadmap = new MapLoader();
+            mp = ".mapFiles/" + mp;
+            this->map = loadmap->readMapFile(mp);
+        }
+        else if ((co.theCommand.find("validatemap") != std::string::npos) && (this->getStateName()->compare("mapvalidated") == 0))
+        {
+            this->map.validate();
+        }
+        else if ((co.theCommand.find("addplayer") != std::string::npos) && (this->getStateName()->compare("playersadded") == 0))
+        {
 
-                }
-                else if((co.theCommand.find("gamestart") != std::string::npos) && (this->getStateName()->compare("assignreinforcement") == 0)){
-                    // //Randomize territories
-                    this->setStateName(new string("play"));
-                    int total_territories = this->map.getTerritories().size();
-                    //shuffle(this->map.getTerritories().begin(), this->map.getTerritories().end(), random_device());
-                    //int terrPerPlayer = (total_territories/this->players.size());
-                    for(int i = 0; i < total_territories;){
-                        for(int j = 0; j < this->players.size(); j++){
-                            if(i == this->map.getTerritories().size()) break;
-                            this->players[j]->addTerritory(this->map.getTerritories()[i]);
-                            i++;
-                        }
-                    }
+            string player_name = co.theCommand;
 
-                    for(int i = 0; i < this->players.size(); i++){
-                        cout << "\nPlayer: ";
-                        cout << this->players[i]->name << endl;
-                        cout << "Assigned Territories: \n" << endl; 
-                        for(int j = 0; j < this->players[i]->getTerritories().size(); j++){
-                            cout<< this->players[i]->getTerritories()[j]->getName() << endl;
-                        }
-                    }
-                   
-                    shuffle(this->players.begin(), players.end(), random_device());
-                    // Give 50 army units to the players
-                    // let each player draw 2 cards
-                     for(Player* p: this->players){
-                        p->reinforcement_pool = new int(50);
-                         p->getHand()->set_cards_in_hand(this.deck.draw());
-                         p->getHand()->set_cards_in_hand(this.deck.draw());
-                     }
-                    
+            player_name = player_name.substr(nthSubstr(1, player_name, "<"), nthSubstr(1, player_name, ">"));
+            player_name.erase(remove(player_name.begin(), player_name.end(), '<'), player_name.end());
+            player_name.erase(remove(player_name.begin(), player_name.end(), '>'), player_name.end());
+            if (search(this->players, player_name))
+            {
+                continue;
+            }
+            this->players.push_back(new Player(player_name));
+        }
+        else if ((co.theCommand.find("gamestart") != std::string::npos) && (this->getStateName()->compare("assignreinforcement") == 0))
+        {
+            // //Randomize territories
+            this->setStateName(new string("play"));
+            int total_territories = this->map.getTerritories().size();
+            // shuffle(this->map.getTerritories().begin(), this->map.getTerritories().end(), random_device());
+            // int terrPerPlayer = (total_territories/this->players.size());
+            for (int i = 0; i < total_territories;)
+            {
+                for (int j = 0; j < this->players.size(); j++)
+                {
+                    if (i == this->map.getTerritories().size())
+                        break;
+                    this->players[j]->addTerritory(this->map.getTerritories()[i]);
+                    i++;
                 }
-
             }
 
-}
-void GameEngine::mainGameLoop(){
+            for (int i = 0; i < this->players.size(); i++)
+            {
+                cout << "\nPlayer: ";
+                cout << this->players[i]->name << endl;
+                cout << "Assigned Territories: \n"
+                     << endl;
+                for (int j = 0; j < this->players[i]->getTerritories().size(); j++)
+                {
+                    cout << this->players[i]->getTerritories()[j]->getName() << endl;
+                }
+            }
 
-  bool winner = false;
-  int totalTerritories;
-
-  do {
-    // check if there is a winner to terminate loop
-
-        for(Player* p: players){
-            if(p->getTerritories().size()==0){
-            delete p;
-            p =NULL;
+            shuffle(this->players.begin(), players.end(), random_device());
+            // Give 50 army units to the players
+            // let each player draw 2 cards
+            for (Player *p : this->players)
+            {
+                p->reinforcement_pool = new int(50);
+                p->getHand()->set_cards_in_hand(this.deck.draw());
+                p->getHand()->set_cards_in_hand(this.deck.draw());
+            }
         }
     }
+}
+void GameEngine::mainGameLoop()
+{
 
-        for(Player* p: this->players){
-            if(p->getTerritories().size() == totalTerritories){ 
-            winner = true; 
-            cout << "the winner of this game is " << p->name;
+    bool winner = false;
+    int totalTerritories;
+
+    do
+    {
+        // check if there is a winner to terminate loop
+
+        for (Player *p : players)
+        {
+            if (p->getTerritories().size() == 0)
+            {
+                delete p;
+                p = NULL;
+            }
         }
-       }
-    //       
-      reinforcementPhase();
+        totalTerritories = map.getTerritories().size();
 
-      issueOrdersPhase();
+        for (Player *p : this->players)
+        {
+            if (p->getTerritories().size() == totalTerritories)
+            {
+                winner = true;
+                cout << "the winner of this game is " << p->name;
+            }
+        }
+        //
+        reinforcementPhase();
 
-      executeOrdersPhase();
-  } while(!winner);   
+        issueOrdersPhase();
+
+        executeOrdersPhase();
+    } while (!winner);
 }
 
-
-void GameEngine::reinforcementPhase(){
-   // loop through player, add to each players armies comparatively to their contitents holding.
-   int armies;
-   for(Player* p: this->players){
-     armies = floor((p->getTerritories().size())/3);
-    *p->reinforcement_pool = armies;
-   }
+void GameEngine::reinforcementPhase()
+{
+    // loop through player, add to each players armies comparatively to their contitents holding.
+    int armies;
+    for (Player *p : this->players)
+    {
+        armies = floor((p->getTerritories().size()) / 3);
+        *p->reinforcement_pool = armies;
+    }
 }
 
+void GameEngine::issueOrdersPhase(){   
+    string issue_order_type[] = { "OrderAdvanceType", "OrderDeployType", "OrderBombType", "OrderBlockadeType", "OrderAirliftType", "OrderNegotiateType"};
+         string OrderType;
 
-void GameEngine::issueOrdersPhase(){
+ for (Player *p : this->players)
+    {   
+         while(true){
+         cout << "Enter Order type\n";
+         cin >> OrderType;
 
-     for(Player* p: this->players){
-        p->issueOrder();
-     }
+         if(issue_order_type->find(OrderType)){
+           if (OrderType == "OrderAdvanceType" || OrderType == "OrderAirliftType")
+           {
+            int ID; int numofUnits; string name; string source; string target;
+
+            cout << "Enter ID\n";
+            cin >> ID;
+            cout << "Enter name\n";
+            cin >> name;
+            cout << "Enter source\n";
+            cin >> source;
+            cout << "Enter target\n";
+            cin >> target;
+            p->issueOrder(OrderType, ID, name, source, target,numofUnits);
+            break;
+            
+           }else if (OrderType == "OrderBombType" || OrderType == "OrderBlockadeType")
+           {
+             int ID;  string name; string target;
+
+            cout << "Enter ID\n";
+            cin >> ID;
+            cout << "Enter name\n";
+            cin >> name;
+            cout << "Enter source\n";
+            cin >> source;
+            cout << "Enter target\n";
+            cin >> target;
+            p->issueOrder(OrderType, ID, name, target);
+            break;
+            /* code */
+           }else if (OrderType == "OrderDeployType")
+           {
+             int ID; int numofUnits; string name; string source; string target;
+
+            cout << "Enter ID\n";
+            cin >> ID;
+            cout << "Enter name\n";
+            cin >> name;
+            cout << "Enter source\n";
+            cin >> source;
+            cout << "Enter target\n";
+            cin >> target;
+            p->issueOrder(OrderType, ID, name, source, target,numofUnits);
+            break;
+            /* code */
+           }else if (OrderType == "OrderDeployType")
+           {
+             int ID; int numofUnits; string name; string source; string target;
+
+            cout << "Enter ID\n";
+            cin >> ID;
+            cout << "Enter name\n";
+            cin >> name;
+            cout << "Enter source\n";
+            cin >> source;
+            cout << "Enter target\n";
+            cin >> target;
+            p->issueOrder(OrderType, ID, name, source, target,numofUnits);
+            break;
+            /* code */
+           }  
+         }
+       
+    }
+    }
+   
+   
+   
+   
 }
-void GameEngine::executeOrdersPhase(){
+void GameEngine::executeOrdersPhase()
+{
 
-    
 }
-bool search(vector<Player*> player, string command){
-    for(int i = 0; i < player.size(); i++){
-        if(player[i]->name.compare(command) == 0){
+bool search(vector<Player *> player, string command)
+{
+    for (int i = 0; i < player.size(); i++)
+    {
+        if (player[i]->name.compare(command) == 0)
+        {
             return true;
         }
     }
     return false;
-
 }
