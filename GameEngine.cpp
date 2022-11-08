@@ -484,13 +484,48 @@ void GameEngine::readCommandList(CommandProcessing* c){
             }
 
 }
-void GameEngine::reinforcementPhase(){
+void GameEngine::mainGameLoop(){
 
+  bool winner = false;
+  int totalTerritories;
+  
+  do {
+    // check if there is a winner to terminate loop
+       for(Player* p: this->players){
+        if(p->getTerritories().size() == totalTerritories)
+        { 
+            winner = true; 
+            cout << "the winner of this game is " << p->name;
+        }
+       } 
+    //       
+      reinforcementPhase();
+
+      issueOrdersPhase();
+
+      executeOrdersPhase();
+  } while(!winner);   
 }
+
+
+void GameEngine::reinforcementPhase(){
+   // loop through player, add to each players armies comparatively to their contitents holding.
+   int armies;
+   for(Player* p: this->players){
+     armies = floor((p->getTerritories().size())/3);
+    *p->reinforcement_pool = armies;
+   }
+}
+
+
 void GameEngine::issueOrdersPhase(){
 
+     for(Player* p: this->players){
+        p->issueOrder();
+     }
 }
 void GameEngine::executeOrdersPhase(){
+
     
 }
 bool search(vector<Player*> player, string command){

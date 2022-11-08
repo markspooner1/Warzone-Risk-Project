@@ -48,6 +48,7 @@ class CommandProcessor {
         static string validate(string str, string * cs);
 };
 
+
 class FileCommandProcessorAdapter : CommandProcessing {
     private:
          void readCommand(string * currentState, string mode); // get command from console
