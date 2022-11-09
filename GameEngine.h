@@ -48,7 +48,7 @@ class GameEngine: public Subject, public ILoggable
      void readCommandList(CommandProcessing* c);
      vector<Player*> players;
      Map map;
-     Deck deck;
+     Deck* deck;
      int num_players;
 
     //this funtion is for ILoggable class in LoggingObserver.h

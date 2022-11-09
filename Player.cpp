@@ -26,6 +26,7 @@ Player::Player(const Player &player) {
 
 Player::Player(string name){
     this->name = name;
+    this->hand = new Hand();
 }
 //Destructor
 Player::~Player() {

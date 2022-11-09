@@ -377,8 +377,9 @@ void Play::win()
 // }
 void GameEngine::startupPhase(CommandProcessing *c)
 {
+    this->deck = new Deck();
     this->num_players = 0;
-    this->deck.initial_deck();
+    this->deck->initial_deck();
     vector<string *> states;
     this->setStateName(new string("start"));
     states.push_back(new string("start"));
@@ -495,8 +496,8 @@ void GameEngine::readCommandList(CommandProcessing *c)
             for (Player *p : this->players)
             {
                 p->reinforcement_pool = new int(50);
-                p->getHand()->set_cards_in_hand(this.deck.draw());
-                p->getHand()->set_cards_in_hand(this.deck.draw());
+                p->getHand()->set_cards_in_hand(this->deck->draw());
+                p->getHand()->set_cards_in_hand(this->deck->draw());
             }
         }
     }
@@ -626,9 +627,7 @@ void GameEngine::issueOrdersPhase(){
     }
     }
    
-   
-   
-   
+
 }
 void GameEngine::executeOrdersPhase()
 {
