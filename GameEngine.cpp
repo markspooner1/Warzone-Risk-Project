@@ -547,14 +547,66 @@ void GameEngine::mainGameLoop(vector<vector<string>> Orders)
     } while (!winner);
 }
 
-void GameEngine::reinforcementPhase()
-{
-    // loop through player, add to each players armies comparatively to their contitents holding.
-    int armies;
-    for (Player *p : this->players)
-    {
-        armies = floor((p->getTerritories().size()) / 3);
-        *p->reinforcement_pool = armies;
+void GameEngine::reinforcementPhase(){
+    // loop through player, add to each player armies comparatively to their continents holding.
+    vector<Continent*> continents = this->map.getContinents();
+    vector<vector<Territory*>> all_territories_of_continents;
+
+    //init of all_territories_of_continents using the continents
+    for (size_t i; i<continents.size(); i++){
+        all_territories_of_continents.at(i) = continents.at(i)->continent_members;
+    }
+
+    //loop over the players to assign reinforcement units
+    for(Player* p: this->players){
+        int armies = 0;
+        vector<int> bonuses = {};
+        vector<Territory*> territories_not_collected = {};
+
+        //checking if a players controls a continent. if true, we collect the bonus of the continents controlled
+        for (int i = 0; i < all_territories_of_continents.size(); ++i) {
+            vector<Territory*> continent_temp = all_territories_of_continents.at(i);
+            int found = 0;
+
+            for (int j = 0; j < continent_temp.size(); ++j) {
+                Territory* territory_temp = continent_temp.at(j);
+                bool territory_found_in_the_player_territories = false;
+
+                for (int k = 0; k < p->getTerritories().size(); ++k) {
+                    if (territory_temp->getName() == p->getTerritories().at(k)->getName()){
+                        found++;
+                        territory_found_in_the_player_territories = true;
+                    }
+                }
+                if (territory_found_in_the_player_territories == false){//Break from looping over this continent
+                    break;
+                }
+
+
+            }
+            if (found == continent_temp.size()){
+                bonuses.push_back(continents.at(i)->getBonusValue());//collecting the bonuses
+                for (int j = 0; j < continent_temp.size(); ++j) {
+                    territories_not_collected.push_back(continent_temp.at(j));
+                }
+            }
+        }
+        int number_of_territories_not_collected = p->getTerritories().size() - territories_not_collected.size();
+
+        int total_bonuses = 0;
+
+        //sum the total bonuses
+        for (int i = 0; i < bonuses.size(); ++i) {
+            total_bonuses = total_bonuses + bonuses.at(i);
+        }
+
+        if ((total_bonuses + floor(number_of_territories_not_collected/3))<3){
+            armies = 3;
+        }else{
+            armies = (total_bonuses + floor(number_of_territories_not_collected/3));
+        }
+
+        *(p->reinforcement_pool) = armies;
     }
 }
 
