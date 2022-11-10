@@ -609,6 +609,7 @@ void GameEngine::reinforcementPhase(){
         *(p->reinforcement_pool) = armies;
     }
 }
+
   issue_order_types convert(const string& word){
   if(word == "OrderAdvanceType") return OrderAdvanceType;
     else if(word == "OrderDeployType") return OrderDeployType;
@@ -618,23 +619,55 @@ void GameEngine::reinforcementPhase(){
     else if(word == "OrderNegotiateType") return OrderNegotiateType;
 }
 
- 
+
+vector<string> split(string str, string deli)
+{
+    vector<string> list;
+    int start = 0;
+    int end = str.find(deli);
+    while (end != -1) {
+      list.push_back(str.substr(start, end - start)); 
+        start = end + deli.size();
+        end = str.find(deli, start);
+    }
+      list.push_back(str.substr(start, end - start)); 
+
+   return list;
+}
 
 void GameEngine::issueOrdersPhase(vector<vector<string>> Orders){
- 
+
+    // issue_order_types order_type, int ID, string name, string source, string target = "default", int num_of_units = 0
+       vector<string> orderlist;
+       int id;
+       string name; 
+       string source; 
+       string target; 
+       int num_of_units;
             for(int i=0; i<Orders[i].size();i++){
                  for(int j=0; j<players.size();j++) {
                     string order = Orders[j][i]; 
+                    orderlist = split(order,",");
+                    if(orderlist[1] == " "){
+                     id =0;
+                    } else{
+                     id = stoi(orderlist[1]); }
+                     name = orderlist[2];
+                     source = orderlist[3];
+                     target = orderlist[4];
+                      if(orderlist[5] == " "){
+                     num_of_units =0;
+                    } else{
+                     num_of_units = stoi(orderlist[5]);
+                    }
                     
-                 
+                        for(Player *p: this->players){
+                            p->issueOrder( (convert(orderlist[0])) , id , name , source , target , num_of_units);
+                    }
                  }
             }
-        
-
 }
    
-
-
 void GameEngine::executeOrdersPhase()
 {
 
