@@ -498,141 +498,149 @@ void GameEngine::readCommandList(CommandProcessing *c)
                 p->reinforcement_pool = new int(50);
                 p->getHand()->set_cards_in_hand(this->deck->draw());
                 p->getHand()->set_cards_in_hand(this->deck->draw());
+                //cout << *this->deck->draw()->get_card_type();
             }
+            for(Player *p: this->players){
+                cout << "\nPlayer " << p->name << "drew cards: " << endl;
+                for(Card *c: *p->getHand()->get_hand_vector()){
+                    cout << *c->get_card_type() << endl << endl;
+                }
+            }
+            	
         }
     }
 }
-void GameEngine::mainGameLoop()
-{
+// void GameEngine::mainGameLoop()
+// {
 
-    bool winner = false;
-    int totalTerritories;
+//     bool winner = false;
+//     int totalTerritories;
 
-    do
-    {
-        // check if there is a winner to terminate loop
+//     do
+//     {
+//         // check if there is a winner to terminate loop
 
-        for (Player *p : players)
-        {
-            if (p->getTerritories().size() == 0)
-            {
-                delete p;
-                p = NULL;
-            }
-        }
-        totalTerritories = map.getTerritories().size();
+//         for (Player *p : players)
+//         {
+//             if (p->getTerritories().size() == 0)
+//             {
+//                 delete p;
+//                 p = NULL;
+//             }
+//         }
+//         totalTerritories = map.getTerritories().size();
 
-        for (Player *p : this->players)
-        {
-            if (p->getTerritories().size() == totalTerritories)
-            {
-                winner = true;
-                cout << "the winner of this game is " << p->name;
-            }
-        }
-        //
-        reinforcementPhase();
+//         for (Player *p : this->players)
+//         {
+//             if (p->getTerritories().size() == totalTerritories)
+//             {
+//                 winner = true;
+//                 cout << "the winner of this game is " << p->name;
+//             }
+//         }
+//         //
+//         reinforcementPhase();
 
-        issueOrdersPhase();
+//         issueOrdersPhase();
 
-        executeOrdersPhase();
-    } while (!winner);
-}
+//         executeOrdersPhase();
+//     } while (!winner);
+// }
 
-void GameEngine::reinforcementPhase()
-{
-    // loop through player, add to each players armies comparatively to their contitents holding.
-    int armies;
-    for (Player *p : this->players)
-    {
-        armies = floor((p->getTerritories().size()) / 3);
-        *p->reinforcement_pool = armies;
-    }
-}
+// void GameEngine::reinforcementPhase()
+// {
+//     // loop through player, add to each players armies comparatively to their contitents holding.
+//     int armies;
+//     for (Player *p : this->players)
+//     {
+//         armies = floor((p->getTerritories().size()) / 3);
+//         *p->reinforcement_pool = armies;
+//     }
+// }
 
-void GameEngine::issueOrdersPhase(){   
-    string issue_order_type[] = { "OrderAdvanceType", "OrderDeployType", "OrderBombType", "OrderBlockadeType", "OrderAirliftType", "OrderNegotiateType"};
-         string OrderType;
+// void GameEngine::issueOrdersPhase(){   
+//     string issue_order_type[] = { "OrderAdvanceType", "OrderDeployType", "OrderBombType", "OrderBlockadeType", "OrderAirliftType", "OrderNegotiateType"};
+//          string OrderType;
 
- for (Player *p : this->players)
-    {   
-         while(true){
-         cout << "Enter Order type\n";
-         cin >> OrderType;
+//  for (Player *p : this->players)
+//     {   
+//          while(true){
+//          cout << "Enter Order type\n";
+//          cin >> OrderType;
 
-         if(issue_order_type->find(OrderType)){
-           if (OrderType == "OrderAdvanceType" || OrderType == "OrderAirliftType")
-           {
-            int ID; int numofUnits; string name; string source; string target;
+//          if(issue_order_type->find(OrderType)){
+//            if (OrderType == "OrderAdvanceType" || OrderType == "OrderAirliftType")
+//            {
+//             int ID; int numofUnits; string name; string source; string target;
 
-            cout << "Enter ID\n";
-            cin >> ID;
-            cout << "Enter name\n";
-            cin >> name;
-            cout << "Enter source\n";
-            cin >> source;
-            cout << "Enter target\n";
-            cin >> target;
-            p->issueOrder(OrderType, ID, name, source, target,numofUnits);
-            break;
+//             cout << "Enter ID\n";
+//             cin >> ID;
+//             cout << "Enter name\n";
+//             cin >> name;
+//             cout << "Enter source\n";
+//             cin >> source;
+//             cout << "Enter target\n";
+//             cin >> target;
+//             p->issueOrder(OrderType, ID, name, source, target,numofUnits);
+//             break;
             
-           }else if (OrderType == "OrderBombType" || OrderType == "OrderBlockadeType")
-           {
-             int ID;  string name; string target;
+//            }else if (OrderType == "OrderBombType" || OrderType == "OrderBlockadeType")
+//            {
+//              int ID;  string name; string target;
 
-            cout << "Enter ID\n";
-            cin >> ID;
-            cout << "Enter name\n";
-            cin >> name;
-            cout << "Enter source\n";
-            cin >> source;
-            cout << "Enter target\n";
-            cin >> target;
-            p->issueOrder(OrderType, ID, name, target);
-            break;
-            /* code */
-           }else if (OrderType == "OrderDeployType")
-           {
-             int ID; int numofUnits; string name; string source; string target;
+//             cout << "Enter ID\n";
+//             cin >> ID;
+//             cout << "Enter name\n";
+//             cin >> name;
+//             cout << "Enter source\n";
+//             cin >> source;
+//             cout << "Enter target\n";
+//             cin >> target;
+//             p->issueOrder(OrderType, ID, name, target);
+//             break;
+//             /* code */
+//            }else if (OrderType == "OrderDeployType")
+//            {
+//              int ID; int numofUnits; string name; string source; string target;
 
-            cout << "Enter ID\n";
-            cin >> ID;
-            cout << "Enter name\n";
-            cin >> name;
-            cout << "Enter source\n";
-            cin >> source;
-            cout << "Enter target\n";
-            cin >> target;
-            p->issueOrder(OrderType, ID, name, source, target,numofUnits);
-            break;
-            /* code */
-           }else if (OrderType == "OrderDeployType")
-           {
-             int ID; int numofUnits; string name; string source; string target;
+//             cout << "Enter ID\n";
+//             cin >> ID;
+//             cout << "Enter name\n";
+//             cin >> name;
+//             cout << "Enter source\n";
+//             cin >> source;
+//             cout << "Enter target\n";
+//             cin >> target;
+//             p->issueOrder(OrderType, ID, name, source, target,numofUnits);
+//             break;
+//             /* code */
+//            }else if (OrderType == "OrderDeployType")
+//            {
+//              int ID; int numofUnits; string name; string source; string target;
 
-            cout << "Enter ID\n";
-            cin >> ID;
-            cout << "Enter name\n";
-            cin >> name;
-            cout << "Enter source\n";
-            cin >> source;
-            cout << "Enter target\n";
-            cin >> target;
-            p->issueOrder(OrderType, ID, name, source, target,numofUnits);
-            break;
-            /* code */
-           }  
-         }
+//             cout << "Enter ID\n";
+//             cin >> ID;
+//             cout << "Enter name\n";
+//             cin >> name;
+//             cout << "Enter source\n";
+//             cin >> source;
+//             cout << "Enter target\n";
+//             cin >> target;
+//             p->issueOrder(OrderType, ID, name, source, target,numofUnits);
+//             break;
+//             /* code */
+//            }  
+//          }
        
-    }
-    }
+//     }
+//     }
    
 
-}
-void GameEngine::executeOrdersPhase()
-{
+// }
+// void GameEngine::executeOrdersPhase()
+// {
 
-}
+// }
 bool search(vector<Player *> player, string command)
 {
     for (int i = 0; i < player.size(); i++)
