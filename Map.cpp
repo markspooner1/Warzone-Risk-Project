@@ -156,7 +156,7 @@ Map MapLoader::readMapFile(string fileName){
                     cout << "Loading Continent: " << line.substr(0, line.find(delimiter)) << endl;
                      
                     //using the = sign as a dilimeter to insert continents into the vector
-                    continents.push_back(new Continent(line.substr(0, line.find(delimiter)),  stoi(line.substr(line.find(delimiter) + 1, line.length()))));
+                    continents.push_back(new Continent(line.substr(0, line.find(delimiter)), 4));
                 }
             }
         }
@@ -340,4 +340,3 @@ int nthSubstr(int n, const string& s, const string& p) {
             else
                 return(s.length());
 }
-

@@ -5,10 +5,12 @@ using std::string;
 using std::ostream;
 #include <vector>
 using std::vector;
-class player;
+#include "Player.h"
+
+class Player;
 class Territory{
     private:
-        player* owner;
+        Player* owner;
         string* name;
         string* continent;
         int* army_units;
@@ -56,6 +58,7 @@ class Map
         vector<Continent*> getContinents();
         void reset();
         int DFS(Territory *t, int num);
+        int checkContinentBonus(Player *player);
 };
 class MapLoader{
     private:
