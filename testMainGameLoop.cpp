@@ -49,20 +49,20 @@ void testMainGameLoop(){
 
     vector<vector<string>> Orders;
 
-    Orders.at(0).at(0) = "OrderDeployType, ID, num_of_units, name, target";
-    Orders.at(0).at(1) = "OrderDeployType,ID, num_of_units, name, target";
+    Orders.at(0).at(0) = "OrderDeployType, ID, num_of_units, name,,target";
+    Orders.at(0).at(1) = "OrderDeployType,ID, num_of_units, name,,target";
     Orders.at(0).at(2) = "OrderAdvanceType, ID,num_of_units, name, source, target";
     Orders.at(0).at(3) = "OrderAdvanceType, ID,num_of_units, name, source, target";
     Orders.at(0).at(4) = "OrderAirliftType, ID,num_of_units, name, source, target";
 
-    Orders.at(1).at(0) = "OrderDeployType, ID, num_of_units, name, target";
-    Orders.at(1).at(1) = "OrderDeployType,ID, num_of_units, name, target";
+    Orders.at(1).at(0) = "OrderDeployType, ID, num_of_units, name,,target";
+    Orders.at(1).at(1) = "OrderDeployType,ID, num_of_units, name,,target";
     Orders.at(1).at(2) = "OrderAdvanceType, ID,num_of_units, name, source, target";
     Orders.at(1).at(3) = "OrderAdvanceType, ID,num_of_units, name, source, target";
     Orders.at(1).at(4) = "OrderAirliftType, ID,num_of_units, name, source, target";
 
-    Orders.at(2).at(0) = "OrderDeployType, ID, num_of_units, name, target";
-    Orders.at(2).at(1) = "OrderDeployType, ID, num_of_units, name, target";
+    Orders.at(2).at(0) = "OrderDeployType, ID, num_of_units, name,,target";
+    Orders.at(2).at(1) = "OrderDeployType, ID, num_of_units, name,,target";
     Orders.at(2).at(2) = "OrderAdvanceType, ID,num_of_units, name, source, target";
     Orders.at(2).at(3) = "OrderAdvanceType, ID,num_of_units, name, source, target";
     Orders.at(2).at(4) = "OrderAirliftType, ID,num_of_units, name, source, target";

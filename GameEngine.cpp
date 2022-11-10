@@ -674,7 +674,14 @@ void GameEngine::issueOrdersPhase(vector<vector<string>> Orders){
 }
    
 void GameEngine::executeOrdersPhase(){
+/*
+// players stop issuing 
 
+// execute top order from orderlist 
+
+
+
+*/
 }
 bool search(vector<Player *> player, string command)
 {

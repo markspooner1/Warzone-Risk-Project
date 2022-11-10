@@ -80,35 +80,69 @@ void Player::issueOrder(issue_order_types order_type, int ID, string name, strin
     switch(order_type)
     {
         case OrderAdvanceType:{
+            if(reinforcement_pool == 0){
             OrderAdvance* o = new OrderAdvance(ID,num_of_units, name, source, target);
             this->orderList->addOrder(*o);
             cout<< "\nOrder created and added to the player order list.\n";
-            break;}
+            }else{
+                cout << "there are still reinforcements !";
+                exit(0);
+            }
+            break;
+            }
         case OrderDeployType:{
+            
             OrderDeploy* o = new OrderDeploy(ID, num_of_units, name, target);
             this->orderList->addOrder(*o);
-            cout<< "\nOrder created and added to the player order list.\n";
-            break;}
+            cout<< "\nOrder created and added to the player order list.\n"; 
+            
+            break;
+            }
         case OrderBombType:{
+              if(reinforcement_pool == 0){
             OrderBomb* o = new OrderBomb(ID, name, target);
             this->orderList->addOrder(*o);
             cout<< "\nOrder created and added to the player order list.\n";
-            break;}
+              } else {
+                cout << "there are still reinforcements !";
+                exit(0);
+            }
+            break;
+            }
         case OrderBlockadeType:{
+             if(reinforcement_pool == 0){
             OrderBlockade* o = new OrderBlockade(ID, name, target);
             this->orderList->addOrder(*o);
             cout<< "\nOrder created and added to the player order list.\n";
-            break;}
+             } else {
+                cout << "there are still reinforcements !";
+                exit(0);
+            }
+            break;
+            }
         case OrderAirliftType:{
+            
+            if(reinforcement_pool == 0){
             OrderAirlift* o = new OrderAirlift(ID,num_of_units, name, source, target);
             this->orderList->addOrder(*o);
             cout<< "\nOrder created and added to the player order list.\n";
-            break;}
+            } else {
+                cout << "there are still reinforcements !";
+                exit(0);
+            }
+            break;
+            }
         case OrderNegotiateType:{
+            if(reinforcement_pool == 0){
             OrderNegotiate* o = new OrderNegotiate(ID, name, source, target);
             this->orderList->addOrder(*o);
             cout<< "\nOrder created and added to the player order list.\n";
-            break;}
+            }else {
+                cout << "there are still reinforcements !";
+                exit(0);
+            }
+            break;
+            }
         default:
             cout<< "Order type not recognized. No order was added to the player order list.";
     }
