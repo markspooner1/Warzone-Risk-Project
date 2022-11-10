@@ -609,86 +609,32 @@ void GameEngine::reinforcementPhase(){
         *(p->reinforcement_pool) = armies;
     }
 }
+  issue_order_types convert(const string& word){
+  if(word == "OrderAdvanceType") return OrderAdvanceType;
+    else if(word == "OrderDeployType") return OrderDeployType;
+    else if(word == "OrderBombType") return OrderBombType;
+    else if(word == "OrderBlockadeType") return OrderBlockadeType;
+    else if(word == "OrderAirliftType") return OrderAirliftType;
+    else if(word == "OrderNegotiateType") return OrderNegotiateType;
+}
+
+ 
 
 void GameEngine::issueOrdersPhase(vector<vector<string>> Orders){
-    string issue_order_type[] = { "OrderAdvanceType", "OrderDeployType", "OrderBombType", "OrderBlockadeType", "OrderAirliftType", "OrderNegotiateType"};
-         string OrderType;
-
- for (Player *p : this->players)
-    {   
-         while(true){
-         cout << "Enter Order type\n";
-         cin >> OrderType;
-
-         if(issue_order_type->find(OrderType)){
-           if (OrderType == "OrderAdvanceType" || OrderType == "OrderAirliftType")
-           {
-            int ID; int numofUnits; string name; string source; string target;
-
-            cout << "Enter ID\n";
-            cin >> ID;
-            cout << "Enter name\n";
-            cin >> name;
-            cout << "Enter source\n";
-            cin >> source;
-            cout << "Enter target\n";
-            cin >> target;
-            p->issueOrder(OrderType, ID, name, source, target,numofUnits);
-            break;
-            
-           }else if (OrderType == "OrderBombType" || OrderType == "OrderBlockadeType")
-           {
-             int ID;  string name; string target;
-
-            cout << "Enter ID\n";
-            cin >> ID;
-            cout << "Enter name\n";
-            cin >> name;
-            cout << "Enter source\n";
-            cin >> source;
-            cout << "Enter target\n";
-            cin >> target;
-            p->issueOrder(OrderType, ID, name, target);
-            break;
-            /* code */
-           }else if (OrderType == "OrderDeployType")
-           {
-             int ID; int numofUnits; string name; string source; string target;
-
-            cout << "Enter ID\n";
-            cin >> ID;
-            cout << "Enter name\n";
-            cin >> name;
-            cout << "Enter source\n";
-            cin >> source;
-            cout << "Enter target\n";
-            cin >> target;
-            p->issueOrder(OrderType, ID, name, source, target,numofUnits);
-            break;
-            /* code */
-           }else if (OrderType == "OrderDeployType")
-           {
-             int ID; int numofUnits; string name; string source; string target;
-
-            cout << "Enter ID\n";
-            cin >> ID;
-            cout << "Enter name\n";
-            cin >> name;
-            cout << "Enter source\n";
-            cin >> source;
-            cout << "Enter target\n";
-            cin >> target;
-            p->issueOrder(OrderType, ID, name, source, target,numofUnits);
-            break;
-            /* code */
-           }  
-         }
-       
-    }
-    }
-   
+ 
+            for(int i=0; i<Orders[i].size();i++){
+                 for(int j=0; j<players.size();j++) {
+                    string order = Orders[j][i]; 
+                    
+                 
+                 }
+            }
+        
 
 }
+   
+
+
 void GameEngine::executeOrdersPhase()
 {
 
