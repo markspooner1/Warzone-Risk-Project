@@ -41,10 +41,10 @@ class GameEngine: public Subject, public ILoggable
      void setStateName(string* stateName);
      void startupPhase(CommandProcessing* c);
      // A2 Part 3
-     void mainGameLoop();
-     void reinforcementPhase();
-     void issueOrdersPhase();
-     void executeOrdersPhase();
+     void mainGameLoop(vector<vector<string>>);
+    void reinforcementPhase();
+    void issueOrdersPhase(vector<vector<string>>);
+    void executeOrdersPhase();
      void readCommandList(CommandProcessing* c);
      vector<Player*> players;
      Map map;

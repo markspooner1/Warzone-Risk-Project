@@ -510,7 +510,7 @@ void GameEngine::readCommandList(CommandProcessing *c)
         }
     }
 }
-void GameEngine::mainGameLoop()
+void GameEngine::mainGameLoop(vector<vector<string>> Orders)
 {
 
     bool winner = false;
@@ -541,7 +541,7 @@ void GameEngine::mainGameLoop()
         //
         reinforcementPhase();
 
-        issueOrdersPhase();
+        issueOrdersPhase(Orders);
 
         executeOrdersPhase();
     } while (!winner);
@@ -558,7 +558,7 @@ void GameEngine::reinforcementPhase()
     }
 }
 
-void GameEngine::issueOrdersPhase(){   
+void GameEngine::issueOrdersPhase(vector<vector<string>> Orders){
     string issue_order_type[] = { "OrderAdvanceType", "OrderDeployType", "OrderBombType", "OrderBlockadeType", "OrderAirliftType", "OrderNegotiateType"};
          string OrderType;
 
