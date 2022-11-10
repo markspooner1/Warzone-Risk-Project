@@ -9,7 +9,7 @@
 #include "Map.h"
 #include "Cards.h"
 using namespace std;
-
+class Territory;
 //Attributes:
 // Collection of orderList
 // collection of territories
@@ -78,6 +78,7 @@ public:
 
     void setName(string name);
     
+    bool ownsTerritory(Territory *t);
 };
 
 void testPlayers();
