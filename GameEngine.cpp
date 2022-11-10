@@ -644,32 +644,36 @@ void GameEngine::issueOrdersPhase(vector<vector<string>> Orders){
        string source; 
        string target; 
        int num_of_units;
-            for(int i=0; i<Orders[i].size();i++){
+       int longest = 0; 
+      for(int i=0;i<Orders.size();i++){
+        if(Orders[i].size()> longest){
+            longest = Orders[i].size();
+        }
+      }
+            for(int i=0; i<longest;i++){
                  for(int j=0; j<players.size();j++) {
                     string order = Orders[j][i]; 
                     orderlist = split(order,",");
-                    if(orderlist[1] == " "){
+                    if(orderlist[1] == ""){
                      id =0;
                     } else{
                      id = stoi(orderlist[1]); }
                      name = orderlist[2];
                      source = orderlist[3];
                      target = orderlist[4];
-                      if(orderlist[5] == " "){
+                      if(orderlist[5] == ""){
                      num_of_units =0;
                     } else{
                      num_of_units = stoi(orderlist[5]);
                     }
                     
-                        for(Player *p: this->players){
-                            p->issueOrder( (convert(orderlist[0])) , id , name , source , target , num_of_units);
-                    }
+                   this->players.at(j)->issueOrder((convert(orderlist[0])) , id , name , source , target , num_of_units);
+                    
                  }
             }
 }
    
-void GameEngine::executeOrdersPhase()
-{
+void GameEngine::executeOrdersPhase(){
 
 }
 bool search(vector<Player *> player, string command)
