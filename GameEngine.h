@@ -43,7 +43,7 @@ class GameEngine: public Subject, public ILoggable
      // A2 Part 3
      void mainGameLoop(vector<vector<string>>);
     void reinforcementPhase();
-    void issueOrdersPhase(vector<vector<string>>);
+    void issueOrdersPhase(vector<vector<string>>,Deck* a_deck);
     void executeOrdersPhase();
      void readCommandList(CommandProcessing* c);
      vector<Player*> players;

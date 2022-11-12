@@ -1,0 +1,3 @@
+/Users/brahimhamidoudjana/CLionProjects/COMP345-Project/cmake-build-debug/CMakeFiles/COMP345_Project.dir
+/Users/brahimhamidoudjana/CLionProjects/COMP345-Project/cmake-build-debug/CMakeFiles/edit_cache.dir
+/Users/brahimhamidoudjana/CLionProjects/COMP345-Project/cmake-build-debug/CMakeFiles/rebuild_cache.dir

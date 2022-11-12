@@ -75,7 +75,13 @@ void Player::setTerritories(vector<Territory*> territories) {
 //method to create an order object and add it to the orderlist (collection of orders)
 //the method expects the first param to be an enum issue_order_types to create the correct object
 //the other param depend on the type of order issued
-void Player::issueOrder(issue_order_types order_type, int ID, string name, string source, string target = "default", int num_of_units = 0) {
+void Player::issueOrder(issue_order_types order_type,Deck* a_deck, int i, vector<Territory*> all_territories, int ID, string name, string source, string target = "default", int num_of_units = 0) {
+
+    vector<Territory*> attack_vector = this->toAttack(all_territories);
+    target = attack_vector.at(i % attack_vector.size())->getName();
+
+    vector<Territory*> defend_vector = this->toDefend();
+    source = defend_vector.at(i % defend_vector.size())->getName();
 
     switch(order_type)
     {
@@ -100,9 +106,23 @@ void Player::issueOrder(issue_order_types order_type, int ID, string name, strin
             }
         case OrderBombType:{
               if(reinforcement_pool == 0){
-            OrderBomb* o = new OrderBomb(ID, name, target);
-            this->orderList->addOrder(*o);
-            cout<< "\nOrder created and added to the player order list.\n";
+//            OrderBomb* o = new OrderBomb(ID, name, target);
+//            this->orderList->addOrder(*o);
+//            cout<< "\nOrder created and added to the player order list.\n";
+
+                  vector<Card*>* cards = (this->getHand())->get_vector_to_cards();
+                  bool found = false;
+
+                  for (int i = 0; i < (*cards).size() ; ++i) {
+                      if ((*cards).at(i)->get_card_type()->compare("bomb") == 0){
+                          found = true;
+                          (*cards).at(i)->play(this, a_deck, ID, name, source, target, num_of_units);
+                      }
+                  }
+                  if (found == false){
+                      cout << "Order was passed, but player has no corresponding card. No order issued.";
+                  }
+
               } else {
                 cout << "there are still reinforcements !";
                 exit(0);
@@ -111,9 +131,21 @@ void Player::issueOrder(issue_order_types order_type, int ID, string name, strin
             }
         case OrderBlockadeType:{
              if(reinforcement_pool == 0){
-            OrderBlockade* o = new OrderBlockade(ID, name, target);
-            this->orderList->addOrder(*o);
-            cout<< "\nOrder created and added to the player order list.\n";
+//            OrderBlockade* o = new OrderBlockade(ID, name, target);
+//            this->orderList->addOrder(*o);
+//            cout<< "\nOrder created and added to the player order list.\n";
+
+                 vector<Card*>* cards = (this->getHand())->get_vector_to_cards();
+                 bool found = false;
+
+                 for (int i = 0; i < (*cards).size() ; ++i) {
+                     if ((*cards).at(i)->get_card_type()->compare("blockade") == 0){
+                         (*cards).at(i)->play(this, a_deck, ID, name, source, target, num_of_units);
+                     }
+                 }
+                 if (found == false){
+                     cout << "Order was passed, but player has no corresponding card. No order issued.";
+                 }
              } else {
                 cout << "there are still reinforcements !";
                 exit(0);
@@ -123,9 +155,22 @@ void Player::issueOrder(issue_order_types order_type, int ID, string name, strin
         case OrderAirliftType:{
             
             if(reinforcement_pool == 0){
-            OrderAirlift* o = new OrderAirlift(ID,num_of_units, name, source, target);
-            this->orderList->addOrder(*o);
-            cout<< "\nOrder created and added to the player order list.\n";
+//            OrderAirlift* o = new OrderAirlift(ID,num_of_units, name, source, target);
+//            this->orderList->addOrder(*o);
+//            cout<< "\nOrder created and added to the player order list.\n";
+
+                vector<Card*>* cards = (this->getHand())->get_vector_to_cards();
+                bool found = false;
+
+                for (int i = 0; i < (*cards).size() ; ++i) {
+                    if ((*cards).at(i)->get_card_type()->compare("airlift") == 0){
+                        (*cards).at(i)->play(this, a_deck, ID, name, source, target, num_of_units);
+                    }
+                }
+                if (found == false){
+                    cout << "Order was passed, but player has no corresponding card. No order issued.";
+                }
+
             } else {
                 cout << "there are still reinforcements !";
                 exit(0);
@@ -134,9 +179,21 @@ void Player::issueOrder(issue_order_types order_type, int ID, string name, strin
             }
         case OrderNegotiateType:{
             if(reinforcement_pool == 0){
-            OrderNegotiate* o = new OrderNegotiate(ID, name, source, target);
-            this->orderList->addOrder(*o);
-            cout<< "\nOrder created and added to the player order list.\n";
+//            OrderNegotiate* o = new OrderNegotiate(ID, name, source, target);
+//            this->orderList->addOrder(*o);
+//            cout<< "\nOrder created and added to the player order list.\n";
+
+                vector<Card*>* cards = (this->getHand())->get_vector_to_cards();
+                bool found = false;
+
+                for (int i = 0; i < (*cards).size() ; ++i) {
+                    if ((*cards).at(i)->get_card_type()->compare("diplomacy") == 0){
+                        (*cards).at(i)->play(this, a_deck, ID, name, source, target, num_of_units);
+                    }
+                }
+                if (found == false){
+                    cout << "Order was passed, but player has no corresponding card. No order issued.";
+                }
             }else {
                 cout << "there are still reinforcements !";
                 exit(0);
@@ -159,7 +216,6 @@ vector<Territory*> Player::toDefend() {
     int LIMIT = (this->territories).size();
     for (size_t i = 0; i < LIMIT; i++) {
         ToDefendTerritories.push_back(ptr.at(i));
-        i++;
     }
     return ToDefendTerritories;
 };
@@ -200,7 +256,6 @@ vector<Territory*> Player::toAttack(const  vector<Territory*> ALLTERRITORIES ) {
     int LIMIT = (attackableTerritories).size();
     for (size_t i = 0; i < LIMIT; i++) {
         ToAttackTerritories.push_back(attackableTerritories.at(i));
-        i++;
     }
     //delete attackableTerritories;
     return ToAttackTerritories;

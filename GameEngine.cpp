@@ -541,7 +541,7 @@ void GameEngine::mainGameLoop(vector<vector<string>> Orders)
         //
         reinforcementPhase();
 
-        issueOrdersPhase(Orders);
+        issueOrdersPhase(Orders,this->deck);
 
         executeOrdersPhase();
     } while (!winner);
@@ -635,7 +635,19 @@ vector<string> split(string str, string deli)
    return list;
 }
 
-void GameEngine::issueOrdersPhase(vector<vector<string>> Orders){
+void GameEngine::issueOrdersPhase(vector<vector<string>> Orders, Deck* a_deck){
+
+    // loop through player, add to each player armies comparatively to their continents holding.
+    vector<Continent*> continents = this->map.getContinents();
+    vector<Territory*> all_territories;
+
+    //init of all_territories_of_continents using the continents
+    for (size_t i; i<continents.size(); i++){
+        for (int j = 0; j < continents.at(i)->continent_members.size(); ++j) {
+            all_territories.push_back(continents.at(i)->continent_members.at(j));
+        }
+
+    }
 
     // issue_order_types order_type, int ID, string name, string source, string target = "default", int num_of_units = 0
        vector<string> orderlist;
@@ -667,7 +679,7 @@ void GameEngine::issueOrdersPhase(vector<vector<string>> Orders){
                      num_of_units = stoi(orderlist[5]);
                     }
                     
-                   this->players.at(j)->issueOrder((convert(orderlist[0])) , id , name , source , target , num_of_units);
+                   this->players.at(j)->issueOrder((convert(orderlist[0])),a_deck, i,all_territories ,id , name , source , target , num_of_units);
                     
                  }
             }

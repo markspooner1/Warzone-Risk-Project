@@ -34,7 +34,7 @@ public:
 
     friend ostream & operator << (ostream &out, const Card *card);
 	//method that is called to play the card
-    void play(Player* a_Player, Deck* a_deck);
+    void play(Player* a_player,Deck* a_deck, int ID, string name, string source, string target , int num_of_units);
 
 private:
     string* card_type;

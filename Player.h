@@ -49,7 +49,7 @@ public:
     vector<Territory*> toAttack(const  vector<Territory*>  ALLTERRITORIES);     //method to attack territories
 
     //method to create an order object and add it to the orderlist (collection of orders)
-    void issueOrder(issue_order_types order_type, int ID, string name, string source, string target, int num_of_units );
+    void issueOrder(issue_order_types order_type,Deck* a_deck,int i,vector<Territory*> all_territories, int ID, string name, string source, string target, int num_of_units );
 
     //Getters:
     OrdersList *getOrders() const;       //getter for the collection orders named orderList
