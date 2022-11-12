@@ -699,7 +699,7 @@ void GameEngine::executeOrdersPhase(){
             if (ord->getOrderName() == "deploy")
             {
                 ord->execute();
-                // remove(ord)
+        (*(p->getOrders())).ol.erase(remove((*(p->getOrders())).ol.begin(),(*(p->getOrders())).ol.end(),ord), (*(p->getOrders())).ol.end());
             }
         }
     }
@@ -713,8 +713,7 @@ void GameEngine::executeOrdersPhase(){
     for(Player* p : this->players){
         Order* ord = (*(p->getOrders())).ol.at(0);
         ord->execute();
-        // remove(order)
-
+        (*(p->getOrders())).ol.erase(remove((*(p->getOrders())).ol.begin(),(*(p->getOrders())).ol.end(),ord), (*(p->getOrders())).ol.end());
     }
  }
 
