@@ -690,10 +690,34 @@ void GameEngine::executeOrdersPhase(){
 // players stop issuing 
 
 // execute top order from orderlist 
-
-
-
 */
+ for (Player *p : this->players)
+    {
+        for (Order *ord : (*(p->getOrders())).ol)
+        {
+            // if ((*(p->getOrders())).ol.at(0)->getOrderName() == "deploy"){
+            if (ord->getOrderName() == "deploy")
+            {
+                ord->execute();
+                // remove(ord)
+            }
+        }
+    }
+ int longest;
+ for(Player *p : this->players){
+         if((*(p->getOrders())).ol.size()>longest){
+            longest = (*(p->getOrders())).ol.size(); 
+         }
+    }
+ for(int i=0;i<longest;i++){
+    for(Player* p : this->players){
+        Order* ord = (*(p->getOrders())).ol.at(0);
+        ord->execute();
+        // remove(order)
+
+    }
+ }
+
 }
 bool search(vector<Player *> player, string command)
 {
