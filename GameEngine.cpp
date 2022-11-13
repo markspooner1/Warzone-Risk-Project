@@ -498,15 +498,17 @@ void GameEngine::readCommandList(CommandProcessing *c)
                 p->reinforcement_pool = new int(50);
                 p->getHand()->set_cards_in_hand(this->deck->draw());
                 p->getHand()->set_cards_in_hand(this->deck->draw());
-                //cout << *this->deck->draw()->get_card_type();
+                // cout << *this->deck->draw()->get_card_type();
             }
-            for(Player *p: this->players){
+            for (Player *p : this->players)
+            {
                 cout << "\nPlayer " << p->name << "drew cards: " << endl;
-                for(Card *c: *p->getHand()->get_hand_vector()){
-                    cout << *c->get_card_type() << endl << endl;
+                for (Card *c : *p->getHand()->get_hand_vector())
+                {
+                    cout << *c->get_card_type() << endl
+                         << endl;
                 }
             }
-            	
         }
     }
 }
@@ -541,52 +543,60 @@ void GameEngine::mainGameLoop(vector<vector<string>> Orders)
         //
         reinforcementPhase();
 
-        issueOrdersPhase(Orders,this->deck);
+        issueOrdersPhase(Orders, this->deck);
 
         executeOrdersPhase();
     } while (!winner);
 }
 
-void GameEngine::reinforcementPhase(){
+void GameEngine::reinforcementPhase()
+{
     // loop through player, add to each player armies comparatively to their continents holding.
-    vector<Continent*> continents = this->map.getContinents();
-    vector<vector<Territory*>> all_territories_of_continents;
+    vector<Continent *> continents = this->map.getContinents();
+    vector<vector<Territory *>> all_territories_of_continents;
 
-    //init of all_territories_of_continents using the continents
-    for (size_t i; i<continents.size(); i++){
+    // init of all_territories_of_continents using the continents
+    for (size_t i; i < continents.size(); i++)
+    {
         all_territories_of_continents.at(i) = continents.at(i)->continent_members;
     }
 
-    //loop over the players to assign reinforcement units
-    for(Player* p: this->players){
+    // loop over the players to assign reinforcement units
+    for (Player *p : this->players)
+    {
         int armies = 0;
         vector<int> bonuses = {};
-        vector<Territory*> territories_not_collected = {};
+        vector<Territory *> territories_not_collected = {};
 
-        //checking if a players controls a continent. if true, we collect the bonus of the continents controlled
-        for (int i = 0; i < all_territories_of_continents.size(); ++i) {
-            vector<Territory*> continent_temp = all_territories_of_continents.at(i);
+        // checking if a players controls a continent. if true, we collect the bonus of the continents controlled
+        for (int i = 0; i < all_territories_of_continents.size(); ++i)
+        {
+            vector<Territory *> continent_temp = all_territories_of_continents.at(i);
             int found = 0;
 
-            for (int j = 0; j < continent_temp.size(); ++j) {
-                Territory* territory_temp = continent_temp.at(j);
+            for (int j = 0; j < continent_temp.size(); ++j)
+            {
+                Territory *territory_temp = continent_temp.at(j);
                 bool territory_found_in_the_player_territories = false;
 
-                for (int k = 0; k < p->getTerritories().size(); ++k) {
-                    if (territory_temp->getName() == p->getTerritories().at(k)->getName()){
+                for (int k = 0; k < p->getTerritories().size(); ++k)
+                {
+                    if (territory_temp->getName() == p->getTerritories().at(k)->getName())
+                    {
                         found++;
                         territory_found_in_the_player_territories = true;
                     }
                 }
-                if (territory_found_in_the_player_territories == false){//Break from looping over this continent
+                if (territory_found_in_the_player_territories == false)
+                { // Break from looping over this continent
                     break;
                 }
-
-
             }
-            if (found == continent_temp.size()){
-                bonuses.push_back(continents.at(i)->getBonusValue());//collecting the bonuses
-                for (int j = 0; j < continent_temp.size(); ++j) {
+            if (found == continent_temp.size())
+            {
+                bonuses.push_back(continents.at(i)->getBonusValue()); // collecting the bonuses
+                for (int j = 0; j < continent_temp.size(); ++j)
+                {
                     territories_not_collected.push_back(continent_temp.at(j));
                 }
             }
@@ -595,103 +605,127 @@ void GameEngine::reinforcementPhase(){
 
         int total_bonuses = 0;
 
-        //sum the total bonuses
-        for (int i = 0; i < bonuses.size(); ++i) {
+        // sum the total bonuses
+        for (int i = 0; i < bonuses.size(); ++i)
+        {
             total_bonuses = total_bonuses + bonuses.at(i);
         }
 
-        if ((total_bonuses + floor(number_of_territories_not_collected/3))<3){
+        if ((total_bonuses + floor(number_of_territories_not_collected / 3)) < 3)
+        {
             armies = 3;
-        }else{
-            armies = (total_bonuses + floor(number_of_territories_not_collected/3));
+        }
+        else
+        {
+            armies = (total_bonuses + floor(number_of_territories_not_collected / 3));
         }
 
         *(p->reinforcement_pool) = armies;
     }
 }
 
-  issue_order_types convert(const string& word){
-  if(word == "OrderAdvanceType") return OrderAdvanceType;
-    else if(word == "OrderDeployType") return OrderDeployType;
-    else if(word == "OrderBombType") return OrderBombType;
-    else if(word == "OrderBlockadeType") return OrderBlockadeType;
-    else if(word == "OrderAirliftType") return OrderAirliftType;
-    else if(word == "OrderNegotiateType") return OrderNegotiateType;
+issue_order_types convert(const string &word)
+{
+    if (word == "OrderAdvanceType")
+        return OrderAdvanceType;
+    else if (word == "OrderDeployType")
+        return OrderDeployType;
+    else if (word == "OrderBombType")
+        return OrderBombType;
+    else if (word == "OrderBlockadeType")
+        return OrderBlockadeType;
+    else if (word == "OrderAirliftType")
+        return OrderAirliftType;
+    else if (word == "OrderNegotiateType")
+        return OrderNegotiateType;
 }
-
 
 vector<string> split(string str, string deli)
 {
     vector<string> list;
     int start = 0;
     int end = str.find(deli);
-    while (end != -1) {
-      list.push_back(str.substr(start, end - start)); 
+    while (end != -1)
+    {
+        list.push_back(str.substr(start, end - start));
         start = end + deli.size();
         end = str.find(deli, start);
     }
-      list.push_back(str.substr(start, end - start)); 
+    list.push_back(str.substr(start, end - start));
 
-   return list;
+    return list;
 }
 
-void GameEngine::issueOrdersPhase(vector<vector<string>> Orders, Deck* a_deck){
+void GameEngine::issueOrdersPhase(vector<vector<string>> Orders, Deck *a_deck)
+{
 
     // loop through player, add to each player armies comparatively to their continents holding.
-    vector<Continent*> continents = this->map.getContinents();
-    vector<Territory*> all_territories;
+    vector<Continent *> continents = this->map.getContinents();
+    vector<Territory *> all_territories;
 
-    //init of all_territories_of_continents using the continents
-    for (size_t i; i<continents.size(); i++){
-        for (int j = 0; j < continents.at(i)->continent_members.size(); ++j) {
+    // init of all_territories_of_continents using the continents
+    for (size_t i; i < continents.size(); i++)
+    {
+        for (int j = 0; j < continents.at(i)->continent_members.size(); ++j)
+        {
             all_territories.push_back(continents.at(i)->continent_members.at(j));
         }
-
     }
 
     // issue_order_types order_type, int ID, string name, string source, string target = "default", int num_of_units = 0
-       vector<string> orderlist;
-       int id;
-       string name; 
-       string source; 
-       string target; 
-       int num_of_units;
-       int longest = 0; 
-      for(int i=0;i<Orders.size();i++){
-        if(Orders[i].size()> longest){
+    vector<string> orderlist;
+    int id;
+    string name;
+    string source;
+    string target;
+    int num_of_units;
+    int longest = 0;
+    for (int i = 0; i < Orders.size(); i++)
+    {
+        if (Orders[i].size() > longest)
+        {
             longest = Orders[i].size();
         }
-      }
-            for(int i=0; i<longest;i++){
-                 for(int j=0; j<players.size();j++) {
-                    string order = Orders[j][i]; 
-                    orderlist = split(order,",");
-                    if(orderlist[1] == ""){
-                     id =0;
-                    } else{
-                     id = stoi(orderlist[1]); }
-                     name = orderlist[2];
-                     source = orderlist[3];
-                     target = orderlist[4];
-                      if(orderlist[5] == ""){
-                     num_of_units =0;
-                    } else{
-                     num_of_units = stoi(orderlist[5]);
-                    }
-                    
-                   this->players.at(j)->issueOrder((convert(orderlist[0])),a_deck, i,all_territories ,id , name , source , target , num_of_units);
-                    
-                 }
+    }
+    for (int i = 0; i < longest; i++)
+    {
+        for (int j = 0; j < players.size(); j++)
+        {
+            string order = Orders[j][i];
+            orderlist = split(order, ",");
+            if (orderlist[1] == "")
+            {
+                id = 0;
             }
-}
-   
-void GameEngine::executeOrdersPhase(){
-/*
-// players stop issuing 
+            else
+            {
+                id = stoi(orderlist[1]);
+            }
+            name = orderlist[2];
+            source = orderlist[3];
+            target = orderlist[4];
+            if (orderlist[5] == "")
+            {
+                num_of_units = 0;
+            }
+            else
+            {
+                num_of_units = stoi(orderlist[5]);
+            }
 
-// execute top order from orderlist 
-*/
- for (Player *p : this->players)
+            this->players.at(j)->issueOrder((convert(orderlist[0])), a_deck, i, all_territories, id, name, source, target, num_of_units);
+        }
+    }
+}
+
+void RemoveOrder(vector<Order *> list, Order *ord)
+{
+    list.erase(remove(list.begin(), list.end(), ord), list.end());
+}
+void GameEngine::executeOrdersPhase()
+{
+
+    for (Player *p : this->players)
     {
         for (Order *ord : (*(p->getOrders())).ol)
         {
@@ -699,25 +733,31 @@ void GameEngine::executeOrdersPhase(){
             if (ord->getOrderName() == "deploy")
             {
                 ord->execute();
-        (*(p->getOrders())).ol.erase(remove((*(p->getOrders())).ol.begin(),(*(p->getOrders())).ol.end(),ord), (*(p->getOrders())).ol.end());
+                RemoveOrder((*(p->getOrders())).ol, ord);
+                // (*(p->getOrders())).ol.erase(remove((*(p->getOrders())).ol.begin(),(*(p->getOrders())).ol.end(),ord), (*(p->getOrders())).ol.end());
             }
         }
     }
- int longest;
- for(Player *p : this->players){
-         if((*(p->getOrders())).ol.size()>longest){
-            longest = (*(p->getOrders())).ol.size(); 
-         }
+    int longest;
+    for (Player *p : this->players)
+    {
+        if ((*(p->getOrders())).ol.size() > longest)
+        {
+            longest = (*(p->getOrders())).ol.size();
+        }
     }
- for(int i=0;i<longest;i++){
-    for(Player* p : this->players){
-        Order* ord = (*(p->getOrders())).ol.at(0);
-        ord->execute();
-        (*(p->getOrders())).ol.erase(remove((*(p->getOrders())).ol.begin(),(*(p->getOrders())).ol.end(),ord), (*(p->getOrders())).ol.end());
+    for (int i = 0; i < longest; i++)
+    {
+        for (Player *p : this->players)
+        {
+            Order *ord = (*(p->getOrders())).ol.at(0);
+            ord->execute();
+            RemoveOrder((*(p->getOrders())).ol, ord);
+            // (*(p->getOrders())).ol.erase(remove((*(p->getOrders())).ol.begin(),(*(p->getOrders())).ol.end(),ord), (*(p->getOrders())).ol.end());
+        }
     }
- }
-
 }
+
 bool search(vector<Player *> player, string command)
 {
     for (int i = 0; i < player.size(); i++)
