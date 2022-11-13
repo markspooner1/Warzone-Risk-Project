@@ -691,7 +691,16 @@ void GameEngine::issueOrdersPhase(vector<vector<string>> Orders, Deck *a_deck)
     {
         for (int j = 0; j < players.size(); j++)
         {
-            string order = Orders[j][i];
+            string order;
+            try
+            {
+               order = Orders.at(j).at(i); 
+            }
+            catch(const std::exception& e)
+            {
+               break;
+            }
+            
             orderlist = split(order, ",");
             if (orderlist[1] == "")
             {
@@ -725,6 +734,7 @@ void RemoveOrder(vector<Order *> list, Order *ord)
 void GameEngine::executeOrdersPhase()
 {
 
+    // loop for executing deploy orders first
     for (Player *p : this->players)
     {
         for (Order *ord : (*(p->getOrders())).ol)
@@ -738,6 +748,7 @@ void GameEngine::executeOrdersPhase()
             }
         }
     }
+    // loop for getting the player with most orders
     int longest;
     for (Player *p : this->players)
     {
@@ -746,8 +757,10 @@ void GameEngine::executeOrdersPhase()
             longest = (*(p->getOrders())).ol.size();
         }
     }
+    // loop for round robin execution of different orders
     for (int i = 0; i < longest; i++)
-    {
+    { 
+        // each round all players issue an order
         for (Player *p : this->players)
         {
             Order *ord = (*(p->getOrders())).ol.at(0);
