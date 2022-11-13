@@ -415,8 +415,10 @@ void GameEngine::startupPhase(CommandProcessing *c)
                 break;
             }
             string nextstate = *states[i];
+            cout << "test" << endl;
             c->getCommand(states[i]);
             this->setStateName(states[i]);
+
 
             if (this->getStateName()->compare("ERROR") == 0)
             {
@@ -474,6 +476,7 @@ void GameEngine::readCommandList(CommandProcessing *c)
                     if (i == this->map.getTerritories().size())
                         break;
                     this->players[j]->addTerritory(this->map.getTerritories()[i]);
+                    this->map.getTerritories()[i]->owner = players[j];
                     i++;
                 }
             }
@@ -510,7 +513,7 @@ void GameEngine::readCommandList(CommandProcessing *c)
         }
     }
 }
-void GameEngine::mainGameLoop(vector<vector<string>> Orders)
+void GameEngine::mainGameLoop()
 {
 
     bool winner = false;
@@ -531,24 +534,28 @@ void GameEngine::mainGameLoop(vector<vector<string>> Orders)
         totalTerritories = map.getTerritories().size();
 
         for (Player *p : this->players)
-        {
+        {   
+            cout << "Player " << p->name << " owns " << p->getTerritories().size() << endl;
+            cout << this->map.getTerritories().size() << " in Total Territories in map"<<endl;
             if (p->getTerritories().size() == totalTerritories)
             {
                 winner = true;
-                cout << "the winner of this game is " << p->name;
+                cout << "------------THE WINNER IS------------\n\n"<<  endl <<"\tPlayer: " << p->name << endl <<"\n\n---------------------------\n\n";
+                exit(0);
             }
         }
-        //
+     
         reinforcementPhase();
 
-        issueOrdersPhase(Orders,this->deck);
+        issueOrdersPhase();
 
         executeOrdersPhase();
     } while (!winner);
 }
 
 void GameEngine::reinforcementPhase(){
-    // loop through player, add to each player armies comparatively to their continents holding.
+        cout << "\n----REINFORCEMENT PHASE-----\n" << endl;
+
     vector<Continent*> continents = this->map.getContinents();
     vector<vector<Territory*>> all_territories_of_continents;
 
@@ -607,7 +614,11 @@ void GameEngine::reinforcementPhase(){
         }
 
         *(p->reinforcement_pool) = armies;
+        cout << p->name << " reinforced with " << armies << " armies" << endl;
+
     }
+            cout << "\n----END OF REINFORCEMENT PHASE-----\n" << endl;
+
 }
 
   issue_order_types convert(const string& word){
@@ -616,7 +627,7 @@ void GameEngine::reinforcementPhase(){
     else if(word == "OrderBombType") return OrderBombType;
     else if(word == "OrderBlockadeType") return OrderBlockadeType;
     else if(word == "OrderAirliftType") return OrderAirliftType;
-    else if(word == "OrderNegotiateType") return OrderNegotiateType;
+    else /*if(word == "OrderNegotiateType")*/ return OrderNegotiateType;
 }
 
 
@@ -635,57 +646,92 @@ vector<string> split(string str, string deli)
    return list;
 }
 
-void GameEngine::issueOrdersPhase(vector<vector<string>> Orders, Deck* a_deck){
-
-    // loop through player, add to each player armies comparatively to their continents holding.
-    vector<Continent*> continents = this->map.getContinents();
-    vector<Territory*> all_territories;
-
-    //init of all_territories_of_continents using the continents
-    for (size_t i; i<continents.size(); i++){
-        for (int j = 0; j < continents.at(i)->continent_members.size(); ++j) {
-            all_territories.push_back(continents.at(i)->continent_members.at(j));
+void GameEngine::issueOrdersPhase(){
+    cout << "\n----ISSUE ORDERS PHASE-----\n" << endl;
+    int ordersPerTurn = this->players.size()*4;
+    int current_player = 0;
+    for(int i = 0; i < ordersPerTurn; i++){
+        this->players[current_player]->issueOrder();
+        current_player++;
+        if(current_player == this->players.size()){
+            current_player = 0;
         }
-
     }
+    cout << "\n----END OF ISSUE ORDERS PHASE-----\n" << endl;
 
-    // issue_order_types order_type, int ID, string name, string source, string target = "default", int num_of_units = 0
-       vector<string> orderlist;
-       int id;
-       string name; 
-       string source; 
-       string target; 
-       int num_of_units;
-       int longest = 0; 
-      for(int i=0;i<Orders.size();i++){
-        if(Orders[i].size()> longest){
-            longest = Orders[i].size();
-        }
-      }
-            for(int i=0; i<longest;i++){
-                 for(int j=0; j<players.size();j++) {
-                    string order = Orders[j][i]; 
-                    orderlist = split(order,",");
-                    if(orderlist[1] == ""){
-                     id =0;
-                    } else{
-                     id = stoi(orderlist[1]); }
-                     name = orderlist[2];
-                     source = orderlist[3];
-                     target = orderlist[4];
-                      if(orderlist[5] == ""){
-                     num_of_units =0;
-                    } else{
-                     num_of_units = stoi(orderlist[5]);
-                    }
-                    
-                   this->players.at(j)->issueOrder((convert(orderlist[0])),a_deck, i,all_territories ,id , name , source , target , num_of_units);
-                    
-                 }
-            }
+  
+    
 }
+       
+
+    // // loop through player, add to each player armies comparatively to their continents holding.
+    // vector<Continent*> continents = this->map.getContinents();
+    // vector<Territory*> all_territories;
+
+    // //init of all_territories_of_continents using the continents
+    // for (size_t i; i<continents.size(); i++){
+    //     for (int j = 0; j < continents.at(i)->continent_members.size(); ++j) {
+    //         all_territories.push_back(continents.at(i)->continent_members.at(j));
+    //     }
+
+    // }
+
+    // // issue_order_types order_type, int ID, string name, string source, string target = "default", int num_of_units = 0
+    //    vector<string> orderlist;
+    //    int id;
+    //    string name; 
+    //    string source; 
+    //    string target; 
+    //    int num_of_units;
+    //    int longest = 0; 
+    //   for(int i=0;i<Orders.size();i++){
+    //     if(Orders[i].size()> longest){
+    //         longest = Orders[i].size();
+    //     }
+    //   }
+    //         for(int i=0; i<longest;i++){
+    //              for(int j=0; j<players.size();j++) {
+    //                 string order = Orders[j][i]; 
+    //                 orderlist = split(order,",");
+    //                 if(orderlist[1] == ""){
+    //                  id =0;
+    //                 } else{
+    //                  id = stoi(orderlist[1]); }
+    //                  name = orderlist[2];
+    //                  source = orderlist[3];
+    //                  target = orderlist[4];
+    //                   if(orderlist[5] == ""){
+    //                  num_of_units =0;
+    //                 } else{
+    //                  num_of_units = stoi(orderlist[5]);
+    //                 }
+                    
+    //                this->players.at(j)->issueOrder((convert(orderlist[0])),a_deck, i,all_territories ,id , name , source , target , num_of_units);
+                    
+    //              }
+    //         }
+
    
 void GameEngine::executeOrdersPhase(){
+    cout << "----EXEC ORDERS PHASE-----" << endl;
+    int ord = 0;
+    for(int i = 0; i < this->players.size()*4; i++){
+        if(ord == this->players.size()){
+            ord = 0;
+        }
+
+        if(this->players[ord]->getOrders()->ol.size() == 0){
+            ord++;
+            continue;
+        }
+        Order* o = this->players[ord]->getOrders()->ol.at(0);
+        o->execute();
+        this->players[ord]->getOrders()->remove(o);
+        delete o;
+        o = NULL;
+        ord++;
+
+    }
 /*
 // players stop issuing 
 

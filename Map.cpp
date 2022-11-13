@@ -20,6 +20,7 @@ Territory::Territory(string name, string continent){
     this->name = new string(name);
     this->continent = new string(continent);
     this->visited = false;
+    this->army_units = new int(0);
 }
 //Territory copy constructor
 Territory::Territory(const Territory &obj){
@@ -156,7 +157,7 @@ Map MapLoader::readMapFile(string fileName){
                     cout << "Loading Continent: " << line.substr(0, line.find(delimiter)) << endl;
                      
                     //using the = sign as a dilimeter to insert continents into the vector
-                    continents.push_back(new Continent(line.substr(0, line.find(delimiter)), 4));
+                    continents.push_back(new Continent(line.substr(0, line.find(delimiter)),  stoi(line.substr(line.find(delimiter) + 1, line.length()))));
                 }
             }
         }

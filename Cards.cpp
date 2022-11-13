@@ -52,47 +52,31 @@ string * Card::get_card_type()
 
 
 //method to play card
-void Card::play(Player* a_player,Deck* a_deck, int ID, string name, string source, string target = "default", int num_of_units = 0)
-{
-    //Create All territories pointer:
-//    auto * ALLTERRITORIES = new vector<Territory>;
-//    ALLTERRITORIES->push_back(Territory("England", "Europe"));
-//    ALLTERRITORIES->push_back(Territory("Finland", "Europe"));
-//    ALLTERRITORIES->push_back(Territory("Denmark", "Europe"));
-//    ALLTERRITORIES->push_back(Territory("Ghana", "Africa"));
-//    ALLTERRITORIES->push_back(Territory("Egypt", "Africa"));
-//    ALLTERRITORIES->push_back(Territory("Congo", "Africa"));
-//    ALLTERRITORIES->push_back(Territory("China", "Asia"));
-//    ALLTERRITORIES->push_back(Territory("Russia", "Asia"));
-//    ALLTERRITORIES->push_back(Territory("Singapore", "Asia"));
-
-
-//create order and add to players orderlist
-//a_player->issueOrder(OrderAdvanceType, 1,"p1 order", ALLTERRITORIES->at(1).getName(), ALLTERRITORIES->at(2).getName(), 2);
-
-    if ((this->get_card_type())->compare("OrderBombType") == 0){
-        OrderBomb* o = new OrderBomb(ID, name, target);
-        a_player->getOrders()->addOrder(*o);
-        cout<< "\nOrder created and added to the player order list.\n";
-    }else{
-        if ((this->get_card_type())->compare("OrderBlockadeType") == 0){
-            OrderBlockade* o = new OrderBlockade(ID, name, target);
-            a_player->getOrders()->addOrder(*o);
-            cout<< "\nOrder created and added to the player order list.\n";
-        }else{
-            if((this->get_card_type())->compare("OrderAirliftType") == 0){
-                OrderAirlift* o = new OrderAirlift(ID,num_of_units, name, source, target);
-                a_player->getOrders()->addOrder(*o);
-                cout<< "\nOrder created and added to the player order list.\n";
-            }else{
-                if ((this->get_card_type())->compare("OrderNegotiateType") == 0){
-                    OrderNegotiate* o = new OrderNegotiate(ID, name, source, target);
-                    a_player->getOrders()->addOrder(*o);
-                    cout<< "\nOrder created and added to the player order list.\n";
-                }
-            }
-        }
-    }
+//void Card::play(Player* a_player,Deck* a_deck, int ID, string name, string source, string target = "default", int num_of_units = 0)
+//
+    // if ((this->get_card_type())->compare("OrderBombType") == 0){
+    //     OrderBomb* o = new OrderBomb(ID, name, target);
+    //     a_player->getOrders().addOrder(*o);
+    //     cout<< "\nOrder created and added to the player order list.\n";
+    // }else{
+    //     if ((this->get_card_type())->compare("OrderBlockadeType") == 0){
+    //         OrderBlockade* o = new OrderBlockade(ID, name, target);
+    //         a_player->getOrders().addOrder(*o);
+    //         cout<< "\nOrder created and added to the player order list.\n";
+    //     }else{
+    //         if((this->get_card_type())->compare("OrderAirliftType") == 0){
+    //             OrderAirlift* o = new OrderAirlift(ID,num_of_units, name, source, target);
+    //             a_player->getOrders().addOrder(*o);
+    //             cout<< "\nOrder created and added to the player order list.\n";
+    //         }else{
+    //             if ((this->get_card_type())->compare("OrderNegotiateType") == 0){
+    //                 OrderNegotiate* o = new OrderNegotiate(ID, name, source, target);
+    //                 a_player->getOrders().addOrder(*o);
+    //                 cout<< "\nOrder created and added to the player order list.\n";
+    //             }
+    //         }
+    //     }
+    //}
 
 //switch(*(this->get_card_type()))
 //    {
@@ -124,11 +108,11 @@ void Card::play(Player* a_player,Deck* a_deck, int ID, string name, string sourc
 
 
 
-//return card to deck
-    a_deck->add_card_to_deck_vector(this);
+// //return card to deck
+//     a_deck->add_card_to_deck_vector(this);
 
 
-}
+// }
 
 
 

@@ -3,8 +3,10 @@
 #include "Player.h"
 #include "Cards.h"
 #include "Orders.h"
+#include "testMainGameLoop.cpp"
 int main(){
-    testStartupPhase();
+    //testStartupPhase();
+    testMainGameLoop();
     //testLoadMaps();
  
     //  testPlayers();

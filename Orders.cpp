@@ -64,7 +64,8 @@ ostream& operator<<(ostream& os, const Order& ordre)
 	return os;
 }
 //////////////////////////////////////////
-OrderAdvance::OrderAdvance(int ID, int numofUnits, string name, string source, string target) : Order(ID, name) {
+OrderAdvance::OrderAdvance(Player* p, int ID, int numofUnits, string name, string source, string target) : Order(ID, name) {
+	this->orderOwner = p;
 	this->numberOfunits = new int(numofUnits);
 	this->SourceTerritory = new string(source);
 	this->TargetTerritory = new string(target);
@@ -102,26 +103,89 @@ string OrderAdvance::getSource() {
 }
 
 void OrderAdvance::execute() {
+	Territory *source = this->orderOwner->getTerritoryFromName(this->getSource());
+	Territory *target;
+	for(int i = 0; i < source->getNeighbours().size(); i++){
+			if(this->getTarget() == source->getNeighbours()[i]->getName()){
+				target = source->getNeighbours()[i];
+			}
+	}
 	if (validate()) {
-		cout << "Arrival of " << *numberOfunits << " units to " << *TargetTerritory << " coming from " << *SourceTerritory << endl;
-		cout << "Advance Order has been executed\n";
+		if(this->orderOwner->ownsTerritory(this->getTarget())){
+			source->army_units -= this->getUnits();
+			target->army_units += this->getUnits();
+			cout << "Advance order executeed player has moved army units from: " << source->getName() << " to " << target->getName() << endl;
+		}else{
+			cout << "---Player " << this->orderOwner->name << "---- has issued an advance order on: " << target->getName() << endl;
+					cout << "\n";
+
+			int randNumber;
+			int attacker = *source->army_units;
+			int defender = *target->army_units;
+			for(int i = 0;;i++){
+				randNumber = rand() % 10 + 1;
+				if(randNumber <= 6){
+					attacker--;
+				}
+				else if(randNumber <= 7){
+					defender--;
+				}
+				if(attacker <= 0){
+					cout << this->orderOwner->name << " has lost the battle to " << target->getName() << endl;
+					cout << "Moving " << defender << " army units to " << source->getName() << endl;
+					*source->army_units += defender;
+					this->orderOwner->removeTerritory(source);
+					target->owner->addTerritory(source);
+					break;
+					
+				}if(defender <= 0){
+					cout << this->orderOwner->name << " has won the battle against " << target->getName() << endl;
+					cout << "Moving " << attacker << " army units to " << target->getName() << endl;
+							cout << "\n";
+
+					*target->army_units += attacker;
+					this->orderOwner->removeTerritory(source);
+					target->owner->addTerritory(source);
+					break;
+				}
+			}
+
+		}
+
         Notify(this);
 	}
-	else
-		cout << "Order has not been executed" << endl;
 }
 
 bool OrderAdvance::validate() {
-	cout << "Order validity check...\n";
-	if (getSource() != getTarget()) {
-		cout << "Order is valid\n";
-		return true;
-	}
-	else {
-		cout << "Order is invalid XXX Abort execution!" << endl;
-		return false;
-	}
+	Player *p = this->orderOwner;
 
+	bool owns = false;
+	if(p->ownsTerritory(this->getSource())){
+		owns = true;
+	}else{
+		cout << "Invalid order: " << p->name << " doesnt own " << this->getSource() << endl;
+				cout << "\n";
+
+	}
+	if(!owns) return false;
+ 	Territory *source = p->getTerritoryFromName(this->getSource());
+	bool isAdj = false;
+	
+
+	for(int i = 0; i < source->getNeighbours().size(); i++){
+			if(this->getTarget() == source->getNeighbours()[i]->getName()){
+				isAdj = true;
+			}
+	}
+	if(!isAdj){
+		cout << "Invalid Order: " << this->getTarget() << " is not adjacent to " << source->getName() << endl;
+				cout << "\n";
+
+		return false;
+
+	}
+	return true;
+	
 }
 
 ostream& operator<<(ostream& os, const OrderAdvance& ordre)
@@ -130,66 +194,64 @@ ostream& operator<<(ostream& os, const OrderAdvance& ordre)
 	return os;
 }
 //////////////////////////////////
-OrderDeploy::OrderDeploy(int ID, int numofUnits, string name, string target) : Order(ID, name) {
-	this->numberOfunits = new int(numofUnits);
-	this->TargetTerritory = new string(target);
+OrderDeploy::OrderDeploy(Player* p,int ID, int numofUnits, string name, string target) : Order(ID, name) {
+	this->orderOwner = p;
+	this->numberOfunits = numofUnits;
+	this->TargetTerritory = target;
 }
 
 OrderDeploy::OrderDeploy() : Order() {
-	this->numberOfunits = new int(0);
-	this->TargetTerritory = new string("default");
+	this->numberOfunits = (0);
+	this->TargetTerritory = "default";
 }
 OrderDeploy& OrderDeploy::operator=(const OrderDeploy& dep) {
 	Order::operator= (dep);
-	this->numberOfunits = new int(*(dep.numberOfunits));
-	this->TargetTerritory = new string(*(dep.TargetTerritory));
+	this->numberOfunits = dep.numberOfunits;
+	this->TargetTerritory = dep.TargetTerritory;
 	return *this;
 }
 
 OrderDeploy::OrderDeploy(const OrderDeploy& dep) : Order(dep) {
-	this->numberOfunits = new int(*(dep.numberOfunits));
-	this->TargetTerritory = new string(*(dep.TargetTerritory));
+	this->numberOfunits = dep.numberOfunits;
+	this->TargetTerritory = dep.TargetTerritory;
 }
 
 
 int OrderDeploy::getUnits() {
-	return *numberOfunits;
+	return numberOfunits;
 }
 
 string OrderDeploy::getTarget() {
-	return *TargetTerritory;
+	return TargetTerritory;
 }
 
 void OrderDeploy::execute() {
-	if (validate()) {
-		cout << "Deployment of " << *TargetTerritory << " units to " << *numberOfunits << endl;
-		cout << "Deploy Order has been executed\n";
-        Notify(this);
+	Player *p = this->orderOwner;
+	if(validate()){
+		Territory *t = p->getTerritoryFromName(this->getTarget());
+		t->army_units += this->getUnits();
+		cout << "\nPlayer " << p->name << "'s deploy order has executed on: \n" << t->getName() << endl;
+				cout << "\n";
+
+	}else{
+		cout << "Player " << p->name << "'s deploy order was invalid on: " << p->getTerritoryFromName(this->getTarget())->getName() << endl;
+		cout << "\n";
 	}
-	else
-		cout << "Order has not been executed" << endl;
 }
 
 bool OrderDeploy::validate() {
-	cout << "Order validity check...\n";
-	if (true) {
-		cout << "Order is valid\n";
-		return true;
-	}
-	else {
-		cout << "Order is invalid XXX Abort execution!" << endl;
-		return false;
-	}
+	Player *p = this->orderOwner;
+	return(p->ownsTerritory(this->getTarget()));
 
 }
 
 ostream& operator<<(ostream& os, const OrderDeploy& ordre)
 {
-	os  << "Deployment of " << *ordre.TargetTerritory << " units to " << *ordre.numberOfunits << endl;
+	os  << "Deployment of " << ordre.TargetTerritory << " units to " << ordre.numberOfunits << endl;
 	return os;
 }
 //////////////////////////////////
-OrderBomb::OrderBomb(int ID, string name, string target) : Order(ID, name) {
+OrderBomb::OrderBomb(Player* p,int ID, string name, string target) : Order(ID, name) {
 	this->TargetTerritory = new string(target);
 }
 
@@ -212,24 +274,29 @@ string OrderBomb::getTarget() {
 
 void OrderBomb::execute() {
 	if (validate()) {
-		cout << *TargetTerritory << " has been bombed successfully!! Half of the units were wiped out!\n";
-		cout << "Bomb order has been executed\n";
-        Notify(this);
+		Territory *t;
+		t = this->orderOwner->getTerritoryFromName(this->getTarget());
+		*t->army_units = *t->army_units / 2;
+		cout << "\nPlayer " << this->orderOwner->name << "'s Bomb order has executed on: \n" << this->getTarget() << endl;
+		delete t;
+		t = NULL;
 	}
-	else
-		cout << "Order has not been executed" << endl;
-}
+	else{
+		cout << "Bomb Order was not executed - invalid" << endl;
+	}
+	}
+
 
 bool OrderBomb::validate() {
-	cout << "Order validity check...\n";
-	if (true) {
-		cout << "Order is valid\n";
-		return true;
+	bool neighbour = false;
+	for(int i = 0; i < this->orderOwner->getTerritories().size(); i++){
+		for(int j = 0; j < this->orderOwner->getTerritories()[i]->getNeighbours().size(); j++){
+			if(this->getTarget() == this->orderOwner->getTerritories()[i]->getNeighbours()[j]->getName()){
+				return true;
+			}
 	}
-	else {
-		cout << "Order is invalid XXX Abort execution!" << endl;
-		return false;
 	}
+	return true;
 
 }
 
@@ -240,7 +307,7 @@ ostream& operator<<(ostream& os, const OrderBomb& ordre)
 }
 
 //////////////////////////////////
-OrderBlockade::OrderBlockade(int ID, string name, string target) : Order(ID, name) {
+OrderBlockade::OrderBlockade(Player* p,int ID, string name, string target) : Order(ID, name) {
 	this->TargetTerritory = new string(target);
 }
 
@@ -265,24 +332,22 @@ string OrderBlockade::getTarget() {
 
 void OrderBlockade::execute() {
 	if (validate()) {
-		cout<<"The number of units on the territory " << *TargetTerritory << " has been tripled! It is now a neutral territory." << endl;
-		cout << "Blockade order has been executed\n";
-        Notify(this);
+		*this->orderOwner->getTerritoryFromName(this->getTarget())->army_units *= 2;
+		cout << "\nPlayer " << this->orderOwner->name << "'s Blockade order has executed on: \n" << this->getTarget() << endl;
+
 	}
-	else
-		cout << "Order has not been executed" << endl;
+	else{
+		cout << "invalid order" << endl;
+	}
 }
 
 bool OrderBlockade::validate() {
-	cout << "Order validity check...\n";
-	if (true) {
-		cout << "Order is valid\n";
-		return true;
-	}
-	else {
-		cout << "Order is invalid XXX Abort execution!" << endl;
+	Player *p = this->orderOwner;
+	if(p->getTerritoryFromName(this->getTarget()) == NULL){
 		return false;
 	}
+	delete p;
+	p = NULL;
 
 }
 
@@ -292,7 +357,8 @@ ostream& operator<<(ostream& os, const OrderBlockade& ordre)
 	return os;
 }
 /////////////////////////////////
-OrderAirlift::OrderAirlift(int ID, int numofUnits, string name, string source, string target) : Order(ID, name) {
+OrderAirlift::OrderAirlift(Player* p,int ID, int numofUnits, string name, string source, string target) : Order(ID, name) {
+	this->orderOwner = p;
 	this->numberOfunits = new int(numofUnits);
 	this->SourceTerritory = new string(source);
 	this->TargetTerritory = new string(target);
@@ -331,23 +397,23 @@ string OrderAirlift::getSource() {
 
 void OrderAirlift::execute() {
 	if (validate()) {
-		cout << *numberOfunits << " units have arrived in " << *TargetTerritory << " from " << *SourceTerritory << endl;
-		cout << "Airlift order has been executed\n";
+		cout << this->getUnits() << " units have arrived in " << this->getTarget() << " from " << *SourceTerritory << endl;
+		int unitsToMove = this->getUnits();
+		this->orderOwner->getTerritoryFromName(this->getSource())->army_units -= unitsToMove;
+		this->orderOwner->getTerritoryFromName(this->getTarget())->army_units += unitsToMove;
         Notify(this);
 	}
-	else
-		cout << "Order has not been executed" << endl;
+	else{
+		cout << "Order Airlift was not valid and not has not been executed" << endl;
+	}
 }
 
 bool OrderAirlift::validate() {
-	cout << "Order validity check...\n";
-	if (getSource() != getTarget()) {
-		cout << "Order is valid\n";
-		return true;
-	}
-	else {
-		cout << "Order is invalid XXX Abort execution!" << endl;
+	
+	if(!(this->orderOwner->ownsTerritory(this->getSource()) && this->orderOwner->ownsTerritory(this->getTarget()))){
 		return false;
+	}else{
+		return true;
 	}
 
 }
@@ -359,7 +425,8 @@ ostream& operator<<(ostream& os, const OrderAirlift& ordre)
 }
 
 /////////////////////////////////
-OrderNegotiate::OrderNegotiate(int ID, string name, string source, string target) : Order(ID, name) {
+OrderNegotiate::OrderNegotiate(Player* p,int ID, string name, string source, string target) : Order(ID, name) {
+	this->orderOwner = p;
 	this->SourceTerritory = new string(source);
 	this->TargetTerritory = new string(target);
 }
@@ -418,6 +485,7 @@ ostream& operator<<(ostream& os, const OrderNegotiate& ordre)
 
 /////////////////////////////////
 OrdersList::OrdersList() {
+
 }
 
 OrdersList::OrdersList(const OrdersList& cop) {
@@ -460,22 +528,14 @@ void OrdersList::move() {
 	
 }
 
-void OrdersList::remove() {
-	int index = 0;
-	int id;
-	cout << "What is the ID of the Order to be deleted?: ";
-	cin >> id;
-	std::vector<Order*>::iterator it;
-	for (it = ol.begin(); it != ol.end(); ++it) {
-		if ((*it)->getOrderID()==id) {
-			ol.erase(it);
-			break;
-		}
-	}
+void OrdersList::remove(Order *o) {
+	ol.erase(std::remove(ol.begin(),ol.end(),o),ol.end());
+
 }
 
- void OrdersList::addOrder(Order o) {
- 	this->ol.push_back(&o);
+ void OrdersList::addOrder(Order* o) {
+ 	this->ol.push_back(o);
+
      Notify(this);
 
  }

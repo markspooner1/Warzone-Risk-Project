@@ -6,39 +6,40 @@
 #include <vector>
 #include <string>
 #include "Orders.h"
-
+#include <random>
 //constructor
 Player::Player(OrdersList *orderList, Hand *hand, vector<Territory*> territories) : orderList(orderList), hand(hand),
 
                                                                                     territories(territories) {}
 //Assign all attributes to NULL
 Player::Player() {
-    this->orderList = NULL;
+    //this->orderList = NULL;
     this->hand = NULL;
 }
 
 //Copy constructor
 Player::Player(const Player &player) {
-    this->orderList = new OrdersList(*player.orderList);
+   //this->orderList = new OrdersList(*player.orderList);
     this->territories = player.getTerritories();
     this->hand = new Hand(*(player.hand));
 }
 
 Player::Player(string name){
+    this->orderList = new OrdersList();
     this->name = name;
     this->hand = new Hand();
 }
 //Destructor
 Player::~Player() {
     this->hand = NULL;
-    this->orderList = NULL;
+   // this->orderList = NULL;
 };
 
 
 //Getters:
 
 //getter for the collection orders named orderList
-OrdersList *Player::getOrders() const {
+OrdersList* Player::getOrders() const {
     return orderList;
 }
 
@@ -56,8 +57,8 @@ vector<Territory*> Player::getTerritories() const {
 //Setters:
 
 //setter for the collection orders named orderList
-void Player::setOrders(OrdersList *orders) {
-    Player::orderList = orders;
+void Player::setOrders(OrdersList orders) {
+    orderList = &orders;
 }
 
 //setter for the collection of cards named hand
@@ -75,133 +76,134 @@ void Player::setTerritories(vector<Territory*> territories) {
 //method to create an order object and add it to the orderlist (collection of orders)
 //the method expects the first param to be an enum issue_order_types to create the correct object
 //the other param depend on the type of order issued
-void Player::issueOrder(issue_order_types order_type,Deck* a_deck, int i, vector<Territory*> all_territories, int ID, string name, string source, string target = "default", int num_of_units = 0) {
+void Player::issueOrder() {
+      std::random_device dev;
+      std::mt19937 rng(dev());
+     vector<Territory*> attack_vector = this->toAttack();
+    // target = attack_vector.at(i % attack_vector.size())->getName();
+     vector<Territory*> defend_vector = this->toDefend();
+    if(*this->reinforcement_pool > 0){
+        cout << "\n---DEPLOY ORDERS----\n" <<endl;
+        std::uniform_int_distribution<std::mt19937::result_type> dist1(1 ,*this->reinforcement_pool);
+        int deploynum = dist1(rng);
+        std::uniform_int_distribution<std::mt19937::result_type> dist2(0 ,this->getTerritories().size() - 1);
+        int terr = dist2(rng);
+    
+        string territorytodeploy = this->getTerritories()[terr]->getName();
+        cout << "Player: " << this->name << " has " << *this->reinforcement_pool << " armies left in its reinforcement pool" << endl;
+        cout << "Player: " << this->name << " has chosen to deploy " << deploynum << " armies to: " << this->getTerritories()[terr]->getName() << endl;
+        cout << "\n";
+        this->orderList->addOrder((new OrderDeploy(this, 0, deploynum, "deploy",territorytodeploy)));
+        *this->reinforcement_pool -= deploynum;
+        }
+    else{
+        
 
-    vector<Territory*> attack_vector = this->toAttack(all_territories);
-    target = attack_vector.at(i % attack_vector.size())->getName();
-
-    vector<Territory*> defend_vector = this->toDefend();
-    source = defend_vector.at(i % defend_vector.size())->getName();
-
-    switch(order_type)
-    {
-        case OrderAdvanceType:{
-            if(reinforcement_pool == 0){
-            OrderAdvance* o = new OrderAdvance(ID,num_of_units, name, source, target);
-            this->orderList->addOrder(*o);
-            cout<< "\nOrder created and added to the player order list.\n";
-            }else{
-                cout << "there are still reinforcements !";
-                exit(0);
+        int rands = rand() % 5 + 1;
+        if(rands < 4){
+            cout << "\n---Advance ORDERS----\n" <<endl;
+            string attackOrDefend = "";
+            int x = rand() % 2 + 1;
+            if(x == 1){ 
+                attackOrDefend = "Attack";
             }
-            break;
+            else{ 
+                attackOrDefend = "Defend";
+
             }
-        case OrderDeployType:{
-            
-            OrderDeploy* o = new OrderDeploy(ID, num_of_units, name, target);
-            this->orderList->addOrder(*o);
-            cout<< "\nOrder created and added to the player order list.\n"; 
-            
-            break;
-            }
-        case OrderBombType:{
-              if(reinforcement_pool == 0){
-//            OrderBomb* o = new OrderBomb(ID, name, target);
-//            this->orderList->addOrder(*o);
-//            cout<< "\nOrder created and added to the player order list.\n";
+            if(attackOrDefend.compare("Attack") == 0){
 
-                  vector<Card*>* cards = (this->getHand())->get_vector_to_cards();
-                  bool found = false;
+                    std::uniform_int_distribution<std::mt19937::result_type> dist3(0 ,defend_vector.size() - 1);
 
-                  for (int i = 0; i < (*cards).size() ; ++i) {
-                      if ((*cards).at(i)->get_card_type()->compare("bomb") == 0){
-                          found = true;
-                          (*cards).at(i)->play(this, a_deck, ID, name, source, target, num_of_units);
-                      }
-                  }
-                  if (found == false){
-                      cout << "Order was passed, but player has no corresponding card. No order issued.";
-                  }
+                    int terr = dist3(rng);
 
-              } else {
-                cout << "there are still reinforcements !";
-                exit(0);
-            }
-            break;
-            }
-        case OrderBlockadeType:{
-             if(reinforcement_pool == 0){
-//            OrderBlockade* o = new OrderBlockade(ID, name, target);
-//            this->orderList->addOrder(*o);
-//            cout<< "\nOrder created and added to the player order list.\n";
-
-                 vector<Card*>* cards = (this->getHand())->get_vector_to_cards();
-                 bool found = false;
-
-                 for (int i = 0; i < (*cards).size() ; ++i) {
-                     if ((*cards).at(i)->get_card_type()->compare("blockade") == 0){
-                         (*cards).at(i)->play(this, a_deck, ID, name, source, target, num_of_units);
-                     }
-                 }
-                 if (found == false){
-                     cout << "Order was passed, but player has no corresponding card. No order issued.";
-                 }
-             } else {
-                cout << "there are still reinforcements !";
-                exit(0);
-            }
-            break;
-            }
-        case OrderAirliftType:{
-            
-            if(reinforcement_pool == 0){
-//            OrderAirlift* o = new OrderAirlift(ID,num_of_units, name, source, target);
-//            this->orderList->addOrder(*o);
-//            cout<< "\nOrder created and added to the player order list.\n";
-
-                vector<Card*>* cards = (this->getHand())->get_vector_to_cards();
-                bool found = false;
-
-                for (int i = 0; i < (*cards).size() ; ++i) {
-                    if ((*cards).at(i)->get_card_type()->compare("airlift") == 0){
-                        (*cards).at(i)->play(this, a_deck, ID, name, source, target, num_of_units);
-                    }
+                    string source = defend_vector[terr]->getName();
+                    std::uniform_int_distribution<std::mt19937::result_type> dist4(1 , 5);
+                    int units = dist4(rng);
+                    std::uniform_int_distribution<std::mt19937::result_type> dist5(0 , attack_vector.size() - 1);
+                    terr = dist5(rng);
+                    string target = attack_vector[terr]->getName();
+                    cout << "Player: " << this->name << " has chosen to Advance(attack) "  << target <<" with " << units << " armies" <<endl;
+                      cout << "\n";
+                    this->orderList->addOrder((new OrderAdvance(this,0,units, "Advance", source, target)));
                 }
-                if (found == false){
-                    cout << "Order was passed, but player has no corresponding card. No order issued.";
-                }
+            else{
+                std::uniform_int_distribution<std::mt19937::result_type> dist7(0 , defend_vector.size() - 1);
+                int terr = dist7(rng);
+                string source = defend_vector[terr]->getName();
+                std::uniform_int_distribution<std::mt19937::result_type> dist8(1 , 6);
+                int units = dist8(rng);
+                std::uniform_int_distribution<std::mt19937::result_type> dist9(0 , defend_vector.size() - 1);
+                terr = dist9(rng);
+                string source2 = defend_vector[terr]->getName();
+                cout << "Player: " << this->name << " has chosen to Advance(defend) " << source2 <<" with "<< units << " armies" << endl;
+                  cout << "\n";
+                this->orderList->addOrder((new OrderAdvance(this,0, units, "Defend", source, source2))); 
+            }
+        }
+        else{
+            if(this->getHand()->get_hand_vector()->size() != 0){
+                cout << "\n---CARD PLAYING----\n" << endl;
 
-            } else {
-                cout << "there are still reinforcements !";
-                exit(0);
-            }
-            break;
-            }
-        case OrderNegotiateType:{
-            if(reinforcement_pool == 0){
-//            OrderNegotiate* o = new OrderNegotiate(ID, name, source, target);
-//            this->orderList->addOrder(*o);
-//            cout<< "\nOrder created and added to the player order list.\n";
-
-                vector<Card*>* cards = (this->getHand())->get_vector_to_cards();
-                bool found = false;
-
-                for (int i = 0; i < (*cards).size() ; ++i) {
-                    if ((*cards).at(i)->get_card_type()->compare("diplomacy") == 0){
-                        (*cards).at(i)->play(this, a_deck, ID, name, source, target, num_of_units);
-                    }
+                Card*c = (this->getHand()->get_hand_vector())->at(0);
+                cout << *c->get_card_type() << endl;
+                if(*c->get_card_type() == "airlift"){
+                    cout << "Player " << this->name << " is playing " << *c->get_card_type() << endl;
+                    cout << "Airlift Order Issued" << endl;
+                    std::uniform_int_distribution<std::mt19937::result_type> dist10(0 , defend_vector.size() - 1);
+                    int terr = dist10(rng);
+                    string source = defend_vector[terr]->getName();
+                    std::uniform_int_distribution<std::mt19937::result_type> dist11(1 , 6);
+                    int units = dist11(rng);
+                    terr = rand() % attack_vector.size();
+                    std::uniform_int_distribution<std::mt19937::result_type> dist12(0 , attack_vector.size() - 1);
+                    terr = dist12(rng);
+                    string target = attack_vector[terr]->getName();
+                    this->orderList->addOrder((new OrderAirlift(this,0, units, "Airlift", source, target)));
+                    this->getHand()->remove_card_played_from_hand_vector(c);
                 }
-                if (found == false){
-                    cout << "Order was passed, but player has no corresponding card. No order issued.";
+                else if(*c->get_card_type() == "bomb"){
+                    cout << "Player " << this->name << " is playing " << *c->get_card_type() << endl;
+                    cout << "Bomb Order Issued on ";
+                    std::uniform_int_distribution<std::mt19937::result_type> dist13(0 , attack_vector.size() - 1);
+                    int terr = dist13(rng);
+                    string target = attack_vector[terr]->getName();
+                    cout << target << endl;
+                    this->orderList->addOrder((new OrderBomb(this,0,"Bomb", target)));
+                    this->getHand()->remove_card_played_from_hand_vector(c);
+
                 }
-            }else {
-                cout << "there are still reinforcements !";
-                exit(0);
+                else if(*c->get_card_type() == "blockade"){
+                    cout << "Player " << this->name << " is playing " << *c->get_card_type() << endl;
+                    cout << "Blockade Order Issued" << endl;
+                    std::uniform_int_distribution<std::mt19937::result_type> dist14(0 , defend_vector.size() - 1);
+                    int terr = dist14(rng);
+                    string source = defend_vector[terr]->getName();
+                    this->orderList->addOrder((new OrderBlockade(this,0, "Blockade", source)));
+                    this->getHand()->remove_card_played_from_hand_vector(c);
+
+                }else if(*c->get_card_type() == "diplomacy"){
+                    cout << "Player " << this->name << " is playing " << *c->get_card_type() << endl;
+                    cout << "Diplomacy Order Issued" << endl;
+                    std::uniform_int_distribution<std::mt19937::result_type> dist15(0 , defend_vector.size() - 1);
+                    int terr = dist15(rng);
+                    string source = defend_vector[terr]->getName();
+                    std::uniform_int_distribution<std::mt19937::result_type> dist16(1 , 6);
+                    int units = dist16(rng);
+                    terr = rand() % attack_vector.size();
+                    std::uniform_int_distribution<std::mt19937::result_type> dist17(0 , attack_vector.size() - 1);
+                    terr = dist17(rng);
+                    string target = attack_vector[terr]->getName();
+                    this->orderList->addOrder((new OrderNegotiate(this,0, "Negotiate", source, target)));
+                    this->getHand()->remove_card_played_from_hand_vector(c);
+                }
+                else if(*c->get_card_type() == "reinforcement"){
+                    //this->reinforcement_pool += 5;
+                    cout << "Player " << this->name << " has used their reinforcement card";
+                    this->getHand()->remove_card_played_from_hand_vector(c);
+                }
             }
-            break;
-            }
-        default:
-            cout<< "Order type not recognized. No order was added to the player order list.";
+        }
     }
 
 }
@@ -210,56 +212,27 @@ void Player::issueOrder(issue_order_types order_type,Deck* a_deck, int i, vector
 //return subset of the territories that belong to the player (arbitrary for now)
 vector<Territory*> Player::toDefend() {
     vector<Territory*> ToDefendTerritories;
-
     vector<Territory*> ptr = this->getTerritories();
-
     int LIMIT = (this->territories).size();
     for (size_t i = 0; i < LIMIT; i++) {
         ToDefendTerritories.push_back(ptr.at(i));
     }
     return ToDefendTerritories;
-};
+}
 
 
 //method to attack territories
 //return an arbitary territories that do not belong to the player by creating the attackable territories vector
-vector<Territory*> Player::toAttack(const  vector<Territory*> ALLTERRITORIES ) {
-    //return arbitrary territories for now
-
-    //vector of territories that do not belong to the player
+vector<Territory*> Player::toAttack() {
     vector<Territory*>  attackableTerritories;
-    //vector of territories to be returned
-    vector<Territory*> ToAttackTerritories;
-
-
-    //init the attackable vector
-    vector<Territory*> ALL = ALLTERRITORIES;
-    vector<Territory*> Current = (this->territories);
-
-    int LIMIT1 = Current.size();
-    int LIMIT2 = ALL.size();
-
-    for (size_t i = 0; i < LIMIT1; i++) {
-        string compared_element = Current.at(i)->getName();
-
-        for (size_t j = 0; j < LIMIT2; j++) {
-            if(compared_element == ALL.at(j)->getName()){
-                attackableTerritories.push_back(Current.at(i));
-                break;
+    for(int i = 0; i < this->getTerritories().size(); i++){
+        for(int j = 0; j < this->getTerritories()[i]->getNeighbours().size(); j++){
+            if(!this->ownsTerritory(this->getTerritories()[i]->getNeighbours()[j]->getName())){
+                attackableTerritories.push_back(this->getTerritories()[i]->getNeighbours()[j]);
             }
-
         }
     }
-
-
-    //assigning arbitrary territories from attackable to toAttack which will be returned
-    int LIMIT = (attackableTerritories).size();
-    for (size_t i = 0; i < LIMIT; i++) {
-        ToAttackTerritories.push_back(attackableTerritories.at(i));
-    }
-    //delete attackableTerritories;
-    return ToAttackTerritories;
-
+    return attackableTerritories;
 }
 
 void Player::addTerritory(Territory *t){
@@ -273,7 +246,7 @@ ostream & operator << (ostream &out, const Player &player)
     cout << *(player.getHand());
 
     cout<< "\nplayer Orders:\n";
-    cout << *(player.getOrders());
+    cout << (player.getOrders());
 
 
     cout<< "\nplayer territories:\n";
@@ -288,7 +261,7 @@ ostream & operator << (ostream &out, const Player &player)
 //Assignment operator = to create a copy of a player
 Player &Player::operator=(const Player &player) {
 
-    this->orderList = new OrdersList(*player.orderList);
+    this->orderList = player.orderList;
     this->territories = player.getTerritories();
     this->hand = new Hand(*(player.hand));
 
@@ -296,5 +269,35 @@ Player &Player::operator=(const Player &player) {
 }
 void Player::setName(string name){
     this->name = name;
+}
+
+
+bool Player::ownsTerritory(string t){
+    for(int i = 0; i < this->getTerritories().size(); i++){
+        if(this->getTerritories()[i]->getName() == t){
+            return true;
+        }
+    }
+    return false;
+}
+
+Territory* Player::getTerritoryFromName(string t){
+   for(int i = 0; i < this->getTerritories().size(); i++){
+       if(this->getTerritories()[i]->getName() == t){
+           return this->getTerritories()[i];
+       }
+   }
+   return NULL;
+
+}
+void Player::removeTerritory(Territory *t){
+    cout << t->getName() << " removed from players territories" << endl;
+    //Need to get to work
+    // for(int i = 0; i < this->getTerritories().size(); i++){
+    //     if(this->getTerritories()[i]->getName() == t->getName()){
+    //         this->getTerritories().erase(this->getTerritories().begin() + i);
+    //     }
+    // }
+    cout << "test" <<endl;
 }
 

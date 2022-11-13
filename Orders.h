@@ -6,8 +6,9 @@
 #include <list>
 #include <vector>
 #include "LoggingObserver.h"
+#include "Player.h"
 using namespace std;
-
+class Player;
 class Order: public Subject, public ILoggable {
 public:
 	virtual bool validate();
@@ -21,7 +22,6 @@ public:
 	std::string getOrderName();
 	void setOrderName(string);
 	friend ostream& operator<<(ostream& os, const Order& ordre);
-
     std::string stringToLog();
 private:
 	int* OrderID;
@@ -31,13 +31,13 @@ private:
 class OrdersList: public Subject, public ILoggable{
 public:
 	void move();
-	void remove();
+	void remove(Order *o);
 	OrdersList();
 	OrdersList(const OrdersList& cop);
 	OrdersList& operator =(const OrdersList& o);
 	vector<Order *> ol;
 	friend ostream& operator<<(ostream& os, const OrdersList& ordre);
-	void addOrder(Order o);
+	void addOrder(Order *o);
 
     std::string stringToLog();
 };
@@ -47,13 +47,15 @@ public:
 	bool validate();
 	void execute();
 	OrderAdvance();
-	OrderAdvance(int, int, string, string, string);
+	OrderAdvance(Player*, int, int, string, string, string);
 	OrderAdvance(const OrderAdvance& dep);
 	OrderAdvance& operator =(const OrderAdvance& dep);
 	string getSource();
 	string getTarget();
 	int getUnits();
 	friend ostream& operator<<(ostream& os, const OrderAdvance& ordre);
+		Player* orderOwner;
+
 private:
 	std::string* SourceTerritory;
 	std::string* TargetTerritory;
@@ -65,23 +67,26 @@ public:
 	bool validate();
 	void execute();
 	OrderDeploy();
-	OrderDeploy(int, int, string, string);
+	OrderDeploy(Player*, int, int, string, string);
 	OrderDeploy(const OrderDeploy& dep);
 	OrderDeploy& operator =(const OrderDeploy& dep);
 	string getTarget();
 	int getUnits();
 	friend ostream& operator<<(ostream& os, const OrderDeploy& ordre);
+		Player* orderOwner;
+
 private:
-	std::string* TargetTerritory;
-	int* numberOfunits;
+	std::string TargetTerritory;
+	int numberOfunits;
 };
 
 class OrderBomb :public Order {
 public:
+	Player* orderOwner;
 	bool validate();
 	void execute();
 	OrderBomb();
-	OrderBomb(int, string, string);
+	OrderBomb(Player*, int, string, string);
 	OrderBomb(const OrderBomb& dep);
 	OrderBomb& operator =(const OrderBomb& dep);
 	string getTarget();
@@ -95,13 +100,16 @@ public:
 	bool validate();
 	void execute();
 	OrderBlockade();
-	OrderBlockade(int, string, string);
+	OrderBlockade(Player*, int, string, string);
 	OrderBlockade(const OrderBlockade& dep);
 	OrderBlockade& operator =(const OrderBlockade& dep);
 	string getTarget();
 	friend ostream& operator<<(ostream& os, const OrderBlockade& ordre);
+		Player* orderOwner;
+
 private:
 	std::string* TargetTerritory;
+
 };
 
 class OrderAirlift :public Order {
@@ -109,13 +117,15 @@ public:
 	bool validate();
 	void execute();
 	OrderAirlift();
-	OrderAirlift(int, int, string, string, string);
+	OrderAirlift(Player*, int, int, string, string, string);
 	OrderAirlift(const OrderAirlift& dep);
 	OrderAirlift& operator =(const OrderAirlift& dep);
 	string getSource();
 	string getTarget();
 	int getUnits();
 	friend ostream& operator<<(ostream& os, const OrderAirlift& ordre);
+		Player *orderOwner;
+
 private:
 	std::string* SourceTerritory;
 	std::string* TargetTerritory;
@@ -127,12 +137,14 @@ public:
 	bool validate();
 	void execute();
 	OrderNegotiate();
-	OrderNegotiate(int, string, string, string);
+	OrderNegotiate(Player*, int, string, string, string);
 	OrderNegotiate(const OrderNegotiate& dep);
 	OrderNegotiate& operator =(const OrderNegotiate& dep);
 	string getSource();
 	string getTarget();
 	friend ostream& operator<<(ostream& os, const OrderNegotiate& ordre);
+		Player* orderOwner;
+
 private:
 	std::string* SourceTerritory;
 	std::string* TargetTerritory;

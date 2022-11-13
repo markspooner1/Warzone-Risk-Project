@@ -41,16 +41,16 @@ class GameEngine: public Subject, public ILoggable
      void setStateName(string* stateName);
      void startupPhase(CommandProcessing* c);
      // A2 Part 3
-     void mainGameLoop(vector<vector<string>>);
+     void mainGameLoop();
     void reinforcementPhase();
-    void issueOrdersPhase(vector<vector<string>>,Deck* a_deck);
+    void issueOrdersPhase();
     void executeOrdersPhase();
      void readCommandList(CommandProcessing* c);
      vector<Player*> players;
      Map map;
      Deck* deck;
      int num_players;
-
+    
     //this funtion is for ILoggable class in LoggingObserver.h
     std::string stringToLog() override;
 
