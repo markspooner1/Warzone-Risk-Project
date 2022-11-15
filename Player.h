@@ -34,7 +34,7 @@ private:
 
 
 public:
-
+    int orederptr = 0;
     OrdersList* orderList;
     Player(Player const &player);   //copy constructor
 
@@ -51,7 +51,7 @@ public:
     vector<Territory*> toAttack();     //method to attack territories
 
     //method to create an order object and add it to the orderlist (collection of orders)
-    void issueOrder();
+    void issueOrder(Deck *d);
 
     //Getters:
     OrdersList* getOrders() const;       //getter for the collection orders named orderList
@@ -76,7 +76,7 @@ public:
     
     string name;
 
-    int *reinforcement_pool;
+    int reinforcement_pool;
 
     void setName(string name);
     

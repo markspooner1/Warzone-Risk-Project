@@ -5,27 +5,30 @@ using namespace std;
 
 // using namespace std;
 
-int main() {
+void testCommandProcessor(){
 
     // Intro
     cout << "\nCommands: loadmap, validatemap, addplayer, gamestart, replay or quit. And has to be at a an acceptable state\n\n";
     string * currentState = new string("start");
 
     // Option of taking commands from console or file
-    cout << "\n\tChoose mode (-console/-file<path>) : ";
     string mode;
+    cout << "\n\tChoose mode (-console/-file<path>):";
+    cin.ignore();
     getline(cin, mode);
 
     if (mode.find("-console") != string::npos) {
 
         // using console
+        
         CommandProcessing * a = new CommandProcessing();
-        a->getCommand(currentState);
-        cout << "currentState: " + *currentState;
-        a->getCommand(currentState);
-        cout << "currentState: " + *currentState;
-        a->getCommand(currentState);
-        cout << "currentState: " + *currentState;
+        while(true){
+            string prevstate = *currentState;
+            a->getCommand(currentState);
+            if(*currentState == "ERROR") *currentState = prevstate;
+            cout << "currentState: " + *currentState;
+        }
+
 
 
         // for (int i = 0; i < a->gameCommands.size(); i++)
@@ -56,7 +59,6 @@ int main() {
 
     
 
-    return 0;
 
 
 }

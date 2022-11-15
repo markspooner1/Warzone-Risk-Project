@@ -1,0 +1,5 @@
+loadmap<Africa.map>
+validatemap
+addplayer<a>
+addplayer<b>
+gamestart

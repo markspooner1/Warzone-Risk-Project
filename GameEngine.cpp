@@ -415,7 +415,6 @@ void GameEngine::startupPhase(CommandProcessing *c)
                 break;
             }
             string nextstate = *states[i];
-            cout << "test" << endl;
             c->getCommand(states[i]);
             this->setStateName(states[i]);
 
@@ -498,10 +497,9 @@ void GameEngine::readCommandList(CommandProcessing *c)
             // let each player draw 2 cards
             for (Player *p : this->players)
             {
-                p->reinforcement_pool = new int(50);
+                p->reinforcement_pool = 50;
                 p->getHand()->set_cards_in_hand(this->deck->draw());
                 p->getHand()->set_cards_in_hand(this->deck->draw());
-                //cout << *this->deck->draw()->get_card_type();
             }
             for(Player *p: this->players){
                 cout << "\nPlayer " << p->name << "drew cards: " << endl;
@@ -523,20 +521,24 @@ void GameEngine::mainGameLoop()
     {
         // check if there is a winner to terminate loop
 
-        for (Player *p : players)
-        {
-            if (p->getTerritories().size() == 0)
+        for (int i = 0; i < players.size(); i++)
+        {   
+
+            if (players[i]->getTerritories().size() == 0)
             {
-                delete p;
-                p = NULL;
+                cout << "Player " << players[i]->name << " has been removed from the game" << endl;
+                players.erase(players.begin() + i);
+                cout << players.size() << endl;
+                delete players[i];
+                i--;
             }
         }
+
         totalTerritories = map.getTerritories().size();
 
         for (Player *p : this->players)
         {   
-            cout << "Player " << p->name << " owns " << p->getTerritories().size() << endl;
-            cout << this->map.getTerritories().size() << " in Total Territories in map"<<endl;
+           
             if (p->getTerritories().size() == totalTerritories)
             {
                 winner = true;
@@ -546,9 +548,9 @@ void GameEngine::mainGameLoop()
         }
      
         reinforcementPhase();
-
+        
         issueOrdersPhase();
-
+        
         executeOrdersPhase();
     } while (!winner);
 }
@@ -613,8 +615,8 @@ void GameEngine::reinforcementPhase(){
             armies = (total_bonuses + floor(number_of_territories_not_collected/3));
         }
 
-        *(p->reinforcement_pool) = armies;
-        cout << p->name << " reinforced with " << armies << " armies" << endl;
+        p->reinforcement_pool = armies;
+        cout << p->name << " reinforced with " << p->reinforcement_pool << " armies" << endl;
 
     }
             cout << "\n----END OF REINFORCEMENT PHASE-----\n" << endl;
@@ -648,10 +650,10 @@ vector<string> split(string str, string deli)
 
 void GameEngine::issueOrdersPhase(){
     cout << "\n----ISSUE ORDERS PHASE-----\n" << endl;
-    int ordersPerTurn = this->players.size()*4;
+    int ordersPerTurn = this->players.size()*5;
     int current_player = 0;
     for(int i = 0; i < ordersPerTurn; i++){
-        this->players[current_player]->issueOrder();
+        this->players[current_player]->issueOrder(this->deck);
         current_player++;
         if(current_player == this->players.size()){
             current_player = 0;
@@ -662,85 +664,39 @@ void GameEngine::issueOrdersPhase(){
   
     
 }
-       
-
-    // // loop through player, add to each player armies comparatively to their continents holding.
-    // vector<Continent*> continents = this->map.getContinents();
-    // vector<Territory*> all_territories;
-
-    // //init of all_territories_of_continents using the continents
-    // for (size_t i; i<continents.size(); i++){
-    //     for (int j = 0; j < continents.at(i)->continent_members.size(); ++j) {
-    //         all_territories.push_back(continents.at(i)->continent_members.at(j));
-    //     }
-
-    // }
-
-    // // issue_order_types order_type, int ID, string name, string source, string target = "default", int num_of_units = 0
-    //    vector<string> orderlist;
-    //    int id;
-    //    string name; 
-    //    string source; 
-    //    string target; 
-    //    int num_of_units;
-    //    int longest = 0; 
-    //   for(int i=0;i<Orders.size();i++){
-    //     if(Orders[i].size()> longest){
-    //         longest = Orders[i].size();
-    //     }
-    //   }
-    //         for(int i=0; i<longest;i++){
-    //              for(int j=0; j<players.size();j++) {
-    //                 string order = Orders[j][i]; 
-    //                 orderlist = split(order,",");
-    //                 if(orderlist[1] == ""){
-    //                  id =0;
-    //                 } else{
-    //                  id = stoi(orderlist[1]); }
-    //                  name = orderlist[2];
-    //                  source = orderlist[3];
-    //                  target = orderlist[4];
-    //                   if(orderlist[5] == ""){
-    //                  num_of_units =0;
-    //                 } else{
-    //                  num_of_units = stoi(orderlist[5]);
-    //                 }
-                    
-    //                this->players.at(j)->issueOrder((convert(orderlist[0])),a_deck, i,all_territories ,id , name , source , target , num_of_units);
-                    
-    //              }
-    //         }
-
    
 void GameEngine::executeOrdersPhase(){
-    cout << "----EXEC ORDERS PHASE-----" << endl;
-    int ord = 0;
-    for(int i = 0; i < this->players.size()*4; i++){
-        if(ord == this->players.size()){
-            ord = 0;
-        }
+    cout << "\n----EXEC ORDERS PHASE-----\n" << endl;
+    int i = 0;
 
-        if(this->players[ord]->getOrders()->ol.size() == 0){
-            ord++;
-            continue;
-        }
-        Order* o = this->players[ord]->getOrders()->ol.at(0);
-        o->execute();
-        this->players[ord]->getOrders()->remove(o);
-        delete o;
-        o = NULL;
-        ord++;
+    while(i < 5){
 
+        for(Player *p : this->players){
+            int before = p->getTerritories().size();
+            if(p->orederptr == p->getOrders()->ol.size()){
+                continue;
+            }else{
+                if(p->getTerritories().size() == 0) continue;
+                p->getOrders()->ol.at(p->orederptr)->execute();
+             
+                p->orederptr++;
+              
+            }
+            int after = p->getTerritories().size();
+            if(after > before) {
+                if(this->deck->deck_vector.size() > 0){
+                    cout << p->name << " is drawing a card from the deck " << endl;
+                    p->getHand()->set_cards_in_hand(this->deck->draw());
+                }
+            }
+        }
+          i++;
     }
-/*
-// players stop issuing 
 
-// execute top order from orderlist 
-
-
-
-*/
+    cout << "\n----END OF EXEC ORDERS PHASE-----\n" << endl;
 }
+
+
 bool search(vector<Player *> player, string command)
 {
     for (int i = 0; i < player.size(); i++)

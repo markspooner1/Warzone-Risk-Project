@@ -1,7 +1,7 @@
 #include "Cards.h"
 #include "Player.h"
 #include "Map.h"
-
+#include <random>
 Card::Card()
 {
 }
@@ -51,68 +51,35 @@ string * Card::get_card_type()
 }
 
 
-//method to play card
-//void Card::play(Player* a_player,Deck* a_deck, int ID, string name, string source, string target = "default", int num_of_units = 0)
-//
-    // if ((this->get_card_type())->compare("OrderBombType") == 0){
-    //     OrderBomb* o = new OrderBomb(ID, name, target);
-    //     a_player->getOrders().addOrder(*o);
-    //     cout<< "\nOrder created and added to the player order list.\n";
-    // }else{
-    //     if ((this->get_card_type())->compare("OrderBlockadeType") == 0){
-    //         OrderBlockade* o = new OrderBlockade(ID, name, target);
-    //         a_player->getOrders().addOrder(*o);
-    //         cout<< "\nOrder created and added to the player order list.\n";
-    //     }else{
-    //         if((this->get_card_type())->compare("OrderAirliftType") == 0){
-    //             OrderAirlift* o = new OrderAirlift(ID,num_of_units, name, source, target);
-    //             a_player->getOrders().addOrder(*o);
-    //             cout<< "\nOrder created and added to the player order list.\n";
-    //         }else{
-    //             if ((this->get_card_type())->compare("OrderNegotiateType") == 0){
-    //                 OrderNegotiate* o = new OrderNegotiate(ID, name, source, target);
-    //                 a_player->getOrders().addOrder(*o);
-    //                 cout<< "\nOrder created and added to the player order list.\n";
-    //             }
-    //         }
-    //     }
-    //}
+void Card::play(Player* a_player,Deck* a_deck, int ID, string name, Territory* source, Territory* target, int num_of_units = 0)
+{
+    if ((this->get_card_type())->compare("bomb") == 0){
+        OrderBomb* o = new OrderBomb(a_player,ID, name, target);
+        a_player->getOrders()->addOrder(o);
+        cout<< "\nOrder created and added to the player order list.\n";
+    }else{
+        if ((this->get_card_type())->compare("blockade") == 0){
+            OrderBlockade* o = new OrderBlockade(a_player,ID, name, target);
+            a_player->getOrders()->addOrder(o);
+            cout<< "\nOrder created and added to the player order list.\n";
+        }else{
+            if((this->get_card_type())->compare("airlift") == 0){
+                OrderAirlift* o = new OrderAirlift(a_player,ID,num_of_units, name, source, target);
+                a_player->getOrders()->addOrder(o);
+                cout<< "\nOrder created and added to the player order list.\n";
+            }else{
+                if ((this->get_card_type())->compare("diplomacy") == 0){
+                    OrderNegotiate* o = new OrderNegotiate(a_player,ID, name, source, target);
+                    a_player->getOrders()->addOrder(o);
+                    cout<< "\nOrder created and added to the player order list.\n";
+                }
+            }
+        }
+    }
+//return card to deck
+	a_player->getHand()->remove_card_played_from_hand_vector(this);
+}
 
-//switch(*(this->get_card_type()))
-//    {
-//
-//        case OrderBombType:{
-//            OrderBomb* o = new OrderBomb(ID, name, target);
-//            a_player->getOrders()->addOrder(*o);
-//            cout<< "\nOrder created and added to the player order list.\n";
-//            break;}
-//        case OrderBlockadeType:{
-//            OrderBlockade* o = new OrderBlockade(ID, name, target);
-//            a_player->getOrders()->addOrder(*o);
-//            cout<< "\nOrder created and added to the player order list.\n";
-//            break;}
-//        case OrderAirliftType:{
-//            OrderAirlift* o = new OrderAirlift(ID,num_of_units, name, source, target);
-//            a_player->getOrders()->addOrder(*o);
-//            cout<< "\nOrder created and added to the player order list.\n";
-//            break;}
-//        case OrderNegotiateType:{
-//            OrderNegotiate* o = new OrderNegotiate(ID, name, source, target);
-//            a_player->getOrders()->addOrder(*o);
-//            cout<< "\nOrder created and added to the player order list.\n";
-//            break;}
-//        default:
-//            cout<< "Order type not recognized. No order was added to the player order list.";
-//    }
-
-
-
-
-// //return card to deck
-//     a_deck->add_card_to_deck_vector(this);
-
-
-// }
 
 
 
@@ -188,18 +155,16 @@ void Deck::initial_deck()
 
 //method to draw card from deck and return it
 Card* Deck::draw()
-{
+{	
+	  
 	//draw random card from the remaining deck of cards
 	srand(time(NULL));
 
 	//random is from 0 to the size of current deck_vector, [0, size).
-	int temp_size = deck_vector.size();
-	int temp = (rand() % temp_size);
 
-	temp_card_holder = deck_vector.at(temp);
-
+	temp_card_holder = deck_vector.at(0);
 	//remove this card from the deck vector
-	deck_vector.erase(deck_vector.begin() + temp);
+	deck_vector.erase(deck_vector.begin() + 0);
 
 	return temp_card_holder;
 }
@@ -214,6 +179,7 @@ void Deck::add_card_to_deck_vector(Card * one_card)
 
 Hand::Hand()
 {
+	
 }
 
 Hand::~Hand()

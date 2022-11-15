@@ -6,7 +6,7 @@
 using namespace std;
 class Deck;
 class Player;
-
+class Territory;
 class Card {
 
 public:
@@ -34,7 +34,7 @@ public:
 
     friend ostream & operator << (ostream &out, const Card *card);
 	//method that is called to play the card
-    void play(Player* a_player,Deck* a_deck, int ID, string name, string source, string target , int num_of_units);
+    void play(Player* a_player,Deck* a_deck, int ID, string name, Territory* source, Territory* target , int num_of_units);
 
 private:
     string* card_type;
@@ -69,12 +69,12 @@ public:
 
 	//the method is to return played cards into deck vector
 	void add_card_to_deck_vector(Card* one_card);
-
+	vector<Card*> deck_vector;
 
 
 
 private:
-	vector<Card*> deck_vector; //deck of cards
+	 //deck of cards
 
 	Card* temp_card_holder;
 

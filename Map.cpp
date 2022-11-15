@@ -20,7 +20,7 @@ Territory::Territory(string name, string continent){
     this->name = new string(name);
     this->continent = new string(continent);
     this->visited = false;
-    this->army_units = new int(0);
+    this->army_units = 0;
 }
 //Territory copy constructor
 Territory::Territory(const Territory &obj){
@@ -29,13 +29,17 @@ Territory::Territory(const Territory &obj){
     this->visited = false;
     this->neighbours = obj.neighbours;
 }
+Territory::Territory(){
+
+}
 // TODO 
 Territory::~Territory(){
 }
 //Territory assignment operatior
 Territory& Territory::operator=(const Territory &t){
-    this->name = new string(*(t.name));
-    this->continent = new string(*(t.continent));
+    cout << "assignment op called" << endl;
+    this->name = (t.name);
+    this->continent = (t.continent);
     this->neighbours = t.neighbours;
     this->visited = t.visited;
     return *this;

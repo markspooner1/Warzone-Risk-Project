@@ -17,6 +17,7 @@ class Territory{
         vector<Territory *> neighbours;
         Territory(string name, string continent); 
         Territory (const Territory &obj);
+        Territory();
         Territory& operator=(const Territory& t);
         friend ostream& operator<<(ostream& out, Territory territory);
         ~Territory();
@@ -26,7 +27,7 @@ class Territory{
         void setContinent(string continent);
         vector<Territory*> getNeighbours();
         bool visited;
-        int* army_units;
+        int army_units;
 
 };
 class Continent{
