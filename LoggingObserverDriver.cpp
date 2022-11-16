@@ -17,7 +17,6 @@ void testLoggingObserver(){
     subject1->addObserver(logObs);
 
 
-
     //test for order issue and order execute
     OrdersList* ordersList = new OrdersList();
     ordersList->addOrder(order);
@@ -25,24 +24,24 @@ void testLoggingObserver(){
     Player *p = new Player("a");
 
     Territory *t = new Territory("Some Place", "Some Place");
-
+    t->owner = p;
     OrderBomb* orderBomb = new OrderBomb(p, 1, "OrderBomb", t);
+
     ordersList->addOrder(orderBomb);
+
     orderBomb->execute();
 
     Player *p1 = new Player("b");
 
     Territory *t2 = new Territory("Some Place2", "Some Place3");
-
+    t2->owner = p1;
     OrderBomb* orderBomb2 = new OrderBomb(p1, 1, "OrderBomb", t2);
     ordersList->addOrder(orderBomb2);
     orderBomb2->execute();
 
-
     //test for game state change
-    string *str1, *str2;
-    *str1 = "start";
-    *str2 = "finish";
+    string *str1 = new string("start"), *str2 = new string("start");
+  
     GameEngine* gameEngine = new GameEngine();
     gameEngine->setStateName(str1);
     gameEngine->setStateName(str2);
@@ -56,11 +55,5 @@ void testLoggingObserver(){
     Command* command = new Command();
     command->saveEffect("another effect");
 
-    // delete logObs;
-    // delete ordersList;
-    // delete orderBomb;
-    // delete order;
-    // delete gameEngine;
-    // delete commandProcessing;
-    // delete command;
+  
 }

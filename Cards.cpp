@@ -165,7 +165,20 @@ Card* Deck::draw()
 	temp_card_holder = deck_vector.at(0);
 	//remove this card from the deck vector
 	deck_vector.erase(deck_vector.begin() + 0);
-
+	string input;
+	cout << "Enter card type: ";
+	cin >> input;
+	if(input == "blockade"){
+		*temp_card_holder->card_type = "blockade";
+	}else if(input == "bomb"){
+		*temp_card_holder->card_type = "bomb";
+	}else if(input == "diplomacy"){
+		*temp_card_holder->card_type = "diplomacy";
+	}else if(input == "airlift"){
+		*temp_card_holder->card_type = "airlift";
+	}else if(input == "reinforcement"){
+		*temp_card_holder->card_type = "reinforcement";
+	}
 	return temp_card_holder;
 }
 

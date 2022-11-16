@@ -5,7 +5,7 @@
 #include "GameEngine.h"
 
 using namespace std;
-void testOrdersLists() {
+void testOrdersExecution() {
 	CommandProcessing *c = new CommandProcessing();
     GameEngine *g = new GameEngine();
     g->startupPhase(c);

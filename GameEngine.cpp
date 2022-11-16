@@ -475,7 +475,6 @@ void GameEngine::readCommandList(CommandProcessing *c)
                     if (i == this->map.getTerritories().size())
                         break;
                     this->players[j]->addTerritory(this->map.getTerritories()[i]);
-                    this->map.getTerritories()[i]->owner = players[j];
                     i++;
                 }
             }
@@ -500,9 +499,11 @@ void GameEngine::readCommandList(CommandProcessing *c)
                 p->reinforcement_pool = 50;
                 p->getHand()->set_cards_in_hand(this->deck->draw());
                 p->getHand()->set_cards_in_hand(this->deck->draw());
+                
+
             }
             for(Player *p: this->players){
-                cout << "\nPlayer " << p->name << "drew cards: " << endl;
+                cout << "\nPlayer " << p->name << " drew cards: " << endl;
                 for(Card *c: *p->getHand()->get_hand_vector()){
                     cout << *c->get_card_type() << endl << endl;
                 }
@@ -519,20 +520,25 @@ void GameEngine::mainGameLoop()
 
     do
     {
-        // check if there is a winner to terminate loop
-
+        for(Player *p: this->players){
+            cout << "\nPlayer " << p->name << " owns: \n";
+            for(int i = 0; i < p->getTerritories().size(); i++){
+                cout << p->getTerritories()[i]->getName() << ",";
+            }
+        }
         for (int i = 0; i < players.size(); i++)
         {   
+            // check if there is a winner to terminate loop
 
             if (players[i]->getTerritories().size() == 0)
             {
-                cout << "Player " << players[i]->name << " has been removed from the game" << endl;
+                cout << "\nPlayer " << players[i]->name << " has been removed from the game" << endl;
                 players.erase(players.begin() + i);
                 cout << players.size() << endl;
-                delete players[i];
                 i--;
             }
         }
+      
 
         totalTerritories = map.getTerritories().size();
 
@@ -542,7 +548,7 @@ void GameEngine::mainGameLoop()
             if (p->getTerritories().size() == totalTerritories)
             {
                 winner = true;
-                cout << "------------THE WINNER IS------------\n\n"<<  endl <<"\tPlayer: " << p->name << endl <<"\n\n---------------------------\n\n";
+                cout << "\n------------THE WINNER IS------------\n\n"<<  endl <<"\tPlayer: " << p->name << endl <<"\n\n---------------------------\n\n";
                 exit(0);
             }
         }
@@ -678,9 +684,7 @@ void GameEngine::executeOrdersPhase(){
             }else{
                 if(p->getTerritories().size() == 0) continue;
                 p->getOrders()->ol.at(p->orederptr)->execute();
-             
                 p->orederptr++;
-              
             }
             int after = p->getTerritories().size();
             if(after > before) {

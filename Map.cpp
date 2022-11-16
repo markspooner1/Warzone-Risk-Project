@@ -24,6 +24,7 @@ Territory::Territory(string name, string continent){
 }
 //Territory copy constructor
 Territory::Territory(const Territory &obj){
+    cout << "copy called" << endl;
     this->name = new string(*(obj.name));
     this->continent = new string(*(obj.continent));
     this->visited = false;

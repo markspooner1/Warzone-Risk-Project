@@ -101,11 +101,11 @@ void Player::issueOrder(Deck *d) {
         
 
         int rands = rand() % 5 + 1;
-        if((this->getHand()->get_hand_vector()->size() == 0) || rands < 3){
+        if((this->getHand()->get_hand_vector()->size() == 0) || rands < 2){
             cout << "\n\t---Advance ORDERS----\n" <<endl;
             string attackOrDefend = "";
-            int x = rand() % 2 + 1;
-            if(x == 1){ 
+            int x = rand() % 5 + 1;
+            if(x > 3){ 
                 attackOrDefend = "Attack";
             }
             else{ 
@@ -147,7 +147,6 @@ void Player::issueOrder(Deck *d) {
                 cout << "\n\t---CARD PLAYING----\n" << endl;
                 
                 Card*c = (this->getHand()->get_hand_vector()->at(0));
-                cout << "good" << endl;
                 if(*c->get_card_type() == "airlift"){
                                                             
 
@@ -172,7 +171,6 @@ void Player::issueOrder(Deck *d) {
                     std::uniform_int_distribution<std::mt19937::result_type> dist13(0 , attack_vector.size() - 1);
                     int terr = dist13(rng);
                     Territory* target = attack_vector[terr];
-                    cout << target << endl;
                     c->play(this, d, 0, "Bomb",target, target, 0);
                     // this->orderList->addOrder((new OrderBomb(this,0,"Bomb", target)));
                     // this->getHand()->remove_card_played_from_hand_vector(c);
@@ -208,10 +206,7 @@ void Player::issueOrder(Deck *d) {
                 }
                 else if(*c->get_card_type() == "reinforcement"){
                     this->reinforcement_pool += 5;
-                    std::uniform_int_distribution<std::mt19937::result_type> dist20(0 ,this->getTerritories().size() - 1);
-                    int terr = dist20(rng);
-                    Territory* territorytodeploy = this->getTerritories()[terr];
-                    this->orderList->addOrder((new OrderDeploy(this, 0, 5, "deploy",territorytodeploy)));
+            
                     cout << "Player " << this->name << " has used their reinforcement card";
                     this->getHand()->remove_card_played_from_hand_vector(c);
                 }
@@ -249,6 +244,7 @@ vector<Territory*> Player::toAttack() {
 
 void Player::addTerritory(Territory *t){
     this->territories.push_back(t);
+    t->owner = this;
 }
 // Method to overload the << operator to print the player
 //returns the attributes of the player, namely hand, orders, and territories.
@@ -305,6 +301,7 @@ Territory* Player::getTerritoryFromName(string t){
 
 }
 void Player::removeTerritory(Territory *t){
+    cout << "\n";
     cout << t->getName() << " removed from players territories " << this->name << "'s list of territories" << endl;
     this->territories.erase(std::remove(this->territories.begin(),this->territories.end(),t),this->territories.end());
 

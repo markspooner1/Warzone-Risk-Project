@@ -112,7 +112,7 @@ string CommandProcessor::validate(string str, string * currentState){
             cout << "Command is invalid because its unrelated to current state\n";
         }
     } else {
-        //cout << "The command is invalid";
+        cout << "The command is invalid";
     }
 
     return effect;

@@ -18,7 +18,7 @@ int main(){
     }else if(input == "4"){
         testCommandProcessor();
     }else if(input == "5"){
-        testOrdersLists();
+        testOrdersExecution();
     }
 
 }

@@ -124,6 +124,7 @@ void OrderAdvance::execute() {
 					cout << this->orderOwner->name << " has lost the battle to " << target->getName() << endl;
 					cout << "Moving " << defender << " army units to " << source->getName() << endl;
 					source->army_units += defender;
+					cout << "removing " << source->getName();
 					this->orderOwner->removeTerritory(source);
 					cout << target->owner->name << " has conquered " << source->getName() << endl;
 					target->owner->addTerritory(source);
@@ -284,13 +285,14 @@ void OrderBomb::execute() {
 	else{
 		cout << "Bomb Order was not executed - invalid" << endl;
 	}
+		Notify(this);
+
 	}
 
 
 bool OrderBomb::validate() {
 				cout << "\t-----Order Bomb Validation---------\n" << endl;
 
-	cout << this->getTarget()->getName() << endl;
 	Territory *t = this->getTarget();
 	if(t->owner->name == this->orderOwner->name){
 		return false;
@@ -302,7 +304,6 @@ bool OrderBomb::validate() {
 			}
 		}
 	}
-
 }
 
 ostream& operator<<(ostream& os, const OrderBomb& ordre)
@@ -342,10 +343,10 @@ void OrderBlockade::execute() {
 
 		this->getTarget()->army_units *= 2;
 		cout << "\nPlayer " << this->orderOwner->name << "'s Blockade order has executed on: \n" << this->getTarget()->getName() << endl;
-
-	}
+		cout << this->getTarget()->getName() << " has transferred to the neutral player" << endl;
+	}	
 	else{
-		cout << "invalid order" << endl;
+		cout << "invalid Blockade order" << endl;
 	}
 }
 
@@ -353,8 +354,6 @@ bool OrderBlockade::validate() {
 				cout << "\t-----Order Blockade Validation---------\n" << endl;
 
 	Player *p = this->orderOwner;
-	cout << p->name << endl;
-		cout << p->name << endl;
 
 	if(this->getTarget()->owner->name == this->orderOwner->name){
 		return true;
@@ -478,7 +477,7 @@ void OrderNegotiate::execute() {
 		cout<< this->getTarget()->getName() << " and  " << this->getSource()->getName() << " can no longer attack each other" << endl;
 		for(int i = 0; i < this->orderOwner->toAttack().size(); i++){
 			if(this->orderOwner->toAttack()[i]->getName() == getTarget()->getName()){
-				
+				this->orderOwner->toAttack().erase(std::remove(this->orderOwner->toAttack().begin(),this->orderOwner->toAttack().end(),getTarget()),this->orderOwner->toAttack().end());
 			}
 		}
 		cout << "Negotiation Order has been executed\n";

@@ -35,9 +35,9 @@ public:
     friend ostream & operator << (ostream &out, const Card *card);
 	//method that is called to play the card
     void play(Player* a_player,Deck* a_deck, int ID, string name, Territory* source, Territory* target , int num_of_units);
-
+	string* card_type;
 private:
-    string* card_type;
+    
 
 	//this vector stores the 5 types of cards  bomb, reinforcement, blockade,airlift, diplomacy,
 	vector<string> card_types = {"bomb", "reinforcement", "blockade", "airlift", "diplomacy"};

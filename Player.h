@@ -83,7 +83,7 @@ public:
     bool ownsTerritory(string t);
 
     Territory* getTerritoryFromName(string t);
-
+    Territory* testfind(Territory *t);
     void removeTerritory(Territory *t);
 };
 
