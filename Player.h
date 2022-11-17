@@ -8,6 +8,7 @@
 #include "Orders.h"
 #include "Map.h"
 #include "Cards.h"
+#include "PlayerStrategy.h"
 using namespace std;
 class Territory;
 class Orders;
@@ -34,6 +35,7 @@ private:
 
 
 public:
+    PlayerStrategy* ps;
     int orederptr = 0;
     OrdersList* orderList;
     Player(Player const &player);   //copy constructor
