@@ -478,6 +478,9 @@ void GameEngine::readCommandList(CommandProcessing *c)
                     i++;
                 }
             }
+            for(int i = 0; i < this->players.size(); i++){
+                this->players[i]->ps = new HumanPlayerStrategy(players[i]);
+            }
 
             for (int i = 0; i < this->players.size(); i++)
             {
@@ -656,7 +659,7 @@ vector<string> split(string str, string deli)
 
 void GameEngine::issueOrdersPhase(){
     cout << "\n----ISSUE ORDERS PHASE-----\n" << endl;
-    int ordersPerTurn = this->players.size()*5;
+    int ordersPerTurn = this->players.size()*2;
     int current_player = 0;
     for(int i = 0; i < ordersPerTurn; i++){
         this->players[current_player]->issueOrder(this->deck);
@@ -675,7 +678,7 @@ void GameEngine::executeOrdersPhase(){
     cout << "\n----EXEC ORDERS PHASE-----\n" << endl;
     int i = 0;
 
-    while(i < 5){
+    while(i < 2){
 
         for(Player *p : this->players){
             int before = p->getTerritories().size();

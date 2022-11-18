@@ -52,7 +52,8 @@ string * Card::get_card_type()
 
 
 void Card::play(Player* a_player,Deck* a_deck, int ID, string name, Territory* source, Territory* target, int num_of_units = 0)
-{
+{	
+	cout << "here2" << endl;
     if ((this->get_card_type())->compare("bomb") == 0){
         OrderBomb* o = new OrderBomb(a_player,ID, name, target);
         a_player->getOrders()->addOrder(o);
@@ -165,20 +166,7 @@ Card* Deck::draw()
 	temp_card_holder = deck_vector.at(0);
 	//remove this card from the deck vector
 	deck_vector.erase(deck_vector.begin() + 0);
-	string input;
-	cout << "Enter card type: ";
-	cin >> input;
-	if(input == "blockade"){
-		*temp_card_holder->card_type = "blockade";
-	}else if(input == "bomb"){
-		*temp_card_holder->card_type = "bomb";
-	}else if(input == "diplomacy"){
-		*temp_card_holder->card_type = "diplomacy";
-	}else if(input == "airlift"){
-		*temp_card_holder->card_type = "airlift";
-	}else if(input == "reinforcement"){
-		*temp_card_holder->card_type = "reinforcement";
-	}
+	
 	return temp_card_holder;
 }
 
@@ -226,7 +214,7 @@ void Hand::print_hand_vector()
 	if (hand_vector.size() > 0) {
 		cout << "This Hand " << hand_vector.size() << " cards" << endl;
 		for (int j = 0; j < hand_vector.size(); j++) {
-			cout<< j << " is " << *hand_vector.at(j)->get_card_type() << endl;
+			cout<<*hand_vector.at(j)->get_card_type() << endl;
 		}
 	}
 	else {

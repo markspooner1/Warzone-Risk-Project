@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Player.h"
+#include "Cards.h"
 #include <vector>
 class PlayerStrategy{
     public:
@@ -51,3 +52,6 @@ class CheaterPlayerStrategy: public PlayerStrategy{
         vector<Territory*> toAttack() override;
         vector<Territory*> toDefend() override;
 };
+
+bool sortbyStrongest(Territory *t1, Territory *t2);
+void printTerritories(vector<Territory*> t);

@@ -13,6 +13,7 @@ using namespace std;
 class Territory;
 class Orders;
 class OrdersList;
+class PlayerStrategy;
 //Attributes:
 // Collection of orderList
 // collection of territories
