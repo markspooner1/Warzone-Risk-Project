@@ -2,6 +2,9 @@
 #include <algorithm>
 using std::cin;
 using std::cout;
+#include <random>
+
+    
 PlayerStrategy::PlayerStrategy(Player *p){
     this->player = p;
 }
@@ -21,7 +24,7 @@ CheaterPlayerStrategy::CheaterPlayerStrategy(Player *p) : PlayerStrategy(p){
 
 }
 
-
+//Only one that requires interaction
 void HumanPlayerStrategy::issueOrder(Deck *d){
     cout << "\n----DEPLOY ORDERS-----\n" << endl;
     int choice;
@@ -166,8 +169,61 @@ void HumanPlayerStrategy::issueOrder(Deck *d){
     }
 
 };
+
+//Focuses on attack
+//Deploys armies on its strongest territory
 void AggressivePlayerStrategy::issueOrder(Deck *d){
-    
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    int numorders = 0;
+    if(this->player->reinforcement_pool > 0){
+        uniform_int_distribution<mt19937::result_type> dist(1, this->player->reinforcement_pool);
+        int deployNum = dist(gen);
+        Territory *strongest = this->toDefend().at(0);
+        this->player->orderList->addOrder(new OrderDeploy(this->player, 0, deployNum, "Deploy", strongest));
+        this->player->reinforcement_pool -= deployNum;
+        numorders++;
+    }else if(!(this->toAttack().at(0)->army_units == 0)){
+
+        uniform_int_distribution<mt19937::result_type> dist(0, this->toAttack().size() - 1);
+        Territory *target = this->toAttack().at(dist(gen));
+        Territory *source = this->player->toDefend().at(0);
+        int deployNum = source->army_units;
+        this->player->orderList->addOrder(new OrderAdvance(this->player, 0, deployNum, "Advance", source, target));
+    }
+    else if(this->player->getHand()->get_hand_vector()->size() > 0){
+        uniform_int_distribution<mt19937::result_type> dist(0, this->player->getHand()->get_hand_vector()->size() - 1);
+        Card *c = this->player->getHand()->get_hand_vector()->at(dist(gen));
+        if(*c->get_card_type() == "bomb"){
+                    cout << "Enter the territory you wish to use your Bomb Card on according to the number associated\n";
+                    uniform_int_distribution<mt19937::result_type> dist(0, this->toAttack().size() - 1);
+                    Territory *target = this->toAttack().at(dist(gen));
+                    c->play(this->player, d,0, "bomb", target,target, 0);
+                }
+                else if(*c->get_card_type() == "blockade"){
+                    uniform_int_distribution<mt19937::result_type> dist(0, this->toDefend().size() - 1);
+                    Territory *target = this->toDefend().at(dist(gen));
+                    c->play(this->player, d,0, "blockade", target,target, 0);   
+                }
+                // else if(*c->get_card_type() == "Diplomacy"){
+                //     cout << "Enter the territory you wish to use the diplomacy card on according to the number associated\n";
+                //     printTerritories(this->toAttack());
+                //     cin >> choice;
+                //     Territory *target = this->toAttack().at(choice)
+                //}
+                else if(*c->get_card_type() == "airlift"){
+                    Territory *source = this->toDefend().at(0);
+                    uniform_int_distribution<mt19937::result_type> dist1(0, this->toDefend().size() - 1);
+                    Territory *target = this->toDefend().at(dist1(gen));
+                    uniform_int_distribution<mt19937::result_type> dist2(0, source->army_units);
+                    c->play(this->player, d, 0, "airlift", source, target, dist2(gen));
+                }
+                else if(*c->get_card_type() == "reinforcement"){
+                    cout << "5 army units added to " << this->player->name << "'s reinforcement pool";
+                    this->player->reinforcement_pool += 5;
+                }
+    }
+
 
 };
 void BenevolentPlayerStrategy::issueOrder(Deck *d){
@@ -193,6 +249,9 @@ vector<Territory*> HumanPlayerStrategy::toAttack(){
             }
         } 
     }
+     //Need to remove duplicates since 2 territories can share neighbours
+    sort(toAttack.begin(),toAttack.end());
+    toAttack.erase(unique(toAttack.begin(), toAttack.end()), toAttack.end());
     return toAttack;
 
 };
@@ -206,6 +265,7 @@ vector<Territory*> AggressivePlayerStrategy::toAttack(){
             }
         } 
     }
+
     return toAttack;
 
 };
@@ -233,6 +293,9 @@ vector<Territory*> CheaterPlayerStrategy::toAttack(){
             }
         } 
     }
+    //Need to remove duplicates since 2 territories can share neighbours
+    sort(toAttack.begin(),toAttack.end());
+    toAttack.erase(unique(toAttack.begin(), toAttack.end()), toAttack.end());
     return toAttack;
 
 };
@@ -246,7 +309,7 @@ vector<Territory*> AggressivePlayerStrategy::toDefend(){
     //Sort to make it easier to find strongest country
     //Using sort method from std::sort
     sort(toDefend.begin(), toDefend.end(), sortbyStrongest);
-
+    return toDefend;
 };
 vector<Territory*> BenevolentPlayerStrategy::toDefend(){
     vector<Territory*> toDefend = this->player->getTerritories();
