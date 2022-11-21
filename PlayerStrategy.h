@@ -5,8 +5,10 @@
 #include <vector>
 class PlayerStrategy{
     public:
-        PlayerStrategy(Player *p);
+        PlayerStrategy(Player *p, string name);
         Player *player;
+        string name;
+        bool hasIssued;
         virtual void issueOrder(Deck *d) = 0;
         virtual vector<Territory*> toAttack() = 0;
         virtual vector<Territory*> toDefend() = 0;
@@ -47,6 +49,7 @@ class NeutralPlayerStrategy: public PlayerStrategy{
 
 class CheaterPlayerStrategy: public PlayerStrategy{
     public:
+       
         CheaterPlayerStrategy(Player*);
         void issueOrder(Deck *d) override;
         vector<Territory*> toAttack() override;
@@ -55,3 +58,4 @@ class CheaterPlayerStrategy: public PlayerStrategy{
 
 bool sortbyStrongest(Territory *t1, Territory *t2);
 void printTerritories(vector<Territory*> t);
+vector<Territory*> removeDuplicates(vector<Territory*> &t);

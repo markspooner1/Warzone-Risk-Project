@@ -40,7 +40,7 @@ public:
 	vector<Order *> ol;
 	friend ostream& operator<<(ostream& os, const OrdersList& ordre);
 	void addOrder(Order *o);
-
+	
     std::string stringToLog();
 };
 

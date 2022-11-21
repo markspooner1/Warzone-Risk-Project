@@ -150,8 +150,8 @@ void GameEngine::readCommandList(CommandProcessing *c)
             // //Randomize territories
             this->setStateName(new string("play"));
             int total_territories = this->map.getTerritories().size();
-            // shuffle(this->map.getTerritories().begin(), this->map.getTerritories().end(), random_device());
-            // int terrPerPlayer = (total_territories/this->players.size());
+            
+            int terrPerPlayer = (total_territories/this->players.size());
             for (int i = 0; i < total_territories;)
             {
                 for (int j = 0; j < this->players.size(); j++)
@@ -163,7 +163,8 @@ void GameEngine::readCommandList(CommandProcessing *c)
                 }
             }
             for(int i = 0; i < this->players.size(); i++){
-                this->players[i]->ps = new AggressivePlayerStrategy(players[i]);
+                    this->players[i]->ps = new HumanPlayerStrategy(players[i]);
+              
             }
 
             for (int i = 0; i < this->players.size(); i++)
@@ -343,12 +344,22 @@ vector<string> split(string str, string deli)
 
 void GameEngine::issueOrdersPhase(){
     cout << "\n----ISSUE ORDERS PHASE-----\n" << endl;
-    int ordersPerTurn = this->players.size()*2;
+    int ordersPerTurn = this->players.size()*5;
     int current_player = 0;
+    for(int i = 0; i < this->players.size(); i++){
+        if(this->players[i]->ps->name == "Cheater"){
+            this->players[i]->ps->hasIssued = false;
+        }
+    }
     for(int i = 0; i < ordersPerTurn; i++){
         this->players[current_player]->issueOrder(this->deck);
+        //Cheater can only issue once per turn
+        if(players[current_player]->ps->name == "Cheater"){
+            players[current_player]->ps->hasIssued = true;
+        }
         current_player++;
         if(current_player == this->players.size()){
+           
             current_player = 0;
         }
     }
@@ -362,12 +373,13 @@ void GameEngine::executeOrdersPhase(){
     cout << "\n----EXEC ORDERS PHASE-----\n" << endl;
     int i = 0;
 
-    while(i < 2){
+    while(i < 5){
 
         for(Player *p : this->players){
             int before = p->getTerritories().size();
             if(p->orederptr == p->getOrders()->ol.size()){
                 continue;
+         
             }else{
                 if(p->getTerritories().size() == 0) continue;
                 p->getOrders()->ol.at(p->orederptr)->execute();

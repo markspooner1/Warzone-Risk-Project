@@ -150,8 +150,6 @@ Territory* Player::getTerritoryFromName(string t){
 
 }
 void Player::removeTerritory(Territory *t){
-    cout << "\n";
-    cout << t->getName() << " removed from players territories " << this->name << "'s list of territories" << endl;
     this->territories.erase(std::remove(this->territories.begin(),this->territories.end(),t),this->territories.end());
 
 }
