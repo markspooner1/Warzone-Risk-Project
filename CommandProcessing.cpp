@@ -76,7 +76,13 @@ string CommandProcessor::validate(string str, string * currentState){
         } else {
             cout << "Command is invalid because its unrelated to current state\n";
         }
-    } else if (str.find("validatemap") != string::npos) {
+    }else if(str.find("tournament") != string::npos){
+        cout << "tets" << endl;
+        if(*currentState == "start"){
+            effect = "tournament";
+        }
+    }
+     else if (str.find("validatemap") != string::npos) {
         if (*currentState == "maploaded") {
             effect = "mapvalidated";
             //cout << "Command is valid\n";

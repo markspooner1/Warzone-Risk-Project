@@ -9,5 +9,5 @@ void testOrdersExecution() {
 	CommandProcessing *c = new CommandProcessing();
     GameEngine *g = new GameEngine();
     g->startupPhase(c);
-	g->mainGameLoop();
+
 }

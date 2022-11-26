@@ -149,16 +149,13 @@ public:
 	bool validate();
 	void execute();
 	OrderNegotiate();
-	OrderNegotiate(Player*, int, string, Territory*, Territory*);
+	OrderNegotiate(Player*, int, string, Player*);
 	OrderNegotiate(const OrderNegotiate& dep);
 	~OrderNegotiate();
 	OrderNegotiate& operator =(const OrderNegotiate& dep);
-	Territory* getSource();
-	Territory* getTarget();
 	friend ostream& operator<<(ostream& os, const OrderNegotiate& ordre);
-		Player *orderOwner;
-	Territory* SourceTerritory;
-	Territory* TargetTerritory;
+	Player *orderOwner;
+	Player* targetPlayer;
 
 private:
 	

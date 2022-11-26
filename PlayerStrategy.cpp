@@ -24,7 +24,6 @@ NeutralPlayerStrategy::NeutralPlayerStrategy(Player *p) : PlayerStrategy(p, "Neu
 }
 CheaterPlayerStrategy::CheaterPlayerStrategy(Player *p) : PlayerStrategy(p, "Cheater"){
     
-    cout << "Cheater created";
 }
 
 //Only one that requires interaction
@@ -143,12 +142,12 @@ void HumanPlayerStrategy::issueOrder(Deck *d){
                     Territory *target = this->toDefend().at(choice);
                     c->play(this->player, d,0, "blockade", target,target, 0);
                 }
-                // }else if(cardChoice == "Diplomacy"){
-                //     cout << "Enter the territory you wish to use the diplomacy card on according to the number associated\n";
-                //     printTerritories(this->toAttack());
-                //     cin >> choice;
-                //     Territory *target = this->toAttack().at(choice)
-                //}
+                else if(cardChoice == "diplomacy"){
+                    cout << "Enter the territory you wish to use the diplomacy card on according to the number associated\n";
+                    printTerritories(this->toAttack());
+                    cin >> choice; 
+                    c->play(this->player, d, 0, "diplomacy", this->toAttack().at(choice), this->toAttack().at(choice),  0);
+                }
                 else if(cardChoice == "airlift"){
                     cout << "Enter the source territory according to the number associated\n";
                     printTerritories(this->toDefend());
@@ -180,7 +179,7 @@ void AggressivePlayerStrategy::issueOrder(Deck *d){
     std::mt19937 gen(rd());
     int numorders = 0;
     if(this->player->getTerritories().size() == 0){
-        cout << "Player " << this->name << " owns no territories and cannot issue any orders, this is likely due to the fact that there is a cheater in the game" << endl;
+        cout << "Player " << this->player->name << " owns no territories and cannot issue any orders, this is likely due to the fact that there is a cheater in the game" << endl;
     }
     else if(this->player->reinforcement_pool > 0){
         cout << "\n----DEPLOY ORDER-----\n" << endl;
@@ -189,7 +188,7 @@ void AggressivePlayerStrategy::issueOrder(Deck *d){
         cout << "Deploy order added by Aggressive player("<< this->player->name << ") On: " << strongest->getName() << endl;
         this->player->reinforcement_pool = 0;
         numorders++;
-    }else if(!(this->toDefend().at(0)->army_units == 0)){
+    }else if(!(this->toDefend().at(0)->army_units == 0) && (this->toAttack().size() > 1)){
         cout << "\n----Advance ORDER-----\n" << endl;
         uniform_int_distribution<mt19937::result_type> dist(0, this->toAttack().size() - 1);
         Territory *target = this->toAttack().at(dist(gen));
@@ -201,24 +200,16 @@ void AggressivePlayerStrategy::issueOrder(Deck *d){
     else if(this->player->getHand()->get_hand_vector()->size() > 0){
         Card *c = this->player->getHand()->get_hand_vector()->at(0);
         cout << "\n----Card Playing-----\n" << endl;
-        if(*c->get_card_type() == "bomb"){
+                if(*c->get_card_type() == "bomb"){
                     uniform_int_distribution<mt19937::result_type> dist(0, this->toAttack().size() - 1);
                     Territory *target = this->toAttack().at(dist(gen));
                     c->play(this->player, d,0, "bomb", target,target, 0);
                     cout << "Bomb order added by Aggressive player(" << this->player->name << ") On: " << target->getName() << endl;
                 }
-                else if(*c->get_card_type() == "blockade"){
-                    uniform_int_distribution<mt19937::result_type> dist(0, this->toDefend().size() - 1);
-                    Territory *target = this->toDefend().at(dist(gen));
-                    c->play(this->player, d,0, "blockade", target,target, 0);
-                    cout << "Blockade order added by Aggressive player(" << this->player->name << ") On: " << target->getName() << endl;   
+                else if(*c->get_card_type() == "Diplomacy"){
+                    uniform_int_distribution<mt19937::result_type> dist(0, this->toAttack().size() - 1);
+                    c->play(this->player, d, 0, "diplomacy", this->toAttack().at(dist(gen)), this->toAttack().at(dist(gen)),  0);
                 }
-                // else if(*c->get_card_type() == "Diplomacy"){
-                //     cout << "Enter the territory you wish to use the diplomacy card on according to the number associated\n";
-                //     printTerritories(this->toAttack());
-                //     cin >> choice;
-                //     Territory *target = this->toAttack().at(choice)
-                //}
                 else if(*c->get_card_type() == "airlift"){
                     Territory *source = this->toDefend().at(0);
                     uniform_int_distribution<mt19937::result_type> dist1(0, this->toDefend().size() - 1);
@@ -236,7 +227,10 @@ void AggressivePlayerStrategy::issueOrder(Deck *d){
 void BenevolentPlayerStrategy::issueOrder(Deck *d){
     std::random_device rd;
     std::mt19937 gen(rd());
-    if(this->player->reinforcement_pool > 0){
+    if(this->player->getTerritories().size() == 0){
+        cout << "Player " << this->player->name << " owns no territories and cannot issue any orders, this is likely due to the fact that there is a cheater in the game" << endl;
+    }
+    else if(this->player->reinforcement_pool > 0){
         cout << "\n----DEPLOY ORDER-----\n" << endl;
         Territory *weakest = this->toDefend().at(this->toDefend().size() - 1);
         uniform_int_distribution<mt19937::result_type> dist(1, this->player->reinforcement_pool);
@@ -256,24 +250,16 @@ void BenevolentPlayerStrategy::issueOrder(Deck *d){
     else if(this->player->getHand()->get_hand_vector()->size() > 0){
         Card *c = this->player->getHand()->get_hand_vector()->at(0);
          cout << "\n----Card Playing-----\n" << endl;
-                if(*c->get_card_type() == "bomb"){
-                    uniform_int_distribution<mt19937::result_type> dist(0, this->toAttack().size() - 1);
-                    Territory *target = this->toAttack().at(dist(gen));
-                    cout << "Bomb order added by Benevolent player(" << this->player->name << ") On: " << target->getName() << endl;
-                    c->play(this->player, d,0, "bomb", target,target, 0);
-                }
-                else if(*c->get_card_type() == "blockade"){
+                if(*c->get_card_type() == "blockade"){
                     uniform_int_distribution<mt19937::result_type> dist(0, this->toDefend().size() - 1);
                     Territory *target = this->toDefend().at(dist(gen));
                     c->play(this->player, d,0, "blockade", target,target, 0);   
                     cout << "Blockade order added by Benevolent player(" << this->player->name << ") On: " << target->getName() << endl;
                 }
-                // else if(*c->get_card_type() == "Diplomacy"){
-                //     cout << "Enter the territory you wish to use the diplomacy card on according to the number associated\n";
-                //     printTerritories(this->toAttack());
-                //     cin >> choice;
-                //     Territory *target = this->toAttack().at(choice)
-                //}
+                else if(*c->get_card_type() == "Diplomacy"){
+                     uniform_int_distribution<mt19937::result_type> dist(0, this->toAttack().size() - 1);
+                    c->play(this->player, d, 0, "diplomacy", this->toAttack().at(dist(gen)), this->toAttack().at(dist(gen)),  0);
+                }
                 else if(*c->get_card_type() == "airlift"){
                     Territory *strongest = this->toDefend().at(0);
                     Territory *weakest = this->toDefend().at(this->toDefend().size() - 1);
@@ -297,12 +283,14 @@ void CheaterPlayerStrategy::issueOrder(Deck *d){
     if(!this->hasIssued){
      cout << "Cheater conquered: ";
         for(Territory *t: this->toAttack()){
+            if(!(t->owner->name == this->player->name)){
                 t->owner->removeTerritory(t);
                 this->player->addTerritory(t);
                 t->owner = this->player;
                 cout << t->getName() << ", ";
             }
             cout << "\n";
+        }
     }
 }
 vector<Territory*> HumanPlayerStrategy::toAttack(){
@@ -310,10 +298,12 @@ vector<Territory*> HumanPlayerStrategy::toAttack(){
     for(Territory *t: this->player->getTerritories()){
         for(Territory *neighour: t->getNeighbours()){
             if(neighour->owner->name != this->player->name){
+                
                 toAttack.push_back(neighour);
             }
         } 
     }
+    cout << "\n";
      //Need to remove duplicates since 2 territories can share neighbours
     sort(toAttack.begin(),toAttack.end());
     return removeDuplicates(toAttack);
@@ -336,9 +326,14 @@ vector<Territory*> AggressivePlayerStrategy::toAttack(){
 vector<Territory*> BenevolentPlayerStrategy::toAttack(){
     //idk what to do here since he never attacks
     vector<Territory*> toAttack;
-
-    return toAttack;
-
+    for(Territory *t: this->player->getTerritories()){
+        for(Territory *neighour: t->getNeighbours()){
+            if(neighour->owner->name != this->player->name){
+                toAttack.push_back(neighour);
+            }
+        } 
+    }
+    return removeDuplicates(toAttack);
 
 };
 
@@ -406,3 +401,4 @@ vector<Territory*> removeDuplicates(vector<Territory*> &t){
     }
     return t;
 }
+

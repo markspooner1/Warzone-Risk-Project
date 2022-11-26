@@ -15,6 +15,8 @@
 #include "CommandProcessing.h"
 #include "Player.h"
 #include "LoggingObserver.h"
+#include "Map.h"
+class Map;
 // istream and ostream are defined in the std namespace in the iostream library
 using namespace std;
 
@@ -47,13 +49,16 @@ class GameEngine: public Subject, public ILoggable
     void executeOrdersPhase();
      void readCommandList(CommandProcessing* c);
      vector<Player*> players;
-     Map map;
+     Map *map;
      Deck* deck;
+     int turns;
+     string winner;
+     int turnCounter;
      int num_players;
-    
+     void processString(int del1, int del2,  string command, vector<string> &type);
     //this funtion is for ILoggable class in LoggingObserver.h
     std::string stringToLog() override;
-
+    void Reset();
 
 };
 

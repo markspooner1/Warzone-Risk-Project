@@ -9,11 +9,13 @@
 #include "Map.h"
 #include "Cards.h"
 #include "PlayerStrategy.h"
+#include "GameEngine.h"
 using namespace std;
 class Territory;
 class Orders;
 class OrdersList;
 class PlayerStrategy;
+class GameEngine;
 //Attributes:
 // Collection of orderList
 // collection of territories
@@ -45,7 +47,7 @@ public:
 
     Player(OrdersList *orderList, Hand *hand, vector<Territory*> territories);   //constructor
 
-    Player(string name);
+    Player(string name, GameEngine *g);
 
     virtual ~Player();      //destructor
 
@@ -88,6 +90,8 @@ public:
     Territory* getTerritoryFromName(string t);
     Territory* testfind(Territory *t);
     void removeTerritory(Territory *t);
+    vector<Player*> negotiationWith;
+    GameEngine *gameEngine;
 };
 
 void testPlayers();

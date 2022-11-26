@@ -6,6 +6,7 @@
 #include <vector>
 #include <string>
 #include "Orders.h"
+#include "GameEngine.h"
 #include <random>
 //constructor
 Player::Player(OrdersList *orderList, Hand *hand, vector<Territory*> territories) : orderList(orderList), hand(hand),
@@ -24,8 +25,9 @@ Player::Player(const Player &player) {
     this->hand = new Hand(*(player.hand));
 }
 
-Player::Player(string name){
+Player::Player(string name, GameEngine *g){
     this->orderList = new OrdersList();
+    this->gameEngine = g;
     this->name = name;
     this->hand = new Hand();
     this->reinforcement_pool = 0;

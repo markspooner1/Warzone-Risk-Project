@@ -67,7 +67,7 @@ class MapLoader{
          //Helper function to find neighbours while loading map file
         vector<Territory*> findNeighbours(string s, vector<Territory*>);
     public:
-        Map readMapFile(string fileName);
+        Map* readMapFile(string fileName);
         MapLoader(string filname);
         MapLoader();
         MapLoader(const MapLoader &ml);

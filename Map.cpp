@@ -129,7 +129,7 @@ MapLoader::MapLoader(string filename){
     this->filename = filename;
 }
 //Method to read .map files and create Map
-Map MapLoader::readMapFile(string fileName){
+Map* MapLoader::readMapFile(string fileName){
     cout << "--LOADING MAP:  " << fileName << "--"<<endl;
     cout << "-----------------" <<endl;
     ifstream input(fileName);
@@ -138,7 +138,7 @@ Map MapLoader::readMapFile(string fileName){
     if(fileName.substr(nthSubstr(2, fileName, "."), 4) != ".map"){
         cout << "Invalid filetype" << endl;
         cout << "Couldnt create map" << endl;
-        return Map(territories, continents);
+        return new Map(territories, continents);
     }
     string delimiter; 
     int found = -1;
@@ -215,7 +215,7 @@ Map MapLoader::readMapFile(string fileName){
         }
     }
     
-    return Map(territories, continents);
+    return new Map(territories, continents);
 }
 Map::Map(){
 }

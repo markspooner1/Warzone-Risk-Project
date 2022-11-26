@@ -58,24 +58,18 @@ void Card::play(Player* a_player,Deck* a_deck, int ID, string name, Territory* s
         OrderBomb* o = new OrderBomb(a_player,ID, name, target);
         a_player->getOrders()->addOrder(o);
         cout<< "\nOrder created and added to the player order list.\n";
-    }else{
-        if ((this->get_card_type())->compare("blockade") == 0){
-            OrderBlockade* o = new OrderBlockade(a_player,ID, name, target);
-            a_player->getOrders()->addOrder(o);
-            cout<< "\nOrder created and added to the player order list.\n";
-        }else{
-            if((this->get_card_type())->compare("airlift") == 0){
-                OrderAirlift* o = new OrderAirlift(a_player,ID,num_of_units, name, source, target);
-                a_player->getOrders()->addOrder(o);
-                cout<< "\nOrder created and added to the player order list.\n";
-            }else{
-                if ((this->get_card_type())->compare("diplomacy") == 0){
-                    OrderNegotiate* o = new OrderNegotiate(a_player,ID, name, source, target);
-                    a_player->getOrders()->addOrder(o);
-                    cout<< "\nOrder created and added to the player order list.\n";
-                }
-            }
-        }
+    }else if ((this->get_card_type())->compare("blockade") == 0){
+		OrderBlockade* o = new OrderBlockade(a_player,ID, name, target);
+		a_player->getOrders()->addOrder(o);
+		cout<< "\nOrder created and added to the player order list.\n";
+    }else if((this->get_card_type())->compare("airlift") == 0){
+		OrderAirlift* o = new OrderAirlift(a_player,ID,num_of_units, name, source, target);
+		a_player->getOrders()->addOrder(o);
+		cout<< "\nOrder created and added to the player order list.\n";
+	}else if((this->get_card_type())->compare("diplomacy") == 0){
+		OrderNegotiate* o = new OrderNegotiate(a_player,ID, name, target->owner);
+		a_player->getOrders()->addOrder(o);
+		cout<< "\nOrder created and added to the player order list.\n";
     }
 //return card to deck
 	a_player->getHand()->remove_card_played_from_hand_vector(this);

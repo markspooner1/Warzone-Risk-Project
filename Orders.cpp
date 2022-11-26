@@ -151,7 +151,9 @@ void OrderAdvance::execute() {
 			}
 
 		}
-
+		if(this->getTarget()->owner->ps->name == "Neutral"){
+			this->getTarget()->owner->ps = new AggressivePlayerStrategy(this->getTarget()->owner);
+		}
         Notify(this);
 	}
 
@@ -184,6 +186,13 @@ bool OrderAdvance::validate() {
 		cout << "\n";
 		return false;
 	}
+	for(Player *p: this->orderOwner->negotiationWith){
+		if(p->name == this->getTarget()->owner->name){
+			cout << "\n Order was invalid because the players have a negotiation with each other" << endl;
+			return false;
+		}
+	}
+
 	return true;
 	
 }
@@ -297,6 +306,13 @@ bool OrderBomb::validate() {
 	if(t->owner->name == this->orderOwner->name){
 		return false;
 	}
+	for(Player *p: this->orderOwner->negotiationWith){
+		if(p->name == this->getTarget()->owner->name){
+			cout << "\n Order was invalid because the players have a negotiation with each other" << endl;
+
+			return false;
+		}
+	}
 	for(int i = 0; this->orderOwner->getTerritories().size(); i++){
 		for(int j = 0; j < this->orderOwner->getTerritories()[i]->getNeighbours().size(); j++){
 			if(t->getName() == this->orderOwner->getTerritories()[i]->getNeighbours()[j]->getName()){
@@ -304,6 +320,7 @@ bool OrderBomb::validate() {
 			}
 		}
 	}
+
 }
 
 ostream& operator<<(ostream& os, const OrderBomb& ordre)
@@ -344,6 +361,22 @@ void OrderBlockade::execute() {
 		this->getTarget()->army_units *= 2;
 		cout << "\nPlayer " << this->orderOwner->name << "'s Blockade order has executed on: \n" << this->getTarget()->getName() << endl;
 		cout << this->getTarget()->getName() << " has transferred to the neutral player" << endl;
+		Player *neutralPlayer = nullptr;
+		for(Player *p: this->orderOwner->gameEngine->players){
+			if(p->ps->name == "Neutral"){
+				neutralPlayer = p;
+			}
+		}
+		if(neutralPlayer == nullptr){
+			neutralPlayer = new Player("ANeutralPlayer", this->orderOwner->gameEngine);
+			neutralPlayer->ps = new NeutralPlayerStrategy(neutralPlayer);
+			this->orderOwner->gameEngine->players.push_back(neutralPlayer);
+		}
+		Territory *test = this->getTarget();
+		this->getTarget()->owner->removeTerritory(this->getTarget());
+		neutralPlayer->addTerritory(test);
+
+
 	}	
 	else{
 		cout << "invalid Blockade order" << endl;
@@ -441,10 +474,10 @@ ostream& operator<<(ostream& os, const OrderAirlift& ordre)
 }
 
 /////////////////////////////////
-OrderNegotiate::OrderNegotiate(Player* p,int ID, string name, Territory* source, Territory* target) : Order(ID, name) {
+OrderNegotiate::OrderNegotiate(Player* p,int ID, string name, Player *p2) : Order(ID, name) {
 	this->orderOwner = p;
-	this->SourceTerritory = source;
-	this->TargetTerritory = target;
+	this->targetPlayer = p2;
+
 }
 
 OrderNegotiate::OrderNegotiate() : Order() {
@@ -452,34 +485,23 @@ OrderNegotiate::OrderNegotiate() : Order() {
 }
 OrderNegotiate& OrderNegotiate::operator=(const OrderNegotiate& dep) {
 	Order::operator= (dep);
-	this->SourceTerritory = dep.SourceTerritory;
-	this->TargetTerritory = dep.TargetTerritory;
+	this->orderOwner = dep.orderOwner;
+	this->targetPlayer = dep.targetPlayer;
 	return *this;
 }
 
 OrderNegotiate::OrderNegotiate(const OrderNegotiate& dep) : Order(dep) {
-	this->SourceTerritory = dep.SourceTerritory;
-	this->TargetTerritory = dep.TargetTerritory;
+	this->orderOwner = dep.orderOwner;
+	this->targetPlayer = dep.targetPlayer;
 }
-
-Territory* OrderNegotiate::getTarget() {
-	return TargetTerritory;
-}
-Territory* OrderNegotiate::getSource() {
-	return SourceTerritory;
-}
-
 void OrderNegotiate::execute() {
 
 	if (validate()) {
 						cout << "\t-----Order Negotiate Execution---------\n" << endl;
 
-		cout<< this->getTarget()->getName() << " and  " << this->getSource()->getName() << " can no longer attack each other" << endl;
-		for(int i = 0; i < this->orderOwner->toAttack().size(); i++){
-			if(this->orderOwner->toAttack()[i]->getName() == getTarget()->getName()){
-				this->orderOwner->toAttack().erase(std::remove(this->orderOwner->toAttack().begin(),this->orderOwner->toAttack().end(),getTarget()),this->orderOwner->toAttack().end());
-			}
-		}
+		cout<< this->orderOwner->name << " and  " << this->targetPlayer->name << " can no longer attack each other for the rest of this turn" << endl;
+		this->orderOwner->negotiationWith.push_back(this->targetPlayer);
+		this->targetPlayer->negotiationWith.push_back(this->orderOwner);
 		cout << "Negotiation Order has been executed\n";
 
         Notify(this);
@@ -491,7 +513,7 @@ void OrderNegotiate::execute() {
 bool OrderNegotiate::validate() {
 	cout << "\t-----Order Negotiate Validation---------\n" << endl;
 
-	if (getSource()->getName() != getTarget()->getName()) {
+	if (this->orderOwner->name != this->targetPlayer->name) {
 		cout << "Order is valid\n";
 		return true;
 	}
@@ -504,7 +526,7 @@ bool OrderNegotiate::validate() {
 
 ostream& operator<<(ostream& os, const OrderNegotiate& ordre)
 {
-	os << ordre.TargetTerritory << " and  " << ordre.SourceTerritory << " can no longer attack each other" << endl;
+	os << ordre.orderOwner->name << " and  " << ordre.targetPlayer->name << " can no longer attack each other" << endl;
 	return os;
 }
 

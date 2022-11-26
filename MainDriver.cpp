@@ -13,8 +13,6 @@ int main(){
         testStartupPhase();
     }else if(input == "2"){
         testMainGameLoop();
-    }else if(input == "3"){
-        testLoggingObserver();
     }else if(input == "4"){
         testCommandProcessor();
     }else if(input == "5"){
