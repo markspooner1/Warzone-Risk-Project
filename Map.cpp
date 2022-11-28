@@ -214,7 +214,7 @@ Map* MapLoader::readMapFile(string fileName){
             territoryNum++;
         }
     }
-    
+    std::random_shuffle(territories.begin(), territories.end());
     return new Map(territories, continents);
 }
 Map::Map(){

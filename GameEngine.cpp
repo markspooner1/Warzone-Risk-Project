@@ -126,7 +126,7 @@ void GameEngine::readCommandList(CommandProcessing *c)
             this->winner = "draw";
             int games;
             string winners;
-            string maps;
+            string maps = "\n\n";
             processString(nthSubstr(1,co.theCommand, "<"), nthSubstr(1, co.theCommand, ">"), co.theCommand, mapFiles);
             processString(nthSubstr(2, co.theCommand, "<"), nthSubstr(2, co.theCommand, ">"), co.theCommand, playerstrats);
             games = stoi(co.theCommand.substr(nthSubstr(3 ,co.theCommand, "<") + 1, nthSubstr(3, co.theCommand, ">") - 1) );
@@ -170,14 +170,19 @@ void GameEngine::readCommandList(CommandProcessing *c)
                     v2->gameCommands.push_back(start);
                     readCommandList(v2);
                     v2->gameCommands.clear();
-                   maps += "Game: "+ std::to_string(i + 1) + "-->" + this->winner + ", ";
+                   maps += "Game: "+ std::to_string(i + 1) + "-->" + this->winner + "\n";
                    Reset();
                 }
-                maps += "\n"; 
+                maps += "\n\n"; 
     
                 
             }
-            cout << maps << winners << endl;
+           std::ofstream logfile;
+           cout << maps << winners;
+           logfile.open("gamelog.txt", std::ios_base::app);
+           logfile << maps << endl;
+           logfile << winners << endl;
+          // outfile << winners;  
            exit(0);
         }
         if ((co.theCommand.find("loadmap") != std::string::npos) && ((*this->getStateName()).compare("maploaded") == 0))
@@ -191,6 +196,8 @@ void GameEngine::readCommandList(CommandProcessing *c)
             mp = ".mapFiles/" + mp;
             this->map = new Map();
             this->map = loadmap->readMapFile(mp);
+            
+            
         }
         else if ((co.theCommand.find("validatemap") != std::string::npos) && (this->getStateName()->compare("mapvalidated") == 0))
         {

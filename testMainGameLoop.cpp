@@ -11,8 +11,10 @@
 
 
 void testMainGameLoop(){
+    LogObserver *o = new LogObserver();
     CommandProcessing *c = new CommandProcessing();
     GameEngine *g = new GameEngine();
+    g->addObserver(o);
     g->startupPhase(c);
     g->mainGameLoop();
 }
