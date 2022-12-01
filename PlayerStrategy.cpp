@@ -23,7 +23,7 @@ NeutralPlayerStrategy::NeutralPlayerStrategy(Player *p) : PlayerStrategy(p, "Neu
 
 }
 CheaterPlayerStrategy::CheaterPlayerStrategy(Player *p) : PlayerStrategy(p, "Cheater"){
-    
+    this->hasIssued = false;
 }
 
 //Only one that requires interaction
@@ -43,8 +43,9 @@ void HumanPlayerStrategy::issueOrder(Deck *d){
         cin >> armiesToSend;
         if(armiesToSend <= this->player->reinforcement_pool){
             this->player->orderList->addOrder(new OrderDeploy(this->player, 0,armiesToSend, "Deploy", toDeployTo));
-            cout << "Deploy order added by human player("<< this->player->name << ") On: " << toDeployTo->getName() << endl;
+            cout << "Deploy order added by human player("<< this->player->name << ") On: " << toDeployTo->getName() << "\n"<<endl;
             this->player->reinforcement_pool -= armiesToSend;
+            cout << "TEST" << endl;
         }
         else{
             cout << "You Entered an invalid amount " << endl;
@@ -185,16 +186,17 @@ void AggressivePlayerStrategy::issueOrder(Deck *d){
         cout << "\n----DEPLOY ORDER-----\n" << endl;
         Territory *strongest = this->toDefend().at(0);
         this->player->orderList->addOrder(new OrderDeploy(this->player, 0, this->player->reinforcement_pool, "Deploy", strongest));
-        cout << "Deploy order added by Aggressive player("<< this->player->name << ") On: " << strongest->getName() << endl;
+        cout << "Deploy order added by Aggressive player("<< this->player->name << ") On: " << strongest->getName() << "\n" << endl;
         this->player->reinforcement_pool = 0;
         numorders++;
-    }else if(!(this->toDefend().at(0)->army_units == 0) && (this->toAttack().size() > 1)){
+    }
+    else if((this->toAttack().size() > 0)){
         cout << "\n----Advance ORDER-----\n" << endl;
         uniform_int_distribution<mt19937::result_type> dist(0, this->toAttack().size() - 1);
         Territory *target = this->toAttack().at(dist(gen));
         Territory *source = this->player->toDefend().at(0);
         int deployNum = source->army_units;
-        cout << "Advance order added by Aggressive player("<< this->player->name << ") On: " << target->getName() << endl;
+        cout << "Advance order added by Aggressive player("<< this->player->name << ") On: " << target->getName() << "\n" <<endl;
         this->player->orderList->addOrder(new OrderAdvance(this->player, 0, deployNum, "Advance", source, target));
     }
     else if(this->player->getHand()->get_hand_vector()->size() > 0){
@@ -204,7 +206,7 @@ void AggressivePlayerStrategy::issueOrder(Deck *d){
                     uniform_int_distribution<mt19937::result_type> dist(0, this->toAttack().size() - 1);
                     Territory *target = this->toAttack().at(dist(gen));
                     c->play(this->player, d,0, "bomb", target,target, 0);
-                    cout << "Bomb order added by Aggressive player(" << this->player->name << ") On: " << target->getName() << endl;
+                    cout << "Bomb order added by Aggressive player(" << this->player->name << ") On: " << target->getName() << "\n"<< endl;
                 }
                 else if(*c->get_card_type() == "Diplomacy"){
                     uniform_int_distribution<mt19937::result_type> dist(0, this->toAttack().size() - 1);
@@ -238,7 +240,7 @@ void BenevolentPlayerStrategy::issueOrder(Deck *d){
         this->player->orderList->addOrder(new OrderDeploy(this->player, 0,deployNum, "Deploy", weakest));
         cout << "Deploy order added by Benevolent player("<< this->player->name << ") On: " << weakest->getName() << endl;
         this->player->reinforcement_pool -= deployNum;
-    }else if(this->player->toDefend().size() > 1){
+    }else if(this->player->toDefend().size() > 0){
         cout << "\n----Advance ORDER-----\n" << endl;
         Territory *weakest = this->toDefend().at(this->toDefend().size() - 1);
         Territory *strongest = this->toDefend().at(0);
@@ -275,13 +277,13 @@ void BenevolentPlayerStrategy::issueOrder(Deck *d){
 
 };
 void NeutralPlayerStrategy::issueOrder(Deck *d){
-    
+    //Neutral player doesnt issue orders
 
 };
 
 void CheaterPlayerStrategy::issueOrder(Deck *d){
     if(!this->hasIssued){
-     cout << "Cheater conquered: ";
+        cout << "Cheater has conqured: ";
         for(Territory *t: this->toAttack()){
             if(!(t->owner->name == this->player->name)){
                 t->owner->removeTerritory(t);
@@ -289,9 +291,9 @@ void CheaterPlayerStrategy::issueOrder(Deck *d){
                 t->owner = this->player;
                 cout << t->getName() << ", ";
             }
-            cout << "\n";
         }
     }
+   
 }
 vector<Territory*> HumanPlayerStrategy::toAttack(){
     vector<Territory*> toAttack;
@@ -353,7 +355,6 @@ vector<Territory*> CheaterPlayerStrategy::toAttack(){
         } 
     }
     //Need to remove duplicates since 2 territories can share neighbours
-    sort(toAttack.begin(),toAttack.end());
     return removeDuplicates(toAttack);
  
 

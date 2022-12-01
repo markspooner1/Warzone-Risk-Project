@@ -187,7 +187,7 @@ void GameEngine::readCommandList(CommandProcessing *c)
         }
         if ((co.theCommand.find("loadmap") != std::string::npos) && ((*this->getStateName()).compare("maploaded") == 0))
         {   
-            cout <<"her33" << endl;
+           
             string file = co.theCommand;
             string mp = file.substr(nthSubstr(1, file, "<"), nthSubstr(1, file, ">"));
             mp.erase(remove(mp.begin(), mp.end(), '<'), mp.end());
@@ -241,7 +241,6 @@ void GameEngine::readCommandList(CommandProcessing *c)
         }
         else if ((co.theCommand.find("gamestart") != std::string::npos) && (this->getStateName()->compare("assignreinforcement") == 0))
         {
-            // //Randomize territories
             this->setStateName(new string("play"));
             int total_territories = this->map->getTerritories().size();
             
@@ -274,7 +273,6 @@ void GameEngine::readCommandList(CommandProcessing *c)
             // let each player draw 2 cards
             for (Player *p : this->players)
             {   
-                            cout << "test2" << endl;
 
                 p->reinforcement_pool = 50;
                 p->getHand()->set_cards_in_hand(this->deck->draw());
@@ -282,7 +280,6 @@ void GameEngine::readCommandList(CommandProcessing *c)
                 
 
             }
-            cout << "test" << endl;
             for(Player *p: this->players){
                 cout << "\nPlayer " << p->name << " drew cards: " << endl;
                 for(Card *c: *p->getHand()->get_hand_vector()){
@@ -306,6 +303,7 @@ void GameEngine::mainGameLoop()
             for(int i = 0; i < p->getTerritories().size(); i++){
                 cout << p->getTerritories()[i]->getName() << ",";
             }
+            cout << "\n";
         }
         for (int i = 0; i < players.size(); i++)
         {   
@@ -333,10 +331,6 @@ void GameEngine::mainGameLoop()
                 this->winner = p->name;
                 break;
             }
-            else if(this->turnCounter == this->turns){
-                cout << "draw " << endl;
-                break;
-            }
         }
      if(!winner){
          this->turnCounter++;
@@ -346,6 +340,7 @@ void GameEngine::mainGameLoop()
         
         executeOrdersPhase();
      }
+     
     } while (!winner && (this->turnCounter != this->turns));
 }
 
@@ -444,8 +439,12 @@ vector<string> split(string str, string deli)
 
 void GameEngine::issueOrdersPhase(){
     cout << "\n----ISSUE ORDERS PHASE-----\n" << endl;
-    int ordersPerTurn = this->players.size()*5;
+    int ordersPerTurn = this->players.size()*3;
+            
+
     int current_player = 0;
+            
+
     for(int i = 0; i < this->players.size(); i++){
         this->players[i]->negotiationWith.clear();
         if(this->players[i]->ps->name == "Cheater"){
@@ -453,11 +452,16 @@ void GameEngine::issueOrdersPhase(){
         }
     }
     for(int i = 0; i < ordersPerTurn; i++){
+        
         this->players[current_player]->issueOrder(this->deck);
+               
+
         //Cheater can only issue once per turn
         if(players[current_player]->ps->name == "Cheater"){
             players[current_player]->ps->hasIssued = true;
         }
+                
+
         current_player++;
         if(current_player == this->players.size()){
            
@@ -494,6 +498,7 @@ void GameEngine::executeOrdersPhase(){
                 }
             }
         }
+        
           i++;
     }
 

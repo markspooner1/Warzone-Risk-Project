@@ -59,3 +59,4 @@ class CheaterPlayerStrategy: public PlayerStrategy{
 bool sortbyStrongest(Territory *t1, Territory *t2);
 void printTerritories(vector<Territory*> t);
 vector<Territory*> removeDuplicates(vector<Territory*> &t);
+void testPlayerStrategies();

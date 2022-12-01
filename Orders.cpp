@@ -104,6 +104,10 @@ Territory* OrderAdvance::getSource() {
 void OrderAdvance::execute() {
 	if (validate()) {
 			cout << "\t-----Order Advance Execution---------\n" << endl;
+			if(this->getTarget()->owner->ps->name == "Neutral"){
+						this->getTarget()->owner->ps = new AggressivePlayerStrategy(this->getTarget()->owner);
+						cout << "!!!!Neutral Player has been attacked and has now changed to an aggressive player!!!!" << endl;
+					}
 
 			Territory *source = this->getSource();
 			Territory *target = this->getTarget();
@@ -121,6 +125,7 @@ void OrderAdvance::execute() {
 			for(int i = 0;;i++){
 				randNumber = rand() % 10 + 1;
 				if(attacker <= 0){
+					
 					cout << this->orderOwner->name << " has lost the battle to " << target->getName() << endl;
 					cout << "Moving " << defender << " army units to " << source->getName() << endl;
 					source->army_units += defender;
@@ -151,9 +156,7 @@ void OrderAdvance::execute() {
 			}
 
 		}
-		if(this->getTarget()->owner->ps->name == "Neutral"){
-			this->getTarget()->owner->ps = new AggressivePlayerStrategy(this->getTarget()->owner);
-		}
+		
         Notify(this);
 	}
 
@@ -290,6 +293,11 @@ void OrderBomb::execute() {
 		Territory *t = this->getTarget();
 		t->army_units = t->army_units / 2;
 		cout << "\nPlayer " << this->orderOwner->name << "'s Bomb order has executed on: \n" << this->getTarget()->getName() << endl;
+		if(this->getTarget()->owner->ps->name == "Neutral"){
+			this->getTarget()->owner->ps = new AggressivePlayerStrategy(this->getTarget()->owner);
+			cout << "!!!!Neutral Player has been attacked and has now dynamically chnaged to and aggressive player!!!!" << endl;
+			cout << "testing.." << this->getTarget()->owner->ps->name << endl;
+		}
 	}
 	else{
 		cout << "Bomb Order was not executed - invalid" << endl;

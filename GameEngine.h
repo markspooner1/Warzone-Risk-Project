@@ -96,3 +96,4 @@ void testGameStates();
 bool search(vector<Player*> player, string command);
 void testStartupPhase();
 void testMainGameLoop();
+void testTournament();
