@@ -132,6 +132,17 @@ void GameEngine::readCommandList(CommandProcessing *c)
             games = stoi(co.theCommand.substr(nthSubstr(3 ,co.theCommand, "<") + 1, nthSubstr(3, co.theCommand, ">") - 1) );
             int numturns = stoi(co.theCommand.substr(nthSubstr(4 ,co.theCommand, "<") + 1, nthSubstr(4, co.theCommand, ">") - 1));
             this->turns = numturns;
+            if(mapFiles.size() > 5 || mapFiles.size() < 1){
+                cout << "please enter only 1 - 5 maps" << endl;
+                exit(0);
+            }else if(numturns < 10 || numturns > 50){
+                cout << "Games of only 10 - 50 turns can be played" << endl;
+                exit(0);
+            }
+            else if(games > 5 || games < 1){
+                cout << "Enter only 1 - 5 games per map" << endl;
+                exit(0);
+            }
             CommandProcessing *v2 = new CommandProcessing();
             for(string map: mapFiles){
                 maps += map + "\n";
@@ -334,7 +345,8 @@ void GameEngine::mainGameLoop()
         }
      if(!winner){
          this->turnCounter++;
-        reinforcementPhase();        
+        reinforcementPhase();
+        
         issueOrdersPhase();
         
         executeOrdersPhase();
@@ -349,48 +361,41 @@ void GameEngine::reinforcementPhase(){
     vector<Continent*> continents = this->map->getContinents();
     vector<vector<Territory*>> all_territories_of_continents;
 
-    // init of all_territories_of_continents using the continents
-    for (size_t i; i < continents.size(); i++)
-    {
+    //init of all_territories_of_continents using the continents
+    for (size_t i; i<continents.size(); i++){
         all_territories_of_continents.at(i) = continents.at(i)->continent_members;
     }
 
-    // loop over the players to assign reinforcement units
-    for (Player *p : this->players)
-    {
+    //loop over the players to assign reinforcement units
+    for(Player* p: this->players){
         int armies = 0;
         vector<int> bonuses = {};
-        vector<Territory *> territories_not_collected = {};
+        vector<Territory*> territories_not_collected = {};
 
-        // checking if a players controls a continent. if true, we collect the bonus of the continents controlled
-        for (int i = 0; i < all_territories_of_continents.size(); ++i)
-        {
-            vector<Territory *> continent_temp = all_territories_of_continents.at(i);
+        //checking if a players controls a continent. if true, we collect the bonus of the continents controlled
+        for (int i = 0; i < all_territories_of_continents.size(); ++i) {
+            vector<Territory*> continent_temp = all_territories_of_continents.at(i);
             int found = 0;
 
-            for (int j = 0; j < continent_temp.size(); ++j)
-            {
-                Territory *territory_temp = continent_temp.at(j);
+            for (int j = 0; j < continent_temp.size(); ++j) {
+                Territory* territory_temp = continent_temp.at(j);
                 bool territory_found_in_the_player_territories = false;
 
-                for (int k = 0; k < p->getTerritories().size(); ++k)
-                {
-                    if (territory_temp->getName() == p->getTerritories().at(k)->getName())
-                    {
+                for (int k = 0; k < p->getTerritories().size(); ++k) {
+                    if (territory_temp->getName() == p->getTerritories().at(k)->getName()){
                         found++;
                         territory_found_in_the_player_territories = true;
                     }
                 }
-                if (territory_found_in_the_player_territories == false)
-                { // Break from looping over this continent
+                if (territory_found_in_the_player_territories == false){//Break from looping over this continent
                     break;
                 }
+
+
             }
-            if (found == continent_temp.size())
-            {
-                bonuses.push_back(continents.at(i)->getBonusValue()); // collecting the bonuses
-                for (int j = 0; j < continent_temp.size(); ++j)
-                {
+            if (found == continent_temp.size()){
+                bonuses.push_back(continents.at(i)->getBonusValue());//collecting the bonuses
+                for (int j = 0; j < continent_temp.size(); ++j) {
                     territories_not_collected.push_back(continent_temp.at(j));
                 }
             }
@@ -399,19 +404,15 @@ void GameEngine::reinforcementPhase(){
 
         int total_bonuses = 0;
 
-        // sum the total bonuses
-        for (int i = 0; i < bonuses.size(); ++i)
-        {
+        //sum the total bonuses
+        for (int i = 0; i < bonuses.size(); ++i) {
             total_bonuses = total_bonuses + bonuses.at(i);
         }
 
-        if ((total_bonuses + floor(number_of_territories_not_collected / 3)) < 3)
-        {
+        if ((total_bonuses + floor(number_of_territories_not_collected/3))<3){
             armies = 3;
-        }
-        else
-        {
-            armies = (total_bonuses + floor(number_of_territories_not_collected / 3));
+        }else{
+            armies = (total_bonuses + floor(number_of_territories_not_collected/3));
         }
 
         p->reinforcement_pool = armies;
@@ -429,25 +430,23 @@ void GameEngine::reinforcementPhase(){
     else if(word == "OrderBlockadeType") return OrderBlockadeType;
     else if(word == "OrderAirliftType") return OrderAirliftType;
     else /*if(word == "OrderNegotiateType")*/ return OrderNegotiateType;
-
 }
+
 
 vector<string> split(string str, string deli)
 {
     vector<string> list;
     int start = 0;
     int end = str.find(deli);
-    while (end != -1)
-    {
-        list.push_back(str.substr(start, end - start));
+    while (end != -1) {
+      list.push_back(str.substr(start, end - start)); 
         start = end + deli.size();
         end = str.find(deli, start);
     }
-    list.push_back(str.substr(start, end - start));
+      list.push_back(str.substr(start, end - start)); 
 
-    return list;
+   return list;
 }
-
 
 void GameEngine::issueOrdersPhase(){
     cout << "\n----ISSUE ORDERS PHASE-----\n" << endl;

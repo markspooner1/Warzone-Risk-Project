@@ -17,14 +17,21 @@ class PlayerStrategy{
 class HumanPlayerStrategy: public PlayerStrategy{
     public:
         HumanPlayerStrategy(Player*);
+        HumanPlayerStrategy(const HumanPlayerStrategy& obj);
+        HumanPlayerStrategy& operator=(const HumanPlayerStrategy& obj);
+        friend ostream& operator <<(ostream& o, const HumanPlayerStrategy &obj);
         void issueOrder(Deck *d) override;
         vector<Territory*> toAttack() override;
         vector<Territory*> toDefend() override;
+
 };
 
 class AggressivePlayerStrategy: public PlayerStrategy{
      public:
         AggressivePlayerStrategy(Player*);
+        AggressivePlayerStrategy(const AggressivePlayerStrategy& obj);
+        AggressivePlayerStrategy& operator=(const AggressivePlayerStrategy& obj);
+        friend ostream& operator <<(ostream& o, const AggressivePlayerStrategy &obj);
         void issueOrder(Deck *d) override;
         vector<Territory*> toAttack() override;
         vector<Territory*> toDefend() override;
@@ -33,6 +40,9 @@ class AggressivePlayerStrategy: public PlayerStrategy{
 class BenevolentPlayerStrategy: public PlayerStrategy{
      public:
         BenevolentPlayerStrategy(Player*);
+        BenevolentPlayerStrategy(const BenevolentPlayerStrategy& obj);
+        BenevolentPlayerStrategy& operator=(const BenevolentPlayerStrategy& obj);
+        friend ostream& operator <<(ostream& o, const BenevolentPlayerStrategy &obj);
         void issueOrder(Deck *d) override;
         vector<Territory*> toAttack() override;
         vector<Territory*> toDefend() override;
@@ -42,6 +52,9 @@ class BenevolentPlayerStrategy: public PlayerStrategy{
 class NeutralPlayerStrategy: public PlayerStrategy{
      public:
         NeutralPlayerStrategy(Player*);
+        NeutralPlayerStrategy(const NeutralPlayerStrategy& obj);
+        NeutralPlayerStrategy& operator=(const NeutralPlayerStrategy& obj);
+        friend ostream& operator <<(ostream& o, const NeutralPlayerStrategy &obj);
         void issueOrder(Deck *d) override;
         vector<Territory*> toAttack() override;
         vector<Territory*> toDefend() override;
@@ -51,6 +64,9 @@ class CheaterPlayerStrategy: public PlayerStrategy{
     public:
        
         CheaterPlayerStrategy(Player*);
+        CheaterPlayerStrategy(const CheaterPlayerStrategy& obj);
+        CheaterPlayerStrategy& operator=(const CheaterPlayerStrategy& obj);
+        friend ostream& operator <<(ostream& o, const CheaterPlayerStrategy &obj);
         void issueOrder(Deck *d) override;
         vector<Territory*> toAttack() override;
         vector<Territory*> toDefend() override;

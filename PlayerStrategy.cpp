@@ -13,17 +13,72 @@ PlayerStrategy::PlayerStrategy(Player *p, string name){
 HumanPlayerStrategy::HumanPlayerStrategy(Player *p) : PlayerStrategy(p, "Human"){
 
 }
+HumanPlayerStrategy::HumanPlayerStrategy(const HumanPlayerStrategy& obj) : PlayerStrategy(obj.player, obj.name){ 
+}
+HumanPlayerStrategy& HumanPlayerStrategy::operator=(const HumanPlayerStrategy& obj){
+    this->name = obj.name;
+    this->player = obj.player;
+    return *this;
+}
+ostream& operator << (ostream &out, const HumanPlayerStrategy& obj){
+    out << "Player name " << obj.player->name << "| Type : " << obj.name << "\n";
+    return out;
+}
 AggressivePlayerStrategy::AggressivePlayerStrategy(Player *p) : PlayerStrategy(p, "Aggressive"){
 
+}
+AggressivePlayerStrategy::AggressivePlayerStrategy(const AggressivePlayerStrategy& obj) : PlayerStrategy(obj.player, obj.name){ 
+}
+AggressivePlayerStrategy& AggressivePlayerStrategy::operator=(const AggressivePlayerStrategy& obj){
+    this->name = obj.name;
+    this->player = obj.player;
+    return *this;
+}
+ostream& operator << (ostream &out, const AggressivePlayerStrategy& obj){
+    out << "Player name " << obj.player->name << "| Type : " << obj.name;
+    return out;
 }
 BenevolentPlayerStrategy::BenevolentPlayerStrategy(Player *p) : PlayerStrategy(p, "Benevolent"){
 
 }
+BenevolentPlayerStrategy::BenevolentPlayerStrategy(const BenevolentPlayerStrategy& obj) : PlayerStrategy(obj.player, obj.name){ 
+}
+BenevolentPlayerStrategy& BenevolentPlayerStrategy::operator=(const BenevolentPlayerStrategy& obj){
+    this->name = obj.name;
+    this->player = obj.player;
+    return *this;
+}
+ostream& operator << (ostream &out, const BenevolentPlayerStrategy& obj){
+    out << "Player name " << obj.player->name << "| Type : " << obj.name;
+    return out;
+}
 NeutralPlayerStrategy::NeutralPlayerStrategy(Player *p) : PlayerStrategy(p, "Neutral"){
 
 }
+NeutralPlayerStrategy::NeutralPlayerStrategy(const NeutralPlayerStrategy& obj) : PlayerStrategy(obj.player, obj.name){ 
+}
+NeutralPlayerStrategy& NeutralPlayerStrategy::operator=(const NeutralPlayerStrategy& obj){
+    this->name = obj.name;
+    this->player = obj.player;
+    return *this;
+}
+ostream& operator << (ostream &out, const NeutralPlayerStrategy& obj){
+    out << "Player name " << obj.player->name << "| Type : " << obj.name;
+    return out;
+}
 CheaterPlayerStrategy::CheaterPlayerStrategy(Player *p) : PlayerStrategy(p, "Cheater"){
     this->hasIssued = false;
+}
+CheaterPlayerStrategy::CheaterPlayerStrategy(const CheaterPlayerStrategy& obj) : PlayerStrategy(obj.player, obj.name){ 
+}
+CheaterPlayerStrategy& CheaterPlayerStrategy::operator=(const CheaterPlayerStrategy& obj){
+    this->name = obj.name;
+    this->player = obj.player;
+    return *this;
+}
+ostream& operator << (ostream &out, const CheaterPlayerStrategy& obj){
+    out << "Player name " << obj.player->name << "| Type : " << obj.name;
+    return out;
 }
 
 //Only one that requires interaction
@@ -45,7 +100,6 @@ void HumanPlayerStrategy::issueOrder(Deck *d){
             this->player->orderList->addOrder(new OrderDeploy(this->player, 0,armiesToSend, "Deploy", toDeployTo));
             cout << "Deploy order added by human player("<< this->player->name << ") On: " << toDeployTo->getName() << "\n"<<endl;
             this->player->reinforcement_pool -= armiesToSend;
-            cout << "TEST" << endl;
         }
         else{
             cout << "You Entered an invalid amount " << endl;
@@ -202,17 +256,17 @@ void AggressivePlayerStrategy::issueOrder(Deck *d){
     else if(this->player->getHand()->get_hand_vector()->size() > 0){
         Card *c = this->player->getHand()->get_hand_vector()->at(0);
         cout << "\n----Card Playing-----\n" << endl;
-                if(*c->get_card_type() == "bomb"){
+                if(*c->get_card_type() == "bomb" && (this->toAttack().size() > 0)){
                     uniform_int_distribution<mt19937::result_type> dist(0, this->toAttack().size() - 1);
                     Territory *target = this->toAttack().at(dist(gen));
                     c->play(this->player, d,0, "bomb", target,target, 0);
                     cout << "Bomb order added by Aggressive player(" << this->player->name << ") On: " << target->getName() << "\n"<< endl;
                 }
-                else if(*c->get_card_type() == "Diplomacy"){
+                else if(*c->get_card_type() == "Diplomacy" && (this->toAttack().size() > 0)){
                     uniform_int_distribution<mt19937::result_type> dist(0, this->toAttack().size() - 1);
                     c->play(this->player, d, 0, "diplomacy", this->toAttack().at(dist(gen)), this->toAttack().at(dist(gen)),  0);
                 }
-                else if(*c->get_card_type() == "airlift"){
+                else if(*c->get_card_type() == "airlift" && (this->toDefend().size() > 0)){
                     Territory *source = this->toDefend().at(0);
                     uniform_int_distribution<mt19937::result_type> dist1(0, this->toDefend().size() - 1);
                     Territory *target = this->toDefend().at(dist1(gen));
@@ -252,17 +306,17 @@ void BenevolentPlayerStrategy::issueOrder(Deck *d){
     else if(this->player->getHand()->get_hand_vector()->size() > 0){
         Card *c = this->player->getHand()->get_hand_vector()->at(0);
          cout << "\n----Card Playing-----\n" << endl;
-                if(*c->get_card_type() == "blockade"){
+                if(*c->get_card_type() == "blockade" && (this->toDefend().size() > 0)){
                     uniform_int_distribution<mt19937::result_type> dist(0, this->toDefend().size() - 1);
                     Territory *target = this->toDefend().at(dist(gen));
                     c->play(this->player, d,0, "blockade", target,target, 0);   
                     cout << "Blockade order added by Benevolent player(" << this->player->name << ") On: " << target->getName() << endl;
                 }
-                else if(*c->get_card_type() == "Diplomacy"){
+                else if(*c->get_card_type() == "Diplomacy" && (this->toAttack().size() > 0)){
                      uniform_int_distribution<mt19937::result_type> dist(0, this->toAttack().size() - 1);
                     c->play(this->player, d, 0, "diplomacy", this->toAttack().at(dist(gen)), this->toAttack().at(dist(gen)),  0);
                 }
-                else if(*c->get_card_type() == "airlift"){
+                else if(*c->get_card_type() == "airlift" && (this->toDefend().size() > 0)){
                     Territory *strongest = this->toDefend().at(0);
                     Territory *weakest = this->toDefend().at(this->toDefend().size() - 1);
                     uniform_int_distribution<mt19937::result_type> dist(1, strongest->army_units);
@@ -292,6 +346,7 @@ void CheaterPlayerStrategy::issueOrder(Deck *d){
                 cout << t->getName() << ", ";
             }
         }
+        cout << endl;
     }
    
 }
@@ -322,11 +377,9 @@ vector<Territory*> AggressivePlayerStrategy::toAttack(){
         } 
     }
     return removeDuplicates(toAttack);
-    
-
 };
 vector<Territory*> BenevolentPlayerStrategy::toAttack(){
-    //idk what to do here since he never attacks
+
     vector<Territory*> toAttack;
     for(Territory *t: this->player->getTerritories()){
         for(Territory *neighour: t->getNeighbours()){
