@@ -17,6 +17,5 @@ void testMainGameLoop(){
     g->addObserver(o);
     g->startupPhase(c);
     g->mainGameLoop();
+
 }
-
-
