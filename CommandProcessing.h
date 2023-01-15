@@ -59,3 +59,5 @@ class FileCommandProcessorAdapter : CommandProcessing {
         FileCommandProcessorAdapter();
         ~FileCommandProcessorAdapter();
 };
+
+void testCommandProcessor();

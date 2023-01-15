@@ -20,21 +20,27 @@ Territory::Territory(string name, string continent){
     this->name = new string(name);
     this->continent = new string(continent);
     this->visited = false;
+    this->army_units = 0;
 }
 //Territory copy constructor
 Territory::Territory(const Territory &obj){
+    cout << "copy called" << endl;
     this->name = new string(*(obj.name));
     this->continent = new string(*(obj.continent));
     this->visited = false;
     this->neighbours = obj.neighbours;
+}
+Territory::Territory(){
+
 }
 // TODO 
 Territory::~Territory(){
 }
 //Territory assignment operatior
 Territory& Territory::operator=(const Territory &t){
-    this->name = new string(*(t.name));
-    this->continent = new string(*(t.continent));
+    cout << "assignment op called" << endl;
+    this->name = (t.name);
+    this->continent = (t.continent);
     this->neighbours = t.neighbours;
     this->visited = t.visited;
     return *this;
@@ -123,7 +129,7 @@ MapLoader::MapLoader(string filename){
     this->filename = filename;
 }
 //Method to read .map files and create Map
-Map MapLoader::readMapFile(string fileName){
+Map* MapLoader::readMapFile(string fileName){
     cout << "--LOADING MAP:  " << fileName << "--"<<endl;
     cout << "-----------------" <<endl;
     ifstream input(fileName);
@@ -132,7 +138,7 @@ Map MapLoader::readMapFile(string fileName){
     if(fileName.substr(nthSubstr(2, fileName, "."), 4) != ".map"){
         cout << "Invalid filetype" << endl;
         cout << "Couldnt create map" << endl;
-        return Map(territories, continents);
+        return new Map(territories, continents);
     }
     string delimiter; 
     int found = -1;
@@ -156,7 +162,7 @@ Map MapLoader::readMapFile(string fileName){
                     cout << "Loading Continent: " << line.substr(0, line.find(delimiter)) << endl;
                      
                     //using the = sign as a dilimeter to insert continents into the vector
-                    continents.push_back(new Continent(line.substr(0, line.find(delimiter)), 4));
+                    continents.push_back(new Continent(line.substr(0, line.find(delimiter)),  stoi(line.substr(line.find(delimiter) + 1, line.length()))));
                 }
             }
         }
@@ -208,8 +214,8 @@ Map MapLoader::readMapFile(string fileName){
             territoryNum++;
         }
     }
-    
-    return Map(territories, continents);
+    std::random_shuffle(territories.begin(), territories.end());
+    return new Map(territories, continents);
 }
 Map::Map(){
 }

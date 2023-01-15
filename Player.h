@@ -8,8 +8,14 @@
 #include "Orders.h"
 #include "Map.h"
 #include "Cards.h"
+#include "PlayerStrategy.h"
+#include "GameEngine.h"
 using namespace std;
 class Territory;
+class Orders;
+class OrdersList;
+class PlayerStrategy;
+class GameEngine;
 //Attributes:
 // Collection of orderList
 // collection of territories
@@ -26,40 +32,41 @@ class Player {
 
 private:
 
-    OrdersList* orderList;  // collection of Orders
+     // collection of Orders
     Hand* hand;            //collection of Cards
     vector<Territory*> territories;     //collection of territories
 
 
 public:
-
-
+    PlayerStrategy* ps;
+    int orederptr = 0;
+    OrdersList* orderList;
     Player(Player const &player);   //copy constructor
 
     Player();   //default Constructor
 
     Player(OrdersList *orderList, Hand *hand, vector<Territory*> territories);   //constructor
 
-    Player(string name);
+    Player(string name, GameEngine *g);
 
     virtual ~Player();      //destructor
 
     vector<Territory*> toDefend();      //method to defend territories
 
-    vector<Territory*> toAttack(const  vector<Territory*>  ALLTERRITORIES);     //method to attack territories
+    vector<Territory*> toAttack();     //method to attack territories
 
     //method to create an order object and add it to the orderlist (collection of orders)
-    void issueOrder(issue_order_types order_type,Deck* a_deck,int i,vector<Territory*> all_territories, int ID, string name, string source, string target, int num_of_units );
+    void issueOrder(Deck *d);
 
     //Getters:
-    OrdersList *getOrders() const;       //getter for the collection orders named orderList
+    OrdersList* getOrders() const;       //getter for the collection orders named orderList
 
     Hand *getHand() const;      //getter for the collection of cards named hand
 
     vector<Territory*> getTerritories() const;  //getter for the collection of territories
 
     //Setters:
-    void setOrders(OrdersList *orders);  //setter for the collection orders named orderList
+    void setOrders(OrdersList orders);  //setter for the collection orders named orderList
 
     void setHand(Hand *hand);       //setter for the collection of cards named hand
 
@@ -74,11 +81,17 @@ public:
     
     string name;
 
-    int *reinforcement_pool;
+    int reinforcement_pool;
 
     void setName(string name);
     
-    bool ownsTerritory(Territory *t);
+    bool ownsTerritory(string t);
+
+    Territory* getTerritoryFromName(string t);
+    Territory* testfind(Territory *t);
+    void removeTerritory(Territory *t);
+    vector<Player*> negotiationWith;
+    GameEngine *gameEngine;
 };
 
 void testPlayers();

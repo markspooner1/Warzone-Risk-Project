@@ -4,20 +4,20 @@ using std::cout;
 using std::string;
 using std::ostream;
 #include <vector>
-using std::vector;
 #include "Player.h"
-
+using std::vector;
 class Player;
 class Territory{
     private:
-        Player* owner;
+       
         string* name;
         string* continent;
-        int* army_units;
     public:
+         Player* owner;
         vector<Territory *> neighbours;
         Territory(string name, string continent); 
         Territory (const Territory &obj);
+        Territory();
         Territory& operator=(const Territory& t);
         friend ostream& operator<<(ostream& out, Territory territory);
         ~Territory();
@@ -27,6 +27,8 @@ class Territory{
         void setContinent(string continent);
         vector<Territory*> getNeighbours();
         bool visited;
+        int army_units;
+
 };
 class Continent{
     public:
@@ -58,7 +60,6 @@ class Map
         vector<Continent*> getContinents();
         void reset();
         int DFS(Territory *t, int num);
-        int checkContinentBonus(Player *player);
 };
 class MapLoader{
     private:
@@ -66,7 +67,7 @@ class MapLoader{
          //Helper function to find neighbours while loading map file
         vector<Territory*> findNeighbours(string s, vector<Territory*>);
     public:
-        Map readMapFile(string fileName);
+        Map* readMapFile(string fileName);
         MapLoader(string filname);
         MapLoader();
         MapLoader(const MapLoader &ml);

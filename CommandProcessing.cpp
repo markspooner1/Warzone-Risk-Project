@@ -76,7 +76,13 @@ string CommandProcessor::validate(string str, string * currentState){
         } else {
             cout << "Command is invalid because its unrelated to current state\n";
         }
-    } else if (str.find("validatemap") != string::npos) {
+    }else if(str.find("tournament") != string::npos){
+        cout << "tets" << endl;
+        if(*currentState == "start"){
+            effect = "tournament";
+        }
+    }
+     else if (str.find("validatemap") != string::npos) {
         if (*currentState == "maploaded") {
             effect = "mapvalidated";
             //cout << "Command is valid\n";
@@ -98,7 +104,7 @@ string CommandProcessor::validate(string str, string * currentState){
             cout << "Command is invalid because its unrelated to current state\n";
         }
     } else if (str.find("replay") != string::npos){
-        if (*currentState == "win") {
+        if (*currentState == "assignreinforcement") {
             effect = "start";
             //cout << "Command is valid\n";
         } else {
@@ -112,7 +118,7 @@ string CommandProcessor::validate(string str, string * currentState){
             cout << "Command is invalid because its unrelated to current state\n";
         }
     } else {
-        //cout << "The command is invalid";
+        cout << "The command is invalid";
     }
 
     return effect;
@@ -147,7 +153,6 @@ void FileCommandProcessorAdapter::readCommand(string * currentState, string mode
         }
     }
 
-
     //std::ifstream file("C:\\Users\\slava\\OneDrive\\Desktop\\game_scenario.txt");
     std::ifstream file (path);
     std::string str; 
@@ -155,7 +160,7 @@ void FileCommandProcessorAdapter::readCommand(string * currentState, string mode
     while (std::getline(file, str))
     {
         // Processing string
-        //cout << str << endl;
+        cout << str << endl;
 
         // still calling CommandProcessor methods as there is no change there
         cout << "\n******************************\n";
